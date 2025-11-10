@@ -102,6 +102,23 @@
         .inbox-item:hover {
             background-color: rgb(55, 65, 81);
         }
+        .team-header-gradient {
+            background: linear-gradient(90deg, #1E1E1E, #2A2A2A);
+            transition: background 300ms ease;
+            position: relative;
+        }
+        .team-header-overlay {
+            background: rgba(0, 0, 0, 0.25);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        .team-header-content {
+            position: relative;
+            z-index: 1;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
@@ -396,17 +413,20 @@
         <!-- Team Overview Tab -->
         <div id="tab-team" class="tab-content">
             <!-- Team Header Section -->
-            <div class="bg-gray-800 border border-gray-700 mb-6 p-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <div class="text-5xl" id="dashboard-team-logo">🏀</div>
-                        <div>
-                            <h2 class="text-2xl font-light" id="dashboard-full-team-name">Your Team</h2>
-                            <div class="flex items-center gap-3 mt-1">
-                                <span class="text-sm text-gray-400" id="current-season">Season 2024-25</span>
-                                <div class="flex gap-2">
-                                    <div class="w-4 h-4 rounded-full" id="team-color-1"></div>
-                                    <div class="w-4 h-4 rounded-full" id="team-color-2"></div>
+            <div class="team-header-gradient border border-gray-700 mb-6 p-4" id="team-header-bar">
+                <div class="team-header-overlay"></div>
+                <div class="team-header-content">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="text-5xl" id="dashboard-team-logo">🏀</div>
+                            <div>
+                                <h2 class="text-2xl font-light text-white" id="dashboard-full-team-name">Your Team</h2>
+                                <div class="flex items-center gap-3 mt-1">
+                                    <span class="text-sm text-gray-100" id="current-season">Season 2024-25</span>
+                                    <div class="flex gap-2">
+                                        <div class="w-4 h-4 rounded-full border border-white border-opacity-50" id="team-color-1"></div>
+                                        <div class="w-4 h-4 rounded-full border border-white border-opacity-50" id="team-color-2"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1175,6 +1195,11 @@
             showScreen('game');
             showTab('team');
             updateDisplay();
+            
+            // Apply gradient after loading
+            setTimeout(() => {
+                applyTeamHeaderGradient();
+            }, 100);
         }
 
         function deleteLeague(index) {
@@ -1365,9 +1390,10 @@
             
             showScreen('dashboard');
             
-            // Initialize game after a brief moment
+            // Initialize game after a brief moment and apply gradient
             setTimeout(() => {
                 showTab('team');
+                applyTeamHeaderGradient();
             }, 100);
         }
 
@@ -1387,8 +1413,15 @@
                 document.getElementById('header-logo').textContent = gameState.selectedTeam.logo;
                 document.getElementById('header-team-name').textContent = gameState.selectedTeam.mascot;
                 
-                // Update dashboard team header
+                // Update dashboard team header and gradient
                 updateDashboardHeader();
+                
+                // Apply gradient when switching to team tab
+                if (tabName === 'team') {
+                    setTimeout(() => {
+                        applyTeamHeaderGradient();
+                    }, 50);
+                }
             }
         }
 
@@ -1400,6 +1433,25 @@
                     `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}`;
                 document.getElementById('team-color-1').style.backgroundColor = gameState.selectedTeam.colors[0];
                 document.getElementById('team-color-2').style.backgroundColor = gameState.selectedTeam.colors[1];
+                
+                // Apply gradient background
+                applyTeamHeaderGradient();
+            }
+        }
+
+        // Apply Team Header Gradient
+        function applyTeamHeaderGradient() {
+            const headerBar = document.getElementById('team-header-bar');
+            
+            if (gameState.selectedTeam && gameState.selectedTeam.colors) {
+                const color1 = gameState.selectedTeam.colors[0];
+                const color2 = gameState.selectedTeam.colors[1];
+                
+                // Create gradient from primary to secondary color
+                headerBar.style.background = `linear-gradient(90deg, ${color1}, ${color2})`;
+            } else {
+                // Fallback gradient
+                headerBar.style.background = 'linear-gradient(90deg, #1E1E1E, #2A2A2A)';
             }
         }
 
