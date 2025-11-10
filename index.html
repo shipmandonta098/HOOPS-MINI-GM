@@ -1128,10 +1128,18 @@
         }
 
         function saveCurrentLeague() {
-            if (!gameState.selectedTeam) return;
+            if (!gameState.selectedTeam) {
+                console.log('No team selected, cannot save');
+                return;
+            }
             
             const yourTeamName = `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}`;
-            const yourTeam = gameState.standings.find(t => t.team === yourTeamName) || { wins: 0, losses: 0 };
+            const yourTeam = gameState.standings.find(t => t.team === yourTeamName);
+            
+            if (!yourTeam) {
+                console.log('Team not found in standings, cannot save');
+                return;
+            }
             
             const leagueData = {
                 teamName: yourTeamName,
@@ -1160,11 +1168,14 @@
             
             if (existingIndex >= 0) {
                 gameState.savedLeagues[existingIndex] = leagueData;
+                console.log('Updated existing league:', yourTeamName);
             } else {
                 gameState.savedLeagues.push(leagueData);
+                console.log('Added new league:', yourTeamName);
             }
             
             localStorage.setItem('hoopsGMLeagues', JSON.stringify(gameState.savedLeagues));
+            console.log('League saved to localStorage. Total leagues:', gameState.savedLeagues.length);
             updateSavedLeaguesList();
         }
 
@@ -1321,8 +1332,11 @@
             document.getElementById(screenId).classList.add('active');
             
             if (screenName === 'game') {
-                initializeStandings();
-                generateSchedule();
+                // Don't re-initialize if we already have standings (coming from continue)
+                if (gameState.standings.length === 0) {
+                    initializeStandings();
+                    generateSchedule();
+                }
                 updateDisplay();
             }
             
@@ -1389,12 +1403,17 @@
             document.getElementById('dashboard-color-1').style.backgroundColor = gameState.selectedTeam.colors[0];
             document.getElementById('dashboard-color-2').style.backgroundColor = gameState.selectedTeam.colors[1];
             
+            // Initialize game state before showing dashboard
+            initializeStandings();
+            generateSchedule();
+            
             showScreen('dashboard');
             
             // Initialize game after a brief moment and apply gradient
             setTimeout(() => {
                 showTab('team');
                 applyTeamHeaderGradient();
+                updateDisplay();
                 
                 // Save the newly created league
                 saveCurrentLeague();
