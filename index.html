@@ -119,6 +119,101 @@
             position: relative;
             z-index: 1;
         }
+        .roster-row {
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .roster-row:hover {
+            background-color: rgb(30, 41, 59);
+        }
+        .ovr-high {
+            color: #10B981;
+        }
+        .ovr-mid {
+            color: #FBBF24;
+        }
+        .ovr-low {
+            color: #EF4444;
+        }
+        .sortable-header {
+            cursor: pointer;
+            user-select: none;
+        }
+        .sortable-header:hover {
+            color: rgb(96, 165, 250);
+        }
+        .minutes-slider {
+            width: 100%;
+            height: 4px;
+            background: rgb(55, 65, 81);
+            border-radius: 2px;
+            outline: none;
+        }
+        .minutes-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            background: rgb(29, 78, 216);
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        .minutes-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            background: rgb(29, 78, 216);
+            cursor: pointer;
+            border-radius: 50%;
+            border: none;
+        }
+        .depth-slot {
+            padding: 8px;
+            background: rgb(31, 41, 55);
+            border: 1px solid rgb(55, 65, 81);
+            border-radius: 4px;
+            font-size: 12px;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .player-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+        .player-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .player-modal-content {
+            background-color: rgb(31, 41, 55);
+            border: 1px solid rgb(55, 65, 81);
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .rating-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .rating-a { background: #10B981; color: white; }
+        .rating-b { background: #3B82F6; color: white; }
+        .rating-c { background: #FBBF24; color: black; }
+        .rating-d { background: #F97316; color: white; }
+        .rating-f { background: #EF4444; color: white; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
@@ -698,31 +793,161 @@
 
         <!-- Roster Tab -->
         <div id="tab-roster" class="tab-content hidden">
-            <div class="bg-gray-800 border border-gray-700">
-                <div class="p-4 border-b border-gray-700 flex justify-between items-center">
-                    <h2 class="text-xl font-light">Current Roster</h2>
-                    <button onclick="generateRoster()" class="btn-primary bg-blue-700 text-white px-4 py-2 text-sm">Generate Roster</button>
+            <!-- Roster Header -->
+            <div class="bg-gray-800 border border-gray-700 mb-6 p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-light" id="roster-team-name">Team Roster</h2>
+                        <div class="text-sm text-gray-400 mt-1">
+                            <span id="roster-record">0-0</span> • 
+                            <span id="roster-player-count">0</span> Players
+                        </div>
+                    </div>
+                    <button class="bg-gray-700 text-gray-400 px-4 py-2 text-sm cursor-not-allowed" disabled>
+                        + Add Player
+                    </button>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead class="bg-gray-900 text-gray-400 text-sm">
-                            <tr>
-                                <th class="text-left p-3 font-normal">Name</th>
-                                <th class="text-left p-3 font-normal">Pos</th>
-                                <th class="text-center p-3 font-normal">Age</th>
-                                <th class="text-center p-3 font-normal">Ovr</th>
-                                <th class="text-center p-3 font-normal">PPG</th>
-                                <th class="text-center p-3 font-normal">RPG</th>
-                                <th class="text-center p-3 font-normal">APG</th>
-                                <th class="text-right p-3 font-normal">Salary</th>
-                            </tr>
-                        </thead>
-                        <tbody id="roster-table" class="text-sm">
-                            <tr>
-                                <td colspan="8" class="p-4 text-center text-gray-500">No players on roster</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            </div>
+
+            <!-- Filters Row -->
+            <div class="bg-gray-800 border border-gray-700 p-4 mb-6">
+                <div class="flex flex-wrap gap-4 items-center">
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">Position</label>
+                        <select id="filter-position" onchange="filterRoster()" class="bg-gray-900 border border-gray-700 text-sm px-3 py-1.5 rounded">
+                            <option value="all">All Positions</option>
+                            <option value="PG">PG</option>
+                            <option value="SG">SG</option>
+                            <option value="SF">SF</option>
+                            <option value="PF">PF</option>
+                            <option value="C">C</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">Status</label>
+                        <select id="filter-status" onchange="filterRoster()" class="bg-gray-900 border border-gray-700 text-sm px-3 py-1.5 rounded">
+                            <option value="all">All</option>
+                            <option value="healthy">Healthy</option>
+                            <option value="injured">Injured</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">Contract</label>
+                        <select id="filter-contract" onchange="filterRoster()" class="bg-gray-900 border border-gray-700 text-sm px-3 py-1.5 rounded">
+                            <option value="all">All</option>
+                            <option value="expiring">Expiring</option>
+                            <option value="multi">Multi-Year</option>
+                        </select>
+                    </div>
+                    <button onclick="generateRoster()" class="btn-primary bg-blue-700 text-white px-4 py-1.5 text-sm ml-auto">
+                        Generate Roster
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Players Table (Left - 2 columns) -->
+                <div class="lg:col-span-2">
+                    <div class="bg-gray-800 border border-gray-700">
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-900 text-gray-400 text-xs">
+                                    <tr>
+                                        <th class="text-left p-2 sortable-header" onclick="sortRoster('#')">#</th>
+                                        <th class="text-left p-2 sortable-header" onclick="sortRoster('name')">Name</th>
+                                        <th class="text-center p-2 sortable-header" onclick="sortRoster('position')">Pos</th>
+                                        <th class="text-center p-2 sortable-header" onclick="sortRoster('age')">Age</th>
+                                        <th class="text-center p-2 sortable-header" onclick="sortRoster('ovr')">OVR</th>
+                                        <th class="text-center p-2 sortable-header" onclick="sortRoster('pot')">POT</th>
+                                        <th class="text-left p-2">Archetype</th>
+                                        <th class="text-center p-2">Ht</th>
+                                        <th class="text-center p-2">Contract</th>
+                                        <th class="text-center p-2">Status</th>
+                                        <th class="text-center p-2">Morale</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="roster-table-body" class="text-xs">
+                                    <tr>
+                                        <td colspan="11" class="p-4 text-center text-gray-500">Generate a roster to begin</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Depth Chart & Minutes (Right - 1 column) -->
+                <div class="space-y-6">
+                    <!-- Depth Chart -->
+                    <div class="bg-gray-800 border border-gray-700 p-4">
+                        <h3 class="text-lg font-light mb-4">Depth Chart</h3>
+                        <div class="space-y-3" id="depth-chart">
+                            <!-- PG -->
+                            <div>
+                                <div class="text-xs text-gray-400 mb-1">Point Guard</div>
+                                <div class="space-y-1">
+                                    <div class="depth-slot" data-position="PG" data-slot="starter">Starter</div>
+                                    <div class="depth-slot" data-position="PG" data-slot="bench1">Bench 1</div>
+                                    <div class="depth-slot" data-position="PG" data-slot="bench2">Bench 2</div>
+                                </div>
+                            </div>
+                            <!-- SG -->
+                            <div>
+                                <div class="text-xs text-gray-400 mb-1">Shooting Guard</div>
+                                <div class="space-y-1">
+                                    <div class="depth-slot" data-position="SG" data-slot="starter">Starter</div>
+                                    <div class="depth-slot" data-position="SG" data-slot="bench1">Bench 1</div>
+                                    <div class="depth-slot" data-position="SG" data-slot="bench2">Bench 2</div>
+                                </div>
+                            </div>
+                            <!-- SF -->
+                            <div>
+                                <div class="text-xs text-gray-400 mb-1">Small Forward</div>
+                                <div class="space-y-1">
+                                    <div class="depth-slot" data-position="SF" data-slot="starter">Starter</div>
+                                    <div class="depth-slot" data-position="SF" data-slot="bench1">Bench 1</div>
+                                    <div class="depth-slot" data-position="SF" data-slot="bench2">Bench 2</div>
+                                </div>
+                            </div>
+                            <!-- PF -->
+                            <div>
+                                <div class="text-xs text-gray-400 mb-1">Power Forward</div>
+                                <div class="space-y-1">
+                                    <div class="depth-slot" data-position="PF" data-slot="starter">Starter</div>
+                                    <div class="depth-slot" data-position="PF" data-slot="bench1">Bench 1</div>
+                                    <div class="depth-slot" data-position="PF" data-slot="bench2">Bench 2</div>
+                                </div>
+                            </div>
+                            <!-- C -->
+                            <div>
+                                <div class="text-xs text-gray-400 mb-1">Center</div>
+                                <div class="space-y-1">
+                                    <div class="depth-slot" data-position="C" data-slot="starter">Starter</div>
+                                    <div class="depth-slot" data-position="C" data-slot="bench1">Bench 1</div>
+                                    <div class="depth-slot" data-position="C" data-slot="bench2">Bench 2</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Minutes Distribution -->
+                    <div class="bg-gray-800 border border-gray-700 p-4">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-light">Minutes</h3>
+                            <button onclick="balanceMinutes()" class="text-blue-400 hover:text-blue-300 text-xs">
+                                Balance Minutes
+                            </button>
+                        </div>
+                        <div class="space-y-3 text-xs" id="minutes-editor">
+                            <div class="text-center text-gray-400">
+                                Total: <span id="total-minutes" class="text-white">0</span> / 240
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="saveDepthChart()" class="w-full btn-primary bg-blue-700 text-white px-4 py-2 text-sm">
+                        Save Depth Chart
+                    </button>
                 </div>
             </div>
         </div>
@@ -778,6 +1003,172 @@
     </main>
     </div>
     <!-- End Game Screen -->
+
+    <!-- Player Modal -->
+    <div id="player-modal" class="player-modal" onclick="closePlayerModal(event)">
+        <div class="player-modal-content" onclick="event.stopPropagation()">
+            <!-- Modal Header -->
+            <div class="bg-gray-800 border-b border-gray-700 p-4 flex justify-between items-center">
+                <h2 class="text-2xl font-light" id="modal-player-name">Player Name</h2>
+                <button onclick="closePlayerModal()" class="text-gray-400 hover:text-gray-100 text-2xl leading-none">×</button>
+            </div>
+
+            <!-- Modal Tabs -->
+            <div class="bg-gray-800 border-b border-gray-700">
+                <div class="flex gap-1 px-4">
+                    <button onclick="showPlayerTab('overview')" class="player-tab px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-blue-700" id="player-tab-overview">Overview</button>
+                    <button onclick="showPlayerTab('ratings')" class="player-tab px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="player-tab-ratings">Ratings</button>
+                    <button onclick="showPlayerTab('contract')" class="player-tab px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="player-tab-contract">Contract</button>
+                    <button onclick="showPlayerTab('health')" class="player-tab px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="player-tab-health">Health & Form</button>
+                    <button onclick="showPlayerTab('actions')" class="player-tab px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="player-tab-actions">Actions</button>
+                </div>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6">
+                <!-- Overview Tab -->
+                <div id="player-content-overview" class="player-tab-content">
+                    <div class="grid grid-cols-2 gap-6 mb-6">
+                        <div class="text-center">
+                            <div class="text-5xl font-light mb-2" id="modal-overall">85</div>
+                            <div class="text-sm text-gray-400">Overall Rating</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-5xl font-light mb-2" id="modal-potential">90</div>
+                            <div class="text-sm text-gray-400">Potential</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div><span class="text-gray-400">Position:</span> <span id="modal-position">PG</span></div>
+                        <div><span class="text-gray-400">Age:</span> <span id="modal-age">25</span></div>
+                        <div><span class="text-gray-400">Height:</span> <span id="modal-height">6'3"</span></div>
+                        <div><span class="text-gray-400">Weight:</span> <span id="modal-weight">185 lbs</span></div>
+                        <div><span class="text-gray-400">Handedness:</span> <span id="modal-hand">Right</span></div>
+                        <div><span class="text-gray-400">Archetype:</span> <span class="text-blue-400" id="modal-archetype">Sharpshooter</span></div>
+                    </div>
+                </div>
+
+                <!-- Ratings Tab -->
+                <div id="player-content-ratings" class="player-tab-content hidden">
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Inside Scoring</span>
+                            <span class="rating-badge" id="rating-inside">B</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Mid-Range</span>
+                            <span class="rating-badge" id="rating-mid">A</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Three-Point</span>
+                            <span class="rating-badge" id="rating-3pt">A</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Playmaking</span>
+                            <span class="rating-badge" id="rating-playmaking">B</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Perimeter Defense</span>
+                            <span class="rating-badge" id="rating-perim-d">C</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Interior Defense</span>
+                            <span class="rating-badge" id="rating-int-d">D</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Rebounding</span>
+                            <span class="rating-badge" id="rating-rebounding">C</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Athleticism</span>
+                            <span class="rating-badge" id="rating-athleticism">B</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-400">Basketball IQ</span>
+                            <span class="rating-badge" id="rating-iq">A</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contract Tab -->
+                <div id="player-content-contract" class="player-tab-content hidden">
+                    <div class="space-y-4 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Contract Years</span>
+                            <span id="contract-years">3 years</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Salary per Year</span>
+                            <span id="contract-salary">$5.2M</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Total Value</span>
+                            <span id="contract-total">$15.6M</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Bird Rights</span>
+                            <span id="contract-bird">Yes</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Cap Hold</span>
+                            <span id="contract-hold">$5.2M</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Health & Form Tab -->
+                <div id="player-content-health" class="player-tab-content hidden">
+                    <div class="space-y-4 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Injury Status</span>
+                            <span id="health-status" class="text-green-400">Healthy</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Est. Return</span>
+                            <span id="health-return">-</span>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-400">Fatigue</span>
+                                <span id="health-fatigue">15%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="health-fatigue-bar" style="width: 15%; background-color: #10B981;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-400">Morale</span>
+                                <span id="health-morale">85%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="health-morale-bar" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Recent Form</span>
+                            <span id="health-form">Good</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions Tab -->
+                <div id="player-content-actions" class="player-tab-content hidden">
+                    <div class="space-y-3">
+                        <button onclick="setAsStarter()" class="w-full btn-primary bg-blue-700 text-white px-4 py-2 text-sm">
+                            Set as Starter
+                        </button>
+                        <button class="w-full bg-gray-700 text-gray-400 px-4 py-2 text-sm cursor-not-allowed" disabled>
+                            Trade Player
+                        </button>
+                        <button class="w-full bg-gray-700 text-gray-400 px-4 py-2 text-sm cursor-not-allowed" disabled>
+                            Waive Player
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Game State
@@ -1451,6 +1842,12 @@
                         applyTeamHeaderGradient();
                     }, 50);
                 }
+                
+                // Update roster display when switching to roster tab
+                if (tabName === 'roster') {
+                    updateRosterDisplay();
+                    updateDepthChart();
+                }
             }
         }
 
@@ -1485,7 +1882,7 @@
         }
 
         // Generate Random Player
-        function generatePlayer(position, isStarter = false) {
+        function generatePlayer(position, isStarter = false, jerseyNum = 0) {
             const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
             const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
             const age = 19 + Math.floor(Math.random() * 15);
@@ -1497,53 +1894,656 @@
                 overall = 55 + Math.floor(Math.random() * 25); // 55-79
             }
             
+            const potential = Math.min(99, overall + Math.floor(Math.random() * 15));
+            const archetypes = ['Sharpshooter', 'Playmaker', 'Slasher', 'Lockdown Defender', 'Two-Way', 'Post Scorer', 'Stretch Big', '3&D Wing'];
+            const heights = { 'PG': '6\'1"', 'SG': '6\'5"', 'SF': '6\'8"', 'PF': '6\'10"', 'C': '7\'0"' };
+            const weights = { 'PG': '185', 'SG': '205', 'SF': '220', 'PF': '240', 'C': '260' };
+            
             return {
+                id: Date.now() + Math.random(),
+                jersey: jerseyNum,
                 name: `${firstName} ${lastName}`,
                 position: position,
                 age: age,
                 overall: overall,
+                potential: potential,
+                archetype: archetypes[Math.floor(Math.random() * archetypes.length)],
+                height: heights[position] || '6\'6"',
+                weight: weights[position] || '210',
+                handedness: Math.random() > 0.1 ? 'Right' : 'Left',
                 ppg: (overall * 0.2 + Math.random() * 5).toFixed(1),
                 rpg: (overall * 0.1 + Math.random() * 3).toFixed(1),
                 apg: (overall * 0.08 + Math.random() * 2).toFixed(1),
-                salary: Math.floor((overall * 100000) + Math.random() * 5000000)
+                salary: Math.floor((overall * 100000) + Math.random() * 5000000),
+                contractYears: 1 + Math.floor(Math.random() * 4),
+                status: Math.random() > 0.9 ? 'Injured' : 'Healthy',
+                injury: Math.random() > 0.9 ? 'Minor Ankle' : null,
+                daysOut: Math.random() > 0.9 ? Math.floor(Math.random() * 14) : 0,
+                morale: 60 + Math.floor(Math.random() * 40),
+                fatigue: Math.floor(Math.random() * 30),
+                minutes: 0,
+                // Ratings
+                inside: 50 + Math.floor(Math.random() * 50),
+                mid: 50 + Math.floor(Math.random() * 50),
+                three: 50 + Math.floor(Math.random() * 50),
+                playmaking: 50 + Math.floor(Math.random() * 50),
+                perimD: 50 + Math.floor(Math.random() * 50),
+                intD: 50 + Math.floor(Math.random() * 50),
+                rebounding: 50 + Math.floor(Math.random() * 50),
+                athleticism: 50 + Math.floor(Math.random() * 50),
+                iq: 50 + Math.floor(Math.random() * 50)
             };
         }
 
         // Generate Roster
         function generateRoster() {
             gameState.roster = [
-                generatePlayer('PG', true),
-                generatePlayer('SG', true),
-                generatePlayer('SF', true),
-                generatePlayer('PF', true),
-                generatePlayer('C', true),
-                generatePlayer('PG', false),
-                generatePlayer('SG', false),
-                generatePlayer('SF', false),
-                generatePlayer('PF', false),
-                generatePlayer('C', false),
-                generatePlayer('SG', false),
-                generatePlayer('SF', false)
+                generatePlayer('PG', true, 1),
+                generatePlayer('SG', true, 2),
+                generatePlayer('SF', true, 3),
+                generatePlayer('PF', true, 4),
+                generatePlayer('C', true, 5),
+                generatePlayer('PG', false, 10),
+                generatePlayer('SG', false, 11),
+                generatePlayer('SF', false, 12),
+                generatePlayer('PF', false, 13),
+                generatePlayer('C', false, 14),
+                generatePlayer('SG', false, 20),
+                generatePlayer('SF', false, 21)
             ];
             
             updateRosterDisplay();
+            updateDepthChart();
         }
 
         // Update Roster Display
         function updateRosterDisplay() {
-            const tbody = document.getElementById('roster-table');
-            tbody.innerHTML = gameState.roster.map(player => `
-                <tr class="player-row border-b border-gray-700">
-                    <td class="p-3">${player.name}</td>
-                    <td class="p-3">${player.position}</td>
-                    <td class="p-3 text-center">${player.age}</td>
-                    <td class="p-3 text-center"><span class="text-blue-400">${player.overall}</span></td>
-                    <td class="p-3 text-center">${player.ppg}</td>
-                    <td class="p-3 text-center">${player.rpg}</td>
-                    <td class="p-3 text-center">${player.apg}</td>
-                    <td class="p-3 text-right">$${(player.salary / 1000000).toFixed(1)}M</td>
+            const tbody = document.getElementById('roster-table-body');
+            const yourTeamName = gameState.selectedTeam ? 
+                `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}` : 
+                'Your Team';
+            const yourTeam = gameState.standings.find(t => t.team === yourTeamName) || { wins: 0, losses: 0 };
+            
+            document.getElementById('roster-team-name').textContent = yourTeamName;
+            document.getElementById('roster-record').textContent = `${yourTeam.wins}-${yourTeam.losses}`;
+            document.getElementById('roster-player-count').textContent = gameState.roster.length;
+            
+            if (gameState.roster.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="11" class="p-4 text-center text-gray-500">Generate a roster to begin</td></tr>';
+                return;
+            }
+            
+            const getOvrClass = (ovr) => {
+                if (ovr >= 80) return 'ovr-high';
+                if (ovr >= 65) return 'ovr-mid';
+                return 'ovr-low';
+            };
+            
+            const getMoraleIcon = (morale) => {
+                if (morale >= 80) return '😊';
+                if (morale >= 50) return '😐';
+                return '😞';
+            };
+            
+            tbody.innerHTML = gameState.roster.map((player, index) => `
+                <tr class="roster-row border-b border-gray-700" onclick="openPlayerModal(${index})">
+                    <td class="p-2 text-gray-400">${player.jersey}</td>
+                    <td class="p-2 font-medium">${player.name}</td>
+                    <td class="p-2 text-center text-blue-400">${player.position}</td>
+                    <td class="p-2 text-center">${player.age}</td>
+                    <td class="p-2 text-center ${getOvrClass(player.overall)}">${player.overall}</td>
+                    <td class="p-2 text-center text-gray-400">${player.potential}</td>
+                    <td class="p-2 text-xs">${player.archetype}</td>
+                    <td class="p-2 text-center text-xs">${player.height}</td>
+                    <td class="p-2 text-center text-xs">${player.contractYears}yr / $${(player.salary/1000000).toFixed(1)}M</td>
+                    <td class="p-2 text-center">
+                        ${player.status === 'Healthy' ? 
+                            '<span class="text-green-400 text-xs">✓</span>' : 
+                            '<span class="text-red-400 text-xs">INJ</span>'
+                        }
+                    </td>
+                    <td class="p-2 text-center">${getMoraleIcon(player.morale)}</td>
                 </tr>
             `).join('');
+        }
+
+        // Filter Roster
+        let rosterFilters = { position: 'all', status: 'all', contract: 'all' };
+        let rosterSort = { column: null, ascending: true };
+
+        function filterRoster() {
+            rosterFilters.position = document.getElementById('filter-position').value;
+            rosterFilters.status = document.getElementById('filter-status').value;
+            rosterFilters.contract = document.getElementById('filter-contract').value;
+            
+            let filtered = [...gameState.roster];
+            
+            if (rosterFilters.position !== 'all') {
+                filtered = filtered.filter(p => p.position === rosterFilters.position);
+            }
+            
+            if (rosterFilters.status === 'healthy') {
+                filtered = filtered.filter(p => p.status === 'Healthy');
+            } else if (rosterFilters.status === 'injured') {
+                filtered = filtered.filter(p => p.status === 'Injured');
+            }
+            
+            if (rosterFilters.contract === 'expiring') {
+                filtered = filtered.filter(p => p.contractYears === 1);
+            } else if (rosterFilters.contract === 'multi') {
+                filtered = filtered.filter(p => p.contractYears > 1);
+            }
+            
+            // Re-apply current sort
+            if (rosterSort.column) {
+                sortRosterArray(filtered, rosterSort.column);
+            }
+            
+            displayFilteredRoster(filtered);
+        }
+
+        function sortRoster(column) {
+            if (rosterSort.column === column) {
+                rosterSort.ascending = !rosterSort.ascending;
+            } else {
+                rosterSort.column = column;
+                rosterSort.ascending = true;
+            }
+            
+            let sorted = [...gameState.roster];
+            sortRosterArray(sorted, column);
+            displayFilteredRoster(sorted);
+        }
+
+        function sortRosterArray(arr, column) {
+            const columnMap = {
+                '#': 'jersey',
+                'name': 'name',
+                'position': 'position',
+                'age': 'age',
+                'ovr': 'overall',
+                'pot': 'potential'
+            };
+            
+            const key = columnMap[column] || column;
+            
+            arr.sort((a, b) => {
+                let aVal = a[key];
+                let bVal = b[key];
+                
+                if (typeof aVal === 'string') {
+                    aVal = aVal.toLowerCase();
+                    bVal = bVal.toLowerCase();
+                }
+                
+                if (rosterSort.ascending) {
+                    return aVal > bVal ? 1 : -1;
+                } else {
+                    return aVal < bVal ? 1 : -1;
+                }
+            });
+        }
+
+        function displayFilteredRoster(players) {
+            const tbody = document.getElementById('roster-table-body');
+            
+            if (players.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="11" class="p-4 text-center text-gray-500">No players match filters</td></tr>';
+                return;
+            }
+            
+            const getOvrClass = (ovr) => {
+                if (ovr >= 80) return 'ovr-high';
+                if (ovr >= 65) return 'ovr-mid';
+                return 'ovr-low';
+            };
+            
+            const getMoraleIcon = (morale) => {
+                if (morale >= 80) return '😊';
+                if (morale >= 50) return '😐';
+                return '😞';
+            };
+            
+            tbody.innerHTML = players.map((player) => {
+                const index = gameState.roster.findIndex(p => p.id === player.id);
+                return `
+                <tr class="roster-row border-b border-gray-700" onclick="openPlayerModal(${index})">
+                    <td class="p-2 text-gray-400">${player.jersey}</td>
+                    <td class="p-2 font-medium">${player.name}</td>
+                    <td class="p-2 text-center text-blue-400">${player.position}</td>
+                    <td class="p-2 text-center">${player.age}</td>
+                    <td class="p-2 text-center ${getOvrClass(player.overall)}">${player.overall}</td>
+                    <td class="p-2 text-center text-gray-400">${player.potential}</td>
+                    <td class="p-2 text-xs">${player.archetype}</td>
+                    <td class="p-2 text-center text-xs">${player.height}</td>
+                    <td class="p-2 text-center text-xs">${player.contractYears}yr / $${(player.salary/1000000).toFixed(1)}M</td>
+                    <td class="p-2 text-center">
+                        ${player.status === 'Healthy' ? 
+                            '<span class="text-green-400 text-xs">✓</span>' : 
+                            '<span class="text-red-400 text-xs">INJ</span>'
+                        }
+                    </td>
+                    <td class="p-2 text-center">${getMoraleIcon(player.morale)}</td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        // Depth Chart Management
+        function updateDepthChart() {
+            if (!gameState.depthChart) {
+                gameState.depthChart = { PG: [], SG: [], SF: [], PF: [], C: [] };
+                autoAssignDepthChart();
+            }
+            
+            const positions = ['PG', 'SG', 'SF', 'PF', 'C'];
+            positions.forEach(pos => {
+                const container = document.getElementById(`depth-${pos.toLowerCase()}`);
+                const posPlayers = gameState.depthChart[pos] || [];
+                
+                container.innerHTML = posPlayers.slice(0, 3).map((playerId, index) => {
+                    const player = gameState.roster.find(p => p.id === playerId);
+                    if (!player) return '';
+                    
+                    const starterBadge = index === 0 ? '<span class="text-xs text-yellow-400">★</span>' : '';
+                    return `
+                        <div class="depth-slot bg-gray-700 p-2 rounded mb-1 cursor-pointer hover:bg-gray-600" 
+                             onclick="removeFromDepth('${pos}', ${index})">
+                            ${starterBadge} ${player.jersey} ${player.name}
+                            <span class="text-xs text-gray-400">(${player.overall})</span>
+                        </div>
+                    `;
+                }).join('') || '<div class="text-xs text-gray-500">No players assigned</div>';
+            });
+            
+            updateMinutesDisplay();
+        }
+
+        function autoAssignDepthChart() {
+            const positions = ['PG', 'SG', 'SF', 'PF', 'C'];
+            gameState.depthChart = { PG: [], SG: [], SF: [], PF: [], C: [] };
+            
+            positions.forEach(pos => {
+                const posPlayers = gameState.roster
+                    .filter(p => p.position === pos)
+                    .sort((a, b) => b.overall - a.overall)
+                    .slice(0, 3);
+                
+                gameState.depthChart[pos] = posPlayers.map(p => p.id);
+            });
+            
+            distributeMinutes();
+            updateDepthChart();
+            saveLeague();
+        }
+
+        function removeFromDepth(position, index) {
+            if (gameState.depthChart[position]) {
+                gameState.depthChart[position].splice(index, 1);
+                updateDepthChart();
+                saveLeague();
+            }
+        }
+
+        function addToDepth(playerId, position) {
+            if (!gameState.depthChart[position]) {
+                gameState.depthChart[position] = [];
+            }
+            if (!gameState.depthChart[position].includes(playerId)) {
+                gameState.depthChart[position].push(playerId);
+                updateDepthChart();
+                saveLeague();
+            }
+        }
+
+        // Minutes Distribution
+        function updateMinutesDisplay() {
+            const container = document.getElementById('minutes-distribution');
+            const starters = [];
+            
+            ['PG', 'SG', 'SF', 'PF', 'C'].forEach(pos => {
+                if (gameState.depthChart[pos] && gameState.depthChart[pos].length > 0) {
+                    const playerId = gameState.depthChart[pos][0];
+                    const player = gameState.roster.find(p => p.id === playerId);
+                    if (player) starters.push(player);
+                }
+            });
+            
+            container.innerHTML = starters.map(player => `
+                <div class="mb-3">
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm">${player.jersey} ${player.name} (${player.position})</span>
+                        <span class="text-sm text-blue-400" id="minutes-value-${player.id}">${player.minutes || 30}</span>
+                    </div>
+                    <input type="range" min="0" max="48" value="${player.minutes || 30}" 
+                           class="minutes-slider w-full" 
+                           oninput="updatePlayerMinutes(${player.id}, this.value)">
+                </div>
+            `).join('');
+            
+            updateTotalMinutes();
+        }
+
+        function updatePlayerMinutes(playerId, minutes) {
+            const player = gameState.roster.find(p => p.id === playerId);
+            if (player) {
+                player.minutes = parseInt(minutes);
+                document.getElementById(`minutes-value-${playerId}`).textContent = minutes;
+                updateTotalMinutes();
+                saveLeague();
+            }
+        }
+
+        function updateTotalMinutes() {
+            const starters = [];
+            ['PG', 'SG', 'SF', 'PF', 'C'].forEach(pos => {
+                if (gameState.depthChart[pos] && gameState.depthChart[pos].length > 0) {
+                    const playerId = gameState.depthChart[pos][0];
+                    const player = gameState.roster.find(p => p.id === playerId);
+                    if (player) starters.push(player);
+                }
+            });
+            
+            const total = starters.reduce((sum, p) => sum + (p.minutes || 30), 0);
+            const totalElement = document.getElementById('total-minutes');
+            if (totalElement) {
+                totalElement.textContent = total;
+                totalElement.className = total === 240 ? 'text-green-400' : 'text-red-400';
+            }
+        }
+
+        function distributeMinutes() {
+            const starters = [];
+            ['PG', 'SG', 'SF', 'PF', 'C'].forEach(pos => {
+                if (gameState.depthChart[pos] && gameState.depthChart[pos].length > 0) {
+                    const playerId = gameState.depthChart[pos][0];
+                    const player = gameState.roster.find(p => p.id === playerId);
+                    if (player) starters.push(player);
+                }
+            });
+            
+            // Distribute 240 minutes among starters
+            const baseMinutes = 30;
+            const totalOverall = starters.reduce((sum, p) => sum + p.overall, 0);
+            
+            starters.forEach(player => {
+                const weight = player.overall / totalOverall;
+                player.minutes = Math.round(baseMinutes + (weight * 90)); // 30 + weighted portion of remaining 90
+            });
+            
+            // Balance to exactly 240
+            let currentTotal = starters.reduce((sum, p) => sum + p.minutes, 0);
+            if (currentTotal !== 240) {
+                const diff = 240 - currentTotal;
+                starters[0].minutes += diff;
+            }
+            
+            updateMinutesDisplay();
+            saveLeague();
+        }
+
+        // Player Modal Functions
+        let currentPlayerIndex = null;
+
+        function openPlayerModal(playerIndex) {
+            currentPlayerIndex = playerIndex;
+            const player = gameState.roster[playerIndex];
+            if (!player) return;
+            
+            // Update modal header
+            document.getElementById('modal-player-name').textContent = player.name;
+            document.getElementById('modal-player-position').textContent = player.position;
+            document.getElementById('modal-player-overall').textContent = player.overall;
+            
+            // Show Overview tab by default
+            showPlayerTab('overview');
+            
+            // Populate Overview tab
+            document.getElementById('modal-overview').innerHTML = `
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <div class="text-xs text-gray-400 mb-1">Age</div>
+                        <div class="text-lg">${player.age} years old</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400 mb-1">Jersey</div>
+                        <div class="text-lg">#${player.jersey}</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400 mb-1">Height</div>
+                        <div class="text-lg">${player.height}</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400 mb-1">Weight</div>
+                        <div class="text-lg">${player.weight} lbs</div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <div class="text-xs text-gray-400 mb-1">Archetype</div>
+                    <div class="text-blue-400">${player.archetype}</div>
+                </div>
+                <div class="mb-4">
+                    <div class="text-xs text-gray-400 mb-1">Handedness</div>
+                    <div>${player.handedness}</div>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="text-center">
+                        <div class="text-2xl text-blue-400">${player.ppg}</div>
+                        <div class="text-xs text-gray-400">PPG</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl text-blue-400">${player.rpg}</div>
+                        <div class="text-xs text-gray-400">RPG</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl text-blue-400">${player.apg}</div>
+                        <div class="text-xs text-gray-400">APG</div>
+                    </div>
+                </div>
+            `;
+            
+            // Populate Ratings tab
+            const getRatingColor = (rating) => {
+                if (rating >= 80) return 'bg-green-600';
+                if (rating >= 65) return 'bg-blue-600';
+                if (rating >= 50) return 'bg-yellow-600';
+                return 'bg-gray-600';
+            };
+            
+            document.getElementById('modal-ratings').innerHTML = `
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="flex justify-between items-center">
+                        <span>Inside Scoring</span>
+                        <span class="rating-badge ${getRatingColor(player.ratings.inside)}">${player.ratings.inside}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>Mid-Range</span>
+                        <span class="rating-badge ${getRatingColor(player.ratings.mid)}">${player.ratings.mid}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>Three-Point</span>
+                        <span class="rating-badge ${getRatingColor(player.ratings.three)}">${player.ratings.three}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>Playmaking</span>
+                        <span class="rating-badge ${getRatingColor(player.ratings.playmaking)}">${player.ratings.playmaking}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>Perimeter Defense</span>
+                        <span class="rating-badge ${getRatingColor(player.ratings.perimD)}">${player.ratings.perimD}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>Interior Defense</span>
+                        <span class="rating-badge ${getRatingColor(player.ratings.intD)}">${player.ratings.intD}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>Rebounding</span>
+                        <span class="rating-badge ${getRatingColor(player.ratings.rebounding)}">${player.ratings.rebounding}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>Athleticism</span>
+                        <span class="rating-badge ${getRatingColor(player.ratings.athleticism)}">${player.ratings.athleticism}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>Basketball IQ</span>
+                        <span class="rating-badge ${getRatingColor(player.ratings.iq)}">${player.ratings.iq}</span>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-700">
+                    <div class="flex justify-between">
+                        <span>Potential</span>
+                        <span class="text-yellow-400">${player.potential}</span>
+                    </div>
+                </div>
+            `;
+            
+            // Populate Contract tab
+            document.getElementById('modal-contract').innerHTML = `
+                <div class="mb-4">
+                    <div class="text-xs text-gray-400 mb-1">Annual Salary</div>
+                    <div class="text-2xl text-green-400">$${(player.salary/1000000).toFixed(2)}M</div>
+                </div>
+                <div class="mb-4">
+                    <div class="text-xs text-gray-400 mb-1">Contract Length</div>
+                    <div class="text-lg">${player.contractYears} ${player.contractYears === 1 ? 'year' : 'years'} remaining</div>
+                </div>
+                <div class="mb-4">
+                    <div class="text-xs text-gray-400 mb-1">Total Value</div>
+                    <div class="text-lg">$${(player.salary * player.contractYears / 1000000).toFixed(2)}M</div>
+                </div>
+                ${player.contractYears === 1 ? 
+                    '<div class="bg-yellow-900 bg-opacity-30 border border-yellow-600 rounded p-3 text-sm"><span class="text-yellow-400">⚠️</span> Expiring Contract</div>' : 
+                    ''
+                }
+            `;
+            
+            // Populate Health & Form tab
+            const getMoraleColor = (morale) => {
+                if (morale >= 80) return 'text-green-400';
+                if (morale >= 50) return 'text-yellow-400';
+                return 'text-red-400';
+            };
+            
+            const getFatigueColor = (fatigue) => {
+                if (fatigue >= 60) return 'text-red-400';
+                if (fatigue >= 30) return 'text-yellow-400';
+                return 'text-green-400';
+            };
+            
+            document.getElementById('modal-health').innerHTML = `
+                <div class="mb-4">
+                    <div class="text-xs text-gray-400 mb-1">Health Status</div>
+                    <div class="text-lg ${player.status === 'Healthy' ? 'text-green-400' : 'text-red-400'}">
+                        ${player.status}
+                    </div>
+                </div>
+                ${player.status === 'Injured' ? `
+                    <div class="mb-4">
+                        <div class="text-xs text-gray-400 mb-1">Injury Details</div>
+                        <div>${player.injuryType}</div>
+                        <div class="text-sm text-gray-400 mt-1">${player.injuryDuration} games remaining</div>
+                    </div>
+                ` : ''}
+                <div class="mb-4">
+                    <div class="text-xs text-gray-400 mb-1">Morale</div>
+                    <div class="flex items-center gap-2">
+                        <div class="flex-1 bg-gray-700 rounded-full h-2">
+                            <div class="${getMoraleColor(player.morale).replace('text-', 'bg-')} h-2 rounded-full" 
+                                 style="width: ${player.morale}%"></div>
+                        </div>
+                        <span class="${getMoraleColor(player.morale)}">${player.morale}</span>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <div class="text-xs text-gray-400 mb-1">Fatigue</div>
+                    <div class="flex items-center gap-2">
+                        <div class="flex-1 bg-gray-700 rounded-full h-2">
+                            <div class="${getFatigueColor(player.fatigue).replace('text-', 'bg-')} h-2 rounded-full" 
+                                 style="width: ${player.fatigue}%"></div>
+                        </div>
+                        <span class="${getFatigueColor(player.fatigue)}">${player.fatigue}</span>
+                    </div>
+                </div>
+            `;
+            
+            // Populate Actions tab
+            const isStarter = ['PG', 'SG', 'SF', 'PF', 'C'].some(pos => 
+                gameState.depthChart[pos] && gameState.depthChart[pos][0] === player.id
+            );
+            
+            document.getElementById('modal-actions').innerHTML = `
+                <div class="space-y-3">
+                    ${!isStarter ? `
+                        <button onclick="setAsStarter(${playerIndex})" 
+                                class="w-full bg-blue-700 hover:bg-blue-600 p-3 rounded">
+                            Set as Starter
+                        </button>
+                    ` : '<div class="text-green-400 text-center p-3">✓ Starting Lineup</div>'}
+                    <button onclick="closePlayerModal()" 
+                            class="w-full bg-gray-700 hover:bg-gray-600 p-3 rounded">
+                        Close
+                    </button>
+                </div>
+            `;
+            
+            // Show modal
+            document.getElementById('player-modal').classList.remove('hidden');
+        }
+
+        function closePlayerModal() {
+            document.getElementById('player-modal').classList.add('hidden');
+            currentPlayerIndex = null;
+        }
+
+        function showPlayerTab(tabName) {
+            // Hide all tabs
+            ['overview', 'ratings', 'contract', 'health', 'actions'].forEach(tab => {
+                document.getElementById(`modal-${tab}`).classList.add('hidden');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.modal-tab-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-700');
+                btn.classList.add('bg-gray-700');
+            });
+            
+            // Show selected tab
+            document.getElementById(`modal-${tabName}`).classList.remove('hidden');
+            
+            // Highlight active button
+            const activeBtn = Array.from(document.querySelectorAll('.modal-tab-btn'))
+                .find(btn => btn.textContent.toLowerCase().includes(tabName));
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-gray-700');
+                activeBtn.classList.add('bg-blue-700');
+            }
+        }
+
+        function setAsStarter(playerIndex) {
+            const player = gameState.roster[playerIndex];
+            if (!player) return;
+            
+            const position = player.position;
+            
+            // Remove player from depth chart if already there
+            Object.keys(gameState.depthChart).forEach(pos => {
+                const index = gameState.depthChart[pos].indexOf(player.id);
+                if (index !== -1) {
+                    gameState.depthChart[pos].splice(index, 1);
+                }
+            });
+            
+            // Add as first in position depth chart
+            if (!gameState.depthChart[position]) {
+                gameState.depthChart[position] = [];
+            }
+            gameState.depthChart[position].unshift(player.id);
+            
+            // Update displays
+            updateDepthChart();
+            distributeMinutes();
+            closePlayerModal();
+            saveLeague();
         }
 
         // Initialize Standings
