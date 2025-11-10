@@ -1,3101 +1,648 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basketball GM Simulator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        }
-        .stat-card {
-            transition: all 0.2s ease;
-        }
-        .stat-card:hover {
-            background-color: rgb(30, 41, 59);
-        }
-        .btn-primary {
-            transition: background-color 0.2s ease;
-        }
-        .btn-primary:hover {
-            background-color: rgb(29, 78, 216);
-        }
-        .player-row:hover {
-            background-color: rgb(30, 41, 59);
-        }
-        .team-card {
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-        .team-card:hover {
-            transform: translateY(-2px);
-        }
-        .team-card.selected {
-            border-color: rgb(29, 78, 216);
-            background-color: rgba(29, 78, 216, 0.1);
-        }
-        .screen {
-            display: none;
-        }
-        .screen.active {
-            display: block;
-        }
-        .fade-in {
-            animation: fadeIn 0.3s ease-in;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            animation: fadeIn 0.2s ease-in;
-        }
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-content {
-            background-color: rgb(31, 41, 55);
-            border: 1px solid rgb(55, 65, 81);
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        .settings-btn {
-            transition: transform 0.2s ease;
-        }
-        .settings-btn:hover {
-            transform: rotate(45deg);
-        }
-        .progress-bar {
-            height: 8px;
-            background-color: rgb(55, 65, 81);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background-color: rgb(29, 78, 216);
-            transition: width 0.3s ease;
-        }
-        .trend-up {
-            color: #10B981;
-        }
-        .trend-down {
-            color: #EF4444;
-        }
-        .inbox-item {
-            transition: background-color 0.2s ease;
-        }
-        .inbox-item:hover {
-            background-color: rgb(55, 65, 81);
-        }
-        .team-header-gradient {
-            background: linear-gradient(90deg, #1E1E1E, #2A2A2A);
-            transition: background 300ms ease;
-            position: relative;
-        }
-        .team-header-overlay {
-            background: rgba(0, 0, 0, 0.25);
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
-        .team-header-content {
-            position: relative;
-            z-index: 1;
-        }
-        .roster-row {
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        .roster-row:hover {
-            background-color: rgb(30, 41, 59);
-        }
-        .ovr-high {
-            color: #10B981;
-        }
-        .ovr-mid {
-            color: #FBBF24;
-        }
-        .ovr-low {
-            color: #EF4444;
-        }
-        .sortable-header {
-            cursor: pointer;
-            user-select: none;
-        }
-        .sortable-header:hover {
-            color: rgb(96, 165, 250);
-        }
-        .minutes-slider {
-            width: 100%;
-            height: 4px;
-            background: rgb(55, 65, 81);
-            border-radius: 2px;
-            outline: none;
-        }
-        .minutes-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 12px;
-            height: 12px;
-            background: rgb(29, 78, 216);
-            cursor: pointer;
-            border-radius: 50%;
-        }
-        .minutes-slider::-moz-range-thumb {
-            width: 12px;
-            height: 12px;
-            background: rgb(29, 78, 216);
-            cursor: pointer;
-            border-radius: 50%;
-            border: none;
-        }
-        .depth-slot {
-            padding: 8px;
-            background: rgb(31, 41, 55);
-            border: 1px solid rgb(55, 65, 81);
-            border-radius: 4px;
-            font-size: 12px;
-            min-height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .player-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            overflow-y: auto;
-        }
-        .player-modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .player-modal-content {
-            background-color: rgb(31, 41, 55);
-            border: 1px solid rgb(55, 65, 81);
-            max-width: 800px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .rating-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .rating-a { background: #10B981; color: white; }
-        .rating-b { background: #3B82F6; color: white; }
-        .rating-c { background: #FBBF24; color: black; }
-        .rating-d { background: #F97316; color: white; }
-        .rating-f { background: #EF4444; color: white; }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hoops Mini GM — Starter</title>
+  <meta name="color-scheme" content="dark">
+  <style>
+    :root{
+      --bg-0:#0d0f14;
+      --bg-1:#11151b;
+      --bg-2:#151a21;
+      --bg-3:#1b212b;
+      --text-0:#e7ecf2;
+      --text-1:#b8c0cc;
+      --muted:#7c8796;
+      --pri:#6aa2ff;
+      --pri-2:#2e6bff;
+      --good:#3ac679;
+      --warn:#ffb020;
+      --bad:#ff6b6b;
+      --border:#232b36;
+      --shadow: 0 8px 24px rgba(0,0,0,.35);
+      --radius:12px;
+      --gap:12px;
+      --gap-lg:20px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:var(--sans); background:linear-gradient(180deg,var(--bg-0),var(--bg-1));
+      color:var(--text-0); letter-spacing:.2px;
+    }
+    .app{
+      display:grid; grid-template-columns:260px 1fr; grid-template-rows:56px 1fr; height:100vh;
+      grid-template-areas: "sidebar topbar" "sidebar main";
+    }
+    header{
+      grid-area:topbar; display:flex; align-items:center; gap:10px; padding:0 16px; border-bottom:1px solid var(--border);
+      background:linear-gradient(180deg,var(--bg-1),var(--bg-2));
+      position:sticky; top:0; z-index:5;
+    }
+    header .title{font-weight:700; letter-spacing:.4px}
+    header .spacer{flex:1}
+    header .btn{margin-left:6px}
+
+    aside{
+      grid-area:sidebar; border-right:1px solid var(--border); background:linear-gradient(180deg,var(--bg-1),var(--bg-2));
+      padding:16px 12px; display:flex; flex-direction:column; gap:10px;
+    }
+    .brand{display:flex; align-items:center; gap:10px; padding:6px 8px; border-radius:10px}
+    .brand svg{filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}
+    .brand strong{font-size:15px; letter-spacing:.6px}
+    nav{margin-top:6px; display:flex; flex-direction:column; gap:6px}
+    .nav-btn{
+      display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; color:var(--text-1);
+      border:1px solid transparent; background:transparent; cursor:pointer; text-align:left;
+    }
+    .nav-btn:hover{background:var(--bg-3); color:var(--text-0)}
+    .nav-btn.active{background:var(--bg-3); color:var(--text-0); border-color:var(--border)}
+    .nav-section{margin-top:auto; padding-top:12px; border-top:1px dashed var(--border);}
+
+    main{
+      grid-area:main; padding:16px; overflow:auto;
+      display:flex; flex-direction:column; gap:var(--gap-lg);
+    }
+
+    .panel{
+      background:linear-gradient(180deg,var(--bg-2),var(--bg-1)); border:1px solid var(--border); border-radius:var(--radius);
+      box-shadow:var(--shadow); padding:16px;
+    }
+    .panel h2{margin:0 0 10px; font-size:18px}
+    .row{display:flex; gap:var(--gap); flex-wrap:wrap}
+    .col{flex:1; min-width:280px}
+
+    .capbar{
+      display:flex; align-items:center; gap:12px;
+    }
+    .bar{position:relative; background:#0c1118; border:1px solid var(--border); height:14px; border-radius:999px; overflow:hidden; flex:1}
+    .bar .fill{height:100%; background:linear-gradient(90deg,var(--pri),var(--pri-2)); width:0%}
+    .kpi{font-family:var(--mono); color:var(--text-1); font-size:12px}
+
+    .toolbar{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px}
+    .btn{
+      border:1px solid var(--border); background:var(--bg-3); color:var(--text-0); padding:8px 12px; border-radius:10px; cursor:pointer;
+    }
+    .btn:hover{filter:brightness(1.1)}
+    .btn.good{border-color:rgba(58,198,121,.3)}
+    .btn.warn{border-color:rgba(255,176,32,.3)}
+    .btn.bad{border-color:rgba(255,107,107,.3)}
+    .btn.ghost{background:transparent}
+    .tag{display:inline-flex; align-items:center; gap:6px; padding:4px 8px; border:1px solid var(--border); border-radius:999px; color:var(--muted); font-size:12px}
+
+    table{width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:10px; border:1px solid var(--border)}
+    thead th{
+      position:sticky; top:0; background:var(--bg-2); color:var(--text-1); font-weight:600; font-size:13px; padding:10px; border-bottom:1px solid var(--border); text-align:left; cursor:pointer;
+    }
+    tbody td{padding:10px; border-bottom:1px solid var(--border); font-size:14px}
+    tbody tr:last-child td{border-bottom:none}
+    tbody tr:hover{background:rgba(255,255,255,.03)}
+    .num{text-align:right; font-family:var(--mono)}
+    .ovr{font-weight:700}
+    .pos{font-weight:600; color:var(--text-1)}
+    .pill{font-family:var(--mono); font-size:12px; color:var(--text-1); background:#0c1118; padding:4px 8px; border:1px solid var(--border); border-radius:999px}
+
+    .empty{padding:24px; color:var(--muted); text-align:center}
+
+    /* Modal */
+    .modal-backdrop{
+      position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:99;
+    }
+    .modal{width:min(560px,92vw); background:var(--bg-2); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow)}
+    .modal header{position:unset; grid-area:unset; border-bottom:1px solid var(--border); border-radius:12px 12px 0 0}
+    .modal .content{padding:16px}
+    .form{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    .form .full{grid-column:1/-1}
+    label{font-size:12px; color:var(--text-1)}
+    input,select{
+      width:100%; padding:10px; border-radius:10px; background:#0c1118; color:var(--text-0); border:1px solid var(--border);
+      font-family:var(--sans);
+    }
+
+    /* Responsive */
+    @media (max-width: 880px){
+      .app{grid-template-columns:1fr; grid-template-rows:auto auto 1fr; grid-template-areas:"topbar" "sidebar" "main"}
+      aside{flex-direction:row; overflow:auto; border-right:none; border-bottom:1px solid var(--border)}
+      nav{flex-direction:row; flex-wrap:wrap}
+      .nav-section{margin-top:0; margin-left:auto; border-top:none; border-left:1px dashed var(--border); padding-left:12px}
+    }
+  </style>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen">
-    
-    <!-- Settings Modal -->
-    <div id="settings-modal" class="modal" onclick="closeSettingsIfClickedOutside(event)">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <div class="bg-gray-800 border-b border-gray-700 p-4 flex justify-between items-center">
-                <h2 class="text-2xl font-light">Settings</h2>
-                <button onclick="closeSettings()" class="text-gray-400 hover:text-gray-100 text-2xl leading-none">×</button>
-            </div>
-            
-            <div class="p-6 space-y-6">
-                <!-- Game Difficulty -->
-                <div>
-                    <label class="block text-sm text-gray-400 mb-2">Game Difficulty</label>
-                    <div class="flex gap-2">
-                        <button onclick="setSetting('difficulty', 'easy')" 
-                                class="difficulty-btn flex-1 py-2 px-4 border border-gray-600 text-sm hover:border-blue-700 hover:text-blue-400"
-                                data-value="easy">Easy</button>
-                        <button onclick="setSetting('difficulty', 'normal')" 
-                                class="difficulty-btn flex-1 py-2 px-4 border-2 border-blue-700 text-blue-400 text-sm hover:border-blue-700"
-                                data-value="normal">Normal</button>
-                        <button onclick="setSetting('difficulty', 'hard')" 
-                                class="difficulty-btn flex-1 py-2 px-4 border border-gray-600 text-sm hover:border-blue-700 hover:text-blue-400"
-                                data-value="hard">Hard</button>
-                    </div>
-                </div>
+<body>
+  <div class="app">
+    <!-- SIDEBAR -->
+    <aside>
+      <div class="brand">
+        <svg width="28" height="28" viewBox="0 0 64 64" aria-hidden="true">
+          <circle cx="32" cy="32" r="30" fill="#1f2632" />
+          <circle cx="32" cy="22" r="10" fill="#6aa2ff"/>
+          <rect x="22" y="34" width="20" height="12" rx="6" fill="#2e6bff"/>
+        </svg>
+        <strong>Hoops Mini GM</strong>
+      </div>
+      <nav id="nav">
+        <button class="nav-btn active" data-view="dashboard">🏠 Dashboard</button>
+        <button class="nav-btn" data-view="roster">🧾 Roster</button>
+        <button class="nav-btn" data-view="cap">💰 Cap Sheet</button>
+        <button class="nav-btn" data-view="trades">🔁 Trades</button>
+        <button class="nav-btn" data-view="draft">🧢 Draft</button>
+      </nav>
+      <div class="nav-section">
+        <button class="nav-btn" data-view="settings">⚙️ Settings</button>
+      </div>
+    </aside>
 
-                <!-- Salary Cap -->
-                <div>
-                    <label class="block text-sm text-gray-400 mb-2">Salary Cap</label>
-                    <div class="flex gap-2">
-                        <button onclick="setSetting('salaryCap', true)" 
-                                class="salaryCap-btn flex-1 py-2 px-4 border-2 border-blue-700 text-blue-400 text-sm hover:border-blue-700"
-                                data-value="true">On</button>
-                        <button onclick="setSetting('salaryCap', false)" 
-                                class="salaryCap-btn flex-1 py-2 px-4 border border-gray-600 text-sm hover:border-blue-700 hover:text-blue-400"
-                                data-value="false">Off</button>
-                    </div>
-                </div>
-
-                <!-- Injuries -->
-                <div>
-                    <label class="block text-sm text-gray-400 mb-2">Injuries</label>
-                    <div class="flex gap-2">
-                        <button onclick="setSetting('injuries', true)" 
-                                class="injuries-btn flex-1 py-2 px-4 border-2 border-blue-700 text-blue-400 text-sm hover:border-blue-700"
-                                data-value="true">On</button>
-                        <button onclick="setSetting('injuries', false)" 
-                                class="injuries-btn flex-1 py-2 px-4 border border-gray-600 text-sm hover:border-blue-700 hover:text-blue-400"
-                                data-value="false">Off</button>
-                    </div>
-                </div>
-
-                <!-- Season Length -->
-                <div>
-                    <label class="block text-sm text-gray-400 mb-2">Season Length</label>
-                    <div class="flex gap-2">
-                        <button onclick="setSetting('seasonLength', 29)" 
-                                class="seasonLength-btn flex-1 py-2 px-4 border border-gray-600 text-sm hover:border-blue-700 hover:text-blue-400"
-                                data-value="29">29 Games</button>
-                        <button onclick="setSetting('seasonLength', 58)" 
-                                class="seasonLength-btn flex-1 py-2 px-4 border border-gray-600 text-sm hover:border-blue-700 hover:text-blue-400"
-                                data-value="58">58 Games</button>
-                        <button onclick="setSetting('seasonLength', 82)" 
-                                class="seasonLength-btn flex-1 py-2 px-4 border-2 border-blue-700 text-blue-400 text-sm hover:border-blue-700"
-                                data-value="82">82 Games</button>
-                    </div>
-                </div>
-
-                <!-- Expansion Mode -->
-                <div>
-                    <label class="block text-sm text-gray-400 mb-2">Expansion Mode</label>
-                    <div class="flex gap-2">
-                        <button onclick="setSetting('expansionMode', true)" 
-                                class="expansionMode-btn flex-1 py-2 px-4 border border-gray-600 text-sm hover:border-blue-700 hover:text-blue-400"
-                                data-value="true">Enabled</button>
-                        <button onclick="setSetting('expansionMode', false)" 
-                                class="expansionMode-btn flex-1 py-2 px-4 border-2 border-blue-700 text-blue-400 text-sm hover:border-blue-700"
-                                data-value="false">Disabled</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 border-t border-gray-700 p-4">
-                <button onclick="closeSettings()" class="w-full btn-primary bg-blue-700 text-white py-2 text-sm">
-                    Save Settings
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Home Screen -->
-    <div id="home-screen" class="screen active">
-        <div class="min-h-screen flex items-center justify-center px-4">
-            <!-- Settings Button -->
-            <button onclick="openSettings()" 
-                    class="settings-btn fixed top-4 right-4 text-gray-400 hover:text-blue-400 text-3xl z-50"
-                    title="Settings">
-                ⚙️
-            </button>
-            
-            <div class="text-center fade-in">
-                <div class="text-6xl mb-4">🏀</div>
-                <h1 class="text-5xl font-light mb-4">Basketball GM</h1>
-                <p class="text-gray-400 mb-8 text-lg">Build your dynasty. Manage your team. Win championships.</p>
-                <button onclick="showScreen('league-menu')" class="btn-primary bg-blue-700 text-white px-8 py-3 text-lg">
-                    Play Now
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- League Menu Screen -->
-    <div id="league-menu-screen" class="screen">
-        <div class="min-h-screen flex items-center justify-center px-4 fade-in">
-            <!-- Settings Button -->
-            <button onclick="openSettings()" 
-                    class="settings-btn fixed top-4 right-4 text-gray-400 hover:text-blue-400 text-3xl z-50"
-                    title="Settings">
-                ⚙️
-            </button>
-            
-            <div class="max-w-4xl w-full">
-                <div class="text-center mb-8">
-                    <h2 class="text-4xl font-light mb-3">League Management</h2>
-                    <p class="text-gray-400">Create a new league or continue an existing one</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Create New League -->
-                    <div class="bg-gray-800 border-2 border-gray-700 p-8 hover:border-blue-700 transition-colors cursor-pointer"
-                         onclick="createNewLeague()">
-                        <div class="text-center">
-                            <div class="text-6xl mb-4">➕</div>
-                            <h3 class="text-2xl font-light mb-3">Create New League</h3>
-                            <p class="text-gray-400 text-sm mb-4">
-                                Start fresh with a new league. Choose your team and begin your journey to championship glory.
-                            </p>
-                            <div class="btn-primary bg-blue-700 text-white px-6 py-2 text-sm inline-block">
-                                Create League
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Continue Existing -->
-                    <div class="bg-gray-800 border-2 border-gray-700 p-8">
-                        <div class="text-center mb-4">
-                            <div class="text-6xl mb-4">💾</div>
-                            <h3 class="text-2xl font-light mb-3">Continue</h3>
-                            <p class="text-gray-400 text-sm mb-4">
-                                Load and continue from your saved leagues
-                            </p>
-                        </div>
-                        
-                        <div id="saved-leagues-list" class="space-y-2 max-h-64 overflow-y-auto">
-                            <!-- Saved leagues will be inserted here -->
-                        </div>
-
-                        <div id="no-leagues-message" class="text-center text-gray-500 text-sm py-8">
-                            No saved leagues yet. Create a new league to get started!
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-center mt-6">
-                    <button onclick="showScreen('home')" class="text-gray-400 hover:text-gray-100 text-sm">
-                        ← Back to Home
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Team Selection Screen -->
-    <div id="team-selection-screen" class="screen">
-        <div class="min-h-screen py-8 px-4 fade-in">
-            <!-- Settings Button -->
-            <button onclick="openSettings()" 
-                    class="settings-btn fixed top-4 right-4 text-gray-400 hover:text-blue-400 text-3xl z-50"
-                    title="Settings">
-                ⚙️
-            </button>
-            
-            <div class="max-w-7xl mx-auto">
-                <div class="text-center mb-8">
-                    <h2 class="text-4xl font-light mb-3">Choose Your Team</h2>
-                    <p class="text-gray-400">Select a franchise to lead to championship glory</p>
-                    <p class="text-sm text-gray-500 mt-2">30 Teams Available</p>
-                </div>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mb-6" id="teams-grid">
-                    <!-- Teams will be inserted here -->
-                </div>
-
-                <div class="text-center sticky bottom-0 bg-gray-900 py-4 border-t border-gray-700">
-                    <button id="continue-btn" onclick="continueToGame()" 
-                            class="btn-primary bg-blue-700 text-white px-8 py-3 text-lg opacity-50 cursor-not-allowed" 
-                            disabled>
-                        Continue
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Dashboard Screen -->
-    <div id="dashboard-screen" class="screen">
-        <div class="min-h-screen fade-in">
-            <!-- Settings Button -->
-            <button onclick="openSettings()" 
-                    class="settings-btn fixed top-4 right-4 text-gray-400 hover:text-blue-400 text-3xl z-50"
-                    title="Settings">
-                ⚙️
-            </button>
-            
-            <div class="bg-gray-800 border-b border-gray-700 py-16">
-                <div class="max-w-4xl mx-auto text-center px-4">
-                    <div class="text-8xl mb-6" id="dashboard-logo">🏀</div>
-                    <h1 class="text-5xl font-light mb-3" id="dashboard-team-name">Team Name</h1>
-                    <p class="text-gray-400 text-xl mb-2" id="dashboard-team-city">City, Team</p>
-                    
-                    <!-- Team Colors Display -->
-                    <div class="flex gap-3 justify-center mb-8">
-                        <div class="w-16 h-16 rounded-full border-2 border-gray-600" id="dashboard-color-1"></div>
-                        <div class="w-16 h-16 rounded-full border-2 border-gray-600" id="dashboard-color-2"></div>
-                    </div>
-                    
-                    <div class="text-3xl font-light text-blue-400 mb-8">Welcome, GM</div>
-                    
-                    <p class="text-gray-400 mb-8 max-w-2xl mx-auto">
-                        You are now the General Manager of the <span id="dashboard-full-name" class="text-gray-200">Team</span>. 
-                        Build your roster, manage your budget, and lead your team to championship glory.
-                    </p>
-                    
-                    <div class="mt-8">
-                        <button onclick="showScreen('game')" class="btn-primary bg-blue-700 text-white px-8 py-3 text-lg">
-                            Enter Management Dashboard
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Game Screen (Original Content) -->
-    <div id="game-screen" class="screen">
-    <!-- Header -->
-    <header class="bg-gray-800 border-b border-gray-700">
-        <div class="max-w-7xl mx-auto px-4 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <span class="text-3xl" id="header-logo">🏀</span>
-                    <h1 class="text-2xl font-light" id="header-team-name">Basketball GM</h1>
-                </div>
-                <div class="flex items-center gap-6">
-                    <button onclick="openSettings()" 
-                            class="settings-btn text-gray-400 hover:text-blue-400 text-2xl"
-                            title="Settings">
-                        ⚙️
-                    </button>
-                    <div class="text-sm">
-                        <span class="text-gray-400">Season:</span>
-                        <span id="season" class="text-gray-100 ml-2">2024-25</span>
-                    </div>
-                    <div class="text-sm">
-                        <span class="text-gray-400">Budget:</span>
-                        <span id="budget" class="text-green-400 ml-2">$85.2M</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- TOPBAR -->
+    <header>
+      <div class="title">San Francisco Riptide</div>
+      <span class="tag" id="seasonTag">Season: 2026</span>
+      <span class="tag">Mode: <strong style="color:var(--text-0)">Sandbox</strong></span>
+      <div class="spacer"></div>
+      <button class="btn ghost" id="simDayBtn">Sim Day ▶</button>
+      <button class="btn good" id="saveBtn">Save</button>
+      <button class="btn warn" id="resetBtn">Reset</button>
     </header>
 
-    <!-- Navigation -->
-    <nav class="bg-gray-800 border-b border-gray-700">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex gap-1">
-                <button onclick="showTab('team')" class="nav-btn px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="nav-team">Team</button>
-                <button onclick="showTab('roster')" class="nav-btn px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="nav-roster">Roster</button>
-                <button onclick="showTab('schedule')" class="nav-btn px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="nav-schedule">Schedule</button>
-                <button onclick="showTab('standings')" class="nav-btn px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="nav-standings">Standings</button>
-                <button onclick="showTab('draft')" class="nav-btn px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="nav-draft">Draft</button>
+    <!-- MAIN -->
+    <main id="viewRoot">
+      <!-- DASHBOARD -->
+      <section class="panel" data-view="dashboard">
+        <h2>Team Overview</h2>
+        <div class="row">
+          <div class="col">
+            <div class="panel" style="padding:12px">
+              <div class="capbar">
+                <div class="bar" aria-label="Payroll vs Cap"><div class="fill" id="capFill"></div></div>
+                <div class="kpi" id="capKpi">$0 / $0</div>
+              </div>
+              <div style="margin-top:8px; display:flex; gap:10px; flex-wrap:wrap">
+                <span class="pill" id="spacePill">Cap Space: $0</span>
+                <span class="pill" id="taxPill">Tax Room: $0</span>
+                <span class="pill" id="apronPill">Apron Room: $0</span>
+              </div>
             </div>
+            <div class="toolbar">
+              <button class="btn" data-view-jump="roster">Open Roster</button>
+              <button class="btn" data-view-jump="cap">Open Cap Sheet</button>
+              <button class="btn" data-view-jump="trades">Open Trades</button>
+            </div>
+          </div>
+          <div class="col">
+            <div class="panel" style="padding:12px">
+              <div style="display:flex; justify-content:space-between; align-items:center">
+                <strong>Recent Activity</strong><span class="tag">Media • Morale • Injuries</span>
+              </div>
+              <div id="feed" class="empty">No events yet. Your beat writer is doomscrolling.</div>
+            </div>
+          </div>
         </div>
-    </nav>
+      </section>
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 py-6">
-        
-        <!-- Team Overview Tab -->
-        <div id="tab-team" class="tab-content">
-            <!-- Team Header Section -->
-            <div class="team-header-gradient border border-gray-700 mb-6 p-4" id="team-header-bar">
-                <div class="team-header-overlay"></div>
-                <div class="team-header-content">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-4">
-                            <div class="text-5xl" id="dashboard-team-logo">🏀</div>
-                            <div>
-                                <h2 class="text-2xl font-light text-white" id="dashboard-full-team-name">Your Team</h2>
-                                <div class="flex items-center gap-3 mt-1">
-                                    <span class="text-sm text-gray-100" id="current-season">Season 2024-25</span>
-                                    <div class="flex gap-2">
-                                        <div class="w-4 h-4 rounded-full border border-white border-opacity-50" id="team-color-1"></div>
-                                        <div class="w-4 h-4 rounded-full border border-white border-opacity-50" id="team-color-2"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Stats Row -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div class="stat-card bg-gray-800 p-4 border border-gray-700">
-                    <div class="text-gray-400 text-xs mb-1">Team Overall</div>
-                    <div class="text-2xl font-light">
-                        <span class="text-blue-400" id="team-ovr">86</span>
-                        <span class="text-sm text-gray-500 ml-1">OVR</span>
-                    </div>
-                </div>
-                <div class="stat-card bg-gray-800 p-4 border border-gray-700">
-                    <div class="text-gray-400 text-xs mb-1">Conference Rank</div>
-                    <div class="text-2xl font-light" id="quick-conf-rank">5th</div>
-                </div>
-                <div class="stat-card bg-gray-800 p-4 border border-gray-700">
-                    <div class="text-gray-400 text-xs mb-1">Current Streak</div>
-                    <div class="text-2xl font-light" id="team-streak">-</div>
-                </div>
-                <div class="stat-card bg-gray-800 p-4 border border-gray-700">
-                    <div class="text-gray-400 text-xs mb-1">Fan Support</div>
-                    <div class="text-2xl font-light">
-                        <span id="fan-support">82</span><span class="text-sm">%</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                <!-- Left Column -->
-                <div class="lg:col-span-2 space-y-6">
-                    <!-- Team Record Card -->
-                    <div class="bg-gray-800 p-6 border border-gray-700">
-                        <h3 class="text-lg font-light mb-4">Team Record</h3>
-                        <div class="grid grid-cols-3 gap-4 mb-4">
-                            <div class="text-center">
-                                <div class="text-gray-400 text-sm mb-1">Wins</div>
-                                <div class="text-3xl font-light text-green-400" id="record-wins">0</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-gray-400 text-sm mb-1">Losses</div>
-                                <div class="text-3xl font-light text-red-400" id="record-losses">0</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-gray-400 text-sm mb-1">Win %</div>
-                                <div class="text-3xl font-light" id="record-pct">.000</div>
-                            </div>
-                        </div>
-                        <div class="border-t border-gray-700 pt-4">
-                            <div class="text-sm text-gray-400 mb-2">Next Game</div>
-                            <div class="flex items-center justify-between bg-gray-900 p-3 border border-gray-700">
-                                <div class="flex items-center gap-3">
-                                    <div class="text-2xl" id="next-opponent-logo">🏀</div>
-                                    <div>
-                                        <div class="font-medium" id="next-opponent">TBD</div>
-                                        <div class="text-xs text-gray-400" id="next-game-location">Home</div>
-                                    </div>
-                                </div>
-                                <button onclick="simulateGame()" class="btn-primary bg-blue-700 text-white px-4 py-2 text-sm">
-                                    Simulate
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Team Chemistry Card -->
-                    <div class="bg-gray-800 p-6 border border-gray-700">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-light">Team Chemistry</h3>
-                            <span class="trend-up text-sm" id="chemistry-trend">↗ Trending Up</span>
-                        </div>
-                        <div class="mb-2">
-                            <div class="flex justify-between text-sm mb-2">
-                                <span class="text-gray-400">Overall Chemistry</span>
-                                <span class="text-blue-400 font-medium" id="chemistry-value">78%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="chemistry-bar" style="width: 78%"></div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-3 gap-4 mt-4 text-center text-sm">
-                            <div>
-                                <div class="text-gray-400">Offense</div>
-                                <div class="text-lg" id="chem-offense">82</div>
-                            </div>
-                            <div>
-                                <div class="text-gray-400">Defense</div>
-                                <div class="text-lg" id="chem-defense">75</div>
-                            </div>
-                            <div>
-                                <div class="text-gray-400">Teamwork</div>
-                                <div class="text-lg" id="chem-teamwork">77</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Finances Card -->
-                    <div class="bg-gray-800 p-6 border border-gray-700">
-                        <h3 class="text-lg font-light mb-4">Team Finances</h3>
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-400">Current Payroll</span>
-                                <span class="text-xl font-light" id="current-payroll">$72.4M</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-400">Salary Cap</span>
-                                <span class="text-lg" id="salary-cap">$85.2M</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-400">Luxury Tax Line</span>
-                                <span class="text-lg text-red-400" id="luxury-tax">$102.3M</span>
-                            </div>
-                            <div class="border-t border-gray-700 pt-3 mt-3">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-gray-400">Owner Budget</span>
-                                    <span class="text-lg text-green-400" id="owner-budget">$125M</span>
-                                </div>
-                            </div>
-                            <div class="mt-4">
-                                <div class="text-xs text-gray-400 mb-2">Cap Space Used</div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" id="cap-space-bar" style="width: 85%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Upcoming Schedule Snapshot -->
-                    <div class="bg-gray-800 p-6 border border-gray-700">
-                        <h3 class="text-lg font-light mb-4">Upcoming Games</h3>
-                        <div class="space-y-2" id="upcoming-games">
-                            <div class="flex items-center justify-between bg-gray-900 p-3 border border-gray-700">
-                                <div class="flex items-center gap-3">
-                                    <div class="text-xl">🏀</div>
-                                    <div>
-                                        <div class="text-sm font-medium">Lakers</div>
-                                        <div class="text-xs text-gray-400">Dec 15, 2024</div>
-                                    </div>
-                                </div>
-                                <span class="text-xs bg-gray-700 px-2 py-1 rounded">H</span>
-                            </div>
-                            <div class="flex items-center justify-between bg-gray-900 p-3 border border-gray-700">
-                                <div class="flex items-center gap-3">
-                                    <div class="text-xl">🏀</div>
-                                    <div>
-                                        <div class="text-sm font-medium">Celtics</div>
-                                        <div class="text-xs text-gray-400">Dec 17, 2024</div>
-                                    </div>
-                                </div>
-                                <span class="text-xs bg-blue-700 px-2 py-1 rounded">A</span>
-                            </div>
-                            <div class="flex items-center justify-between bg-gray-900 p-3 border border-gray-700">
-                                <div class="flex items-center gap-3">
-                                    <div class="text-xl">🏀</div>
-                                    <div>
-                                        <div class="text-sm font-medium">Warriors</div>
-                                        <div class="text-xs text-gray-400">Dec 19, 2024</div>
-                                    </div>
-                                </div>
-                                <span class="text-xs bg-gray-700 px-2 py-1 rounded">H</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Column -->
-                <div class="space-y-6">
-                    <!-- Quick Actions -->
-                    <div class="bg-gray-800 p-6 border border-gray-700">
-                        <h3 class="text-lg font-light mb-4">Quick Actions</h3>
-                        <div class="space-y-2">
-                            <button onclick="simulateGame()" class="w-full btn-primary bg-blue-700 text-white px-4 py-2 text-sm">Simulate Game</button>
-                            <button onclick="simulateWeek()" class="w-full btn-primary bg-blue-700 text-white px-4 py-2 text-sm">Simulate Week</button>
-                            <button onclick="simulateSeason()" class="w-full btn-primary bg-blue-700 text-white px-4 py-2 text-sm">Simulate Season</button>
-                        </div>
-                    </div>
-
-                    <!-- GM Profile Widget -->
-                    <div class="bg-gray-800 p-6 border border-gray-700">
-                        <h3 class="text-lg font-light mb-4">GM Profile</h3>
-                        <div class="text-center mb-4">
-                            <div class="text-4xl mb-2">👤</div>
-                            <div class="text-lg font-medium" id="gm-name">General Manager</div>
-                        </div>
-                        <div class="space-y-3 text-sm">
-                            <div class="flex justify-between">
-                                <span class="text-gray-400">Job Security</span>
-                                <span class="text-green-400" id="job-security">Stable (75%)</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-400">Reputation</span>
-                                <span id="reputation">★★★★☆</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-400">Years with Team</span>
-                                <span id="gm-years">1</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Inbox / Alerts Card -->
-                    <div class="bg-gray-800 p-6 border border-gray-700">
-                        <h3 class="text-lg font-light mb-4 flex items-center justify-between">
-                            Inbox
-                            <span class="text-xs bg-blue-700 text-white px-2 py-1 rounded-full">3</span>
-                        </h3>
-                        <div class="space-y-2" id="inbox-messages">
-                            <div class="inbox-item p-3 bg-gray-900 border border-gray-700 cursor-pointer text-sm">
-                                <div class="flex items-start gap-2">
-                                    <span class="text-lg">📨</span>
-                                    <div class="flex-1">
-                                        <div class="font-medium text-blue-400">Trade Offer</div>
-                                        <div class="text-xs text-gray-400">From Seattle Dragons</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="inbox-item p-3 bg-gray-900 border border-gray-700 cursor-pointer text-sm">
-                                <div class="flex items-start gap-2">
-                                    <span class="text-lg">🏥</span>
-                                    <div class="flex-1">
-                                        <div class="font-medium">Player Update</div>
-                                        <div class="text-xs text-gray-400">Minor injury reported</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="inbox-item p-3 bg-gray-900 border border-gray-700 cursor-pointer text-sm">
-                                <div class="flex items-start gap-2">
-                                    <span class="text-lg">💼</span>
-                                    <div class="flex-1">
-                                        <div class="font-medium">Owner Expectations</div>
-                                        <div class="text-xs text-gray-400">45+ wins expected</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Analytics Preview -->
-                    <div class="bg-gray-800 p-6 border border-gray-700">
-                        <h3 class="text-lg font-light mb-4">Team Trends</h3>
-                        <div class="bg-gray-900 border border-gray-700 p-4 text-center">
-                            <div class="text-gray-500 text-sm mb-2">Chemistry Trend Over Time</div>
-                            <div class="h-32 flex items-end justify-around gap-1 mt-4">
-                                <div class="bg-blue-700 w-full" style="height: 45%"></div>
-                                <div class="bg-blue-700 w-full" style="height: 52%"></div>
-                                <div class="bg-blue-700 w-full" style="height: 58%"></div>
-                                <div class="bg-blue-700 w-full" style="height: 68%"></div>
-                                <div class="bg-blue-700 w-full" style="height: 72%"></div>
-                                <div class="bg-blue-700 w-full" style="height: 75%"></div>
-                                <div class="bg-blue-700 w-full" style="height: 78%"></div>
-                            </div>
-                            <div class="text-xs text-gray-500 mt-3">Last 7 games</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 p-6 border border-gray-700">
-                <h2 class="text-xl font-light mb-4">Recent Games</h2>
-                <div id="recent-games" class="space-y-2">
-                    <div class="text-gray-500 text-sm">No games played yet</div>
-                </div>
-            </div>
+      <!-- ROSTER -->
+      <section class="panel" data-view="roster" hidden>
+        <h2>Roster</h2>
+        <div class="toolbar">
+          <button class="btn good" id="addPlayerBtn">Add Player</button>
+          <button class="btn ghost" id="sortOVR">Sort by OVR</button>
+          <span class="tag" id="rosterCount">0/15</span>
         </div>
-
-        <!-- Roster Tab -->
-        <div id="tab-roster" class="tab-content hidden">
-            <!-- Roster Header -->
-            <div class="bg-gray-800 border border-gray-700 mb-6 p-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h2 class="text-2xl font-light" id="roster-team-name">Team Roster</h2>
-                        <div class="text-sm text-gray-400 mt-1">
-                            <span id="roster-record">0-0</span> • 
-                            <span id="roster-player-count">0</span> Players
-                        </div>
-                    </div>
-                    <button class="bg-gray-700 text-gray-400 px-4 py-2 text-sm cursor-not-allowed" disabled>
-                        + Add Player
-                    </button>
-                </div>
-            </div>
-
-            <!-- Filters Row -->
-            <div class="bg-gray-800 border border-gray-700 p-4 mb-6">
-                <div class="flex flex-wrap gap-4 items-center">
-                    <div>
-                        <label class="text-xs text-gray-400 block mb-1">Position</label>
-                        <select id="filter-position" onchange="filterRoster()" class="bg-gray-900 border border-gray-700 text-sm px-3 py-1.5 rounded">
-                            <option value="all">All Positions</option>
-                            <option value="PG">PG</option>
-                            <option value="SG">SG</option>
-                            <option value="SF">SF</option>
-                            <option value="PF">PF</option>
-                            <option value="C">C</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-xs text-gray-400 block mb-1">Status</label>
-                        <select id="filter-status" onchange="filterRoster()" class="bg-gray-900 border border-gray-700 text-sm px-3 py-1.5 rounded">
-                            <option value="all">All</option>
-                            <option value="healthy">Healthy</option>
-                            <option value="injured">Injured</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-xs text-gray-400 block mb-1">Contract</label>
-                        <select id="filter-contract" onchange="filterRoster()" class="bg-gray-900 border border-gray-700 text-sm px-3 py-1.5 rounded">
-                            <option value="all">All</option>
-                            <option value="expiring">Expiring</option>
-                            <option value="multi">Multi-Year</option>
-                        </select>
-                    </div>
-                    <button onclick="generateRoster()" class="btn-primary bg-blue-700 text-white px-4 py-1.5 text-sm ml-auto">
-                        Generate Roster
-                    </button>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Players Table (Left - 2 columns) -->
-                <div class="lg:col-span-2">
-                    <div class="bg-gray-800 border border-gray-700">
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead class="bg-gray-900 text-gray-400 text-xs">
-                                    <tr>
-                                        <th class="text-left p-2 sortable-header" onclick="sortRoster('#')">#</th>
-                                        <th class="text-left p-2 sortable-header" onclick="sortRoster('name')">Name</th>
-                                        <th class="text-center p-2 sortable-header" onclick="sortRoster('position')">Pos</th>
-                                        <th class="text-center p-2 sortable-header" onclick="sortRoster('age')">Age</th>
-                                        <th class="text-center p-2 sortable-header" onclick="sortRoster('ovr')">OVR</th>
-                                        <th class="text-center p-2 sortable-header" onclick="sortRoster('pot')">POT</th>
-                                        <th class="text-left p-2">Archetype</th>
-                                        <th class="text-center p-2">Ht</th>
-                                        <th class="text-center p-2">Contract</th>
-                                        <th class="text-center p-2">Status</th>
-                                        <th class="text-center p-2">Morale</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="roster-table-body" class="text-xs">
-                                    <tr>
-                                        <td colspan="11" class="p-4 text-center text-gray-500">Generate a roster to begin</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Depth Chart & Minutes (Right - 1 column) -->
-                <div class="space-y-6">
-                    <!-- Depth Chart -->
-                    <div class="bg-gray-800 border border-gray-700 p-4">
-                        <h3 class="text-lg font-light mb-4">Depth Chart</h3>
-                        <div class="space-y-3" id="depth-chart">
-                            <!-- PG -->
-                            <div>
-                                <div class="text-xs text-gray-400 mb-1">Point Guard</div>
-                                <div class="space-y-1">
-                                    <div class="depth-slot" data-position="PG" data-slot="starter">Starter</div>
-                                    <div class="depth-slot" data-position="PG" data-slot="bench1">Bench 1</div>
-                                    <div class="depth-slot" data-position="PG" data-slot="bench2">Bench 2</div>
-                                </div>
-                            </div>
-                            <!-- SG -->
-                            <div>
-                                <div class="text-xs text-gray-400 mb-1">Shooting Guard</div>
-                                <div class="space-y-1">
-                                    <div class="depth-slot" data-position="SG" data-slot="starter">Starter</div>
-                                    <div class="depth-slot" data-position="SG" data-slot="bench1">Bench 1</div>
-                                    <div class="depth-slot" data-position="SG" data-slot="bench2">Bench 2</div>
-                                </div>
-                            </div>
-                            <!-- SF -->
-                            <div>
-                                <div class="text-xs text-gray-400 mb-1">Small Forward</div>
-                                <div class="space-y-1">
-                                    <div class="depth-slot" data-position="SF" data-slot="starter">Starter</div>
-                                    <div class="depth-slot" data-position="SF" data-slot="bench1">Bench 1</div>
-                                    <div class="depth-slot" data-position="SF" data-slot="bench2">Bench 2</div>
-                                </div>
-                            </div>
-                            <!-- PF -->
-                            <div>
-                                <div class="text-xs text-gray-400 mb-1">Power Forward</div>
-                                <div class="space-y-1">
-                                    <div class="depth-slot" data-position="PF" data-slot="starter">Starter</div>
-                                    <div class="depth-slot" data-position="PF" data-slot="bench1">Bench 1</div>
-                                    <div class="depth-slot" data-position="PF" data-slot="bench2">Bench 2</div>
-                                </div>
-                            </div>
-                            <!-- C -->
-                            <div>
-                                <div class="text-xs text-gray-400 mb-1">Center</div>
-                                <div class="space-y-1">
-                                    <div class="depth-slot" data-position="C" data-slot="starter">Starter</div>
-                                    <div class="depth-slot" data-position="C" data-slot="bench1">Bench 1</div>
-                                    <div class="depth-slot" data-position="C" data-slot="bench2">Bench 2</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Minutes Distribution -->
-                    <div class="bg-gray-800 border border-gray-700 p-4">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-light">Minutes</h3>
-                            <button onclick="balanceMinutes()" class="text-blue-400 hover:text-blue-300 text-xs">
-                                Balance Minutes
-                            </button>
-                        </div>
-                        <div class="space-y-3 text-xs" id="minutes-editor">
-                            <div class="text-center text-gray-400">
-                                Total: <span id="total-minutes" class="text-white">0</span> / 240
-                            </div>
-                        </div>
-                    </div>
-
-                    <button onclick="saveDepthChart()" class="w-full btn-primary bg-blue-700 text-white px-4 py-2 text-sm">
-                        Save Depth Chart
-                    </button>
-                </div>
-            </div>
+        <div class="table-wrap">
+          <table id="rosterTable" aria-label="Roster table">
+            <thead>
+              <tr>
+                <th data-sort="name">Player</th>
+                <th data-sort="pos">Pos</th>
+                <th class="num" data-sort="age">Age</th>
+                <th class="num" data-sort="ovr">OVR</th>
+                <th class="num" data-sort="salary">Salary</th>
+                <th class="num" data-sort="years">Years</th>
+                <th class="num">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="rosterBody">
+              <tr><td colspan="7" class="empty">Add players to begin your dynasty.</td></tr>
+            </tbody>
+          </table>
         </div>
+      </section>
 
-        <!-- Schedule Tab -->
-        <div id="tab-schedule" class="tab-content hidden">
-            <div class="bg-gray-800 p-6 border border-gray-700">
-                <h2 class="text-xl font-light mb-4">Season Schedule</h2>
-                <div id="schedule-list" class="space-y-2">
-                    <div class="text-gray-500 text-sm">Schedule will be generated when season starts</div>
-                </div>
-            </div>
+      <!-- CAP SHEET -->
+      <section class="panel" data-view="cap" hidden>
+        <h2>Cap Sheet</h2>
+        <div class="toolbar">
+          <span class="tag">Cap: <span id="capNum">$0</span></span>
+          <span class="tag">Tax Line: <span id="taxNum">$0</span></span>
+          <span class="tag">First Apron: <span id="apron1Num">$0</span></span>
+          <span class="tag">Second Apron: <span id="apron2Num">$0</span></span>
         </div>
-
-        <!-- Standings Tab -->
-        <div id="tab-standings" class="tab-content hidden">
-            <div class="bg-gray-800 border border-gray-700">
-                <div class="p-4 border-b border-gray-700">
-                    <h2 class="text-xl font-light">League Standings</h2>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead class="bg-gray-900 text-gray-400 text-sm">
-                            <tr>
-                                <th class="text-left p-3 font-normal">Rank</th>
-                                <th class="text-left p-3 font-normal">Team</th>
-                                <th class="text-center p-3 font-normal">W</th>
-                                <th class="text-center p-3 font-normal">L</th>
-                                <th class="text-center p-3 font-normal">PCT</th>
-                                <th class="text-center p-3 font-normal">GB</th>
-                            </tr>
-                        </thead>
-                        <tbody id="standings-table" class="text-sm">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div class="table-wrap">
+          <table id="capTable">
+            <thead>
+              <tr>
+                <th>Player</th><th class="num">2026</th><th class="num">2027</th><th class="num">2028</th><th class="num">Options</th>
+              </tr>
+            </thead>
+            <tbody id="capBody"></tbody>
+          </table>
         </div>
+      </section>
 
-        <!-- Draft Tab -->
-        <div id="tab-draft" class="tab-content hidden">
-            <div class="bg-gray-800 p-6 border border-gray-700">
-                <h2 class="text-xl font-light mb-4">Draft Prospects</h2>
-                <div class="mb-4">
-                    <button onclick="generateDraftClass()" class="btn-primary bg-blue-700 text-white px-4 py-2 text-sm">Generate Draft Class</button>
-                </div>
-                <div id="draft-prospects" class="space-y-2">
-                    <div class="text-gray-500 text-sm">No draft prospects available</div>
-                </div>
-            </div>
+      <!-- TRADES -->
+      <section class="panel" data-view="trades" hidden>
+        <h2>Trade Center</h2>
+        <div class="toolbar">
+          <button class="btn" id="tradeIdea">Generate Trade Idea</button>
+          <span class="tag">Prototype</span>
         </div>
+        <div id="tradeArea" class="empty">Trade engine not wired yet. This is where pick protections, matching rules, and AI team preferences will live.</div>
+      </section>
 
+      <!-- DRAFT -->
+      <section class="panel" data-view="draft" hidden>
+        <h2>Draft Room</h2>
+        <div class="toolbar">
+          <button class="btn" id="genProspects">Generate Prospects</button>
+          <span class="tag">Big Board v0.1</span>
+        </div>
+        <div id="draftArea" class="empty">Prospects will appear here with fog-of-war scouting grades.</div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="panel" data-view="settings" hidden>
+        <h2>Settings</h2>
+        <div class="row">
+          <div class="col">
+            <label>Team Name</label>
+            <input id="teamName" value="San Francisco Riptide" />
+          </div>
+          <div class="col">
+            <label>Season</label>
+            <input id="seasonInput" type="number" value="2026" />
+          </div>
+        </div>
+        <div class="toolbar" style="margin-top:12px">
+          <button class="btn good" id="applySettings">Apply</button>
+        </div>
+      </section>
     </main>
-    </div>
-    <!-- End Game Screen -->
+  </div>
 
-    <!-- Player Modal -->
-    <div id="player-modal" class="player-modal" onclick="closePlayerModal(event)">
-        <div class="player-modal-content" onclick="event.stopPropagation()">
-            <!-- Modal Header -->
-            <div class="bg-gray-800 border-b border-gray-700 p-4 flex justify-between items-center">
-                <h2 class="text-2xl font-light" id="modal-player-name">Player Name</h2>
-                <button onclick="closePlayerModal()" class="text-gray-400 hover:text-gray-100 text-2xl leading-none">×</button>
-            </div>
-
-            <!-- Modal Tabs -->
-            <div class="bg-gray-800 border-b border-gray-700">
-                <div class="flex gap-1 px-4">
-                    <button onclick="showPlayerTab('overview')" class="player-tab px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-blue-700" id="player-tab-overview">Overview</button>
-                    <button onclick="showPlayerTab('ratings')" class="player-tab px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="player-tab-ratings">Ratings</button>
-                    <button onclick="showPlayerTab('contract')" class="player-tab px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="player-tab-contract">Contract</button>
-                    <button onclick="showPlayerTab('health')" class="player-tab px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="player-tab-health">Health & Form</button>
-                    <button onclick="showPlayerTab('actions')" class="player-tab px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="player-tab-actions">Actions</button>
-                </div>
-            </div>
-
-            <!-- Modal Content -->
-            <div class="p-6">
-                <!-- Overview Tab -->
-                <div id="player-content-overview" class="player-tab-content">
-                    <div class="grid grid-cols-2 gap-6 mb-6">
-                        <div class="text-center">
-                            <div class="text-5xl font-light mb-2" id="modal-overall">85</div>
-                            <div class="text-sm text-gray-400">Overall Rating</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-5xl font-light mb-2" id="modal-potential">90</div>
-                            <div class="text-sm text-gray-400">Potential</div>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4 text-sm">
-                        <div><span class="text-gray-400">Position:</span> <span id="modal-position">PG</span></div>
-                        <div><span class="text-gray-400">Age:</span> <span id="modal-age">25</span></div>
-                        <div><span class="text-gray-400">Height:</span> <span id="modal-height">6'3"</span></div>
-                        <div><span class="text-gray-400">Weight:</span> <span id="modal-weight">185 lbs</span></div>
-                        <div><span class="text-gray-400">Handedness:</span> <span id="modal-hand">Right</span></div>
-                        <div><span class="text-gray-400">Archetype:</span> <span class="text-blue-400" id="modal-archetype">Sharpshooter</span></div>
-                    </div>
-                </div>
-
-                <!-- Ratings Tab -->
-                <div id="player-content-ratings" class="player-tab-content hidden">
-                    <div class="grid grid-cols-2 gap-4 text-sm">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-400">Inside Scoring</span>
-                            <span class="rating-badge" id="rating-inside">B</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-400">Mid-Range</span>
-                            <span class="rating-badge" id="rating-mid">A</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-400">Three-Point</span>
-                            <span class="rating-badge" id="rating-3pt">A</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-400">Playmaking</span>
-                            <span class="rating-badge" id="rating-playmaking">B</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-400">Perimeter Defense</span>
-                            <span class="rating-badge" id="rating-perim-d">C</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-400">Interior Defense</span>
-                            <span class="rating-badge" id="rating-int-d">D</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-400">Rebounding</span>
-                            <span class="rating-badge" id="rating-rebounding">C</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-400">Athleticism</span>
-                            <span class="rating-badge" id="rating-athleticism">B</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-400">Basketball IQ</span>
-                            <span class="rating-badge" id="rating-iq">A</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Contract Tab -->
-                <div id="player-content-contract" class="player-tab-content hidden">
-                    <div class="space-y-4 text-sm">
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Contract Years</span>
-                            <span id="contract-years">3 years</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Salary per Year</span>
-                            <span id="contract-salary">$5.2M</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Total Value</span>
-                            <span id="contract-total">$15.6M</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Bird Rights</span>
-                            <span id="contract-bird">Yes</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Cap Hold</span>
-                            <span id="contract-hold">$5.2M</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Health & Form Tab -->
-                <div id="player-content-health" class="player-tab-content hidden">
-                    <div class="space-y-4 text-sm">
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Injury Status</span>
-                            <span id="health-status" class="text-green-400">Healthy</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Est. Return</span>
-                            <span id="health-return">-</span>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-2">
-                                <span class="text-gray-400">Fatigue</span>
-                                <span id="health-fatigue">15%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="health-fatigue-bar" style="width: 15%; background-color: #10B981;"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-2">
-                                <span class="text-gray-400">Morale</span>
-                                <span id="health-morale">85%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="health-morale-bar" style="width: 85%"></div>
-                            </div>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Recent Form</span>
-                            <span id="health-form">Good</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Actions Tab -->
-                <div id="player-content-actions" class="player-tab-content hidden">
-                    <div class="space-y-3">
-                        <button onclick="setAsStarter()" class="w-full btn-primary bg-blue-700 text-white px-4 py-2 text-sm">
-                            Set as Starter
-                        </button>
-                        <button class="w-full bg-gray-700 text-gray-400 px-4 py-2 text-sm cursor-not-allowed" disabled>
-                            Trade Player
-                        </button>
-                        <button class="w-full bg-gray-700 text-gray-400 px-4 py-2 text-sm cursor-not-allowed" disabled>
-                            Waive Player
-                        </button>
-                    </div>
-                </div>
-            </div>
+  <!-- ADD PLAYER MODAL -->
+  <div class="modal-backdrop" id="modal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="addPlayerTitle">
+      <header>
+        <div class="title" id="addPlayerTitle">Add Player</div>
+        <div class="spacer"></div>
+        <button class="btn ghost" id="closeModal">Close</button>
+      </header>
+      <div class="content">
+        <div class="form">
+          <div>
+            <label>Name</label>
+            <input id="pName" placeholder="e.g., J. Rivera" />
+          </div>
+          <div>
+            <label>Position</label>
+            <select id="pPos">
+              <option>PG</option><option>SG</option><option>SF</option><option>PF</option><option>C</option>
+            </select>
+          </div>
+          <div>
+            <label>Age</label>
+            <input id="pAge" type="number" min="18" max="45" value="24" />
+          </div>
+          <div>
+            <label>OVR</label>
+            <input id="pOvr" type="number" min="40" max="99" value="76" />
+          </div>
+          <div>
+            <label>Salary (2026)</label>
+            <input id="pSalary" type="number" min="0" step="100000" value="8200000" />
+          </div>
+          <div>
+            <label>Years</label>
+            <input id="pYears" type="number" min="1" max="5" value="2" />
+          </div>
+          <div class="full">
+            <label>Notes</label>
+            <input id="pNotes" placeholder="e.g., 3&D wing, team option Yr2" />
+          </div>
         </div>
+        <div class="toolbar" style="margin-top:12px">
+          <button class="btn good" id="submitPlayer">Add to Roster</button>
+        </div>
+      </div>
     </div>
-
-    <script>
-        // Game State
-        const gameState = {
-            season: '2024-25',
-            budget: 85200000,
-            wins: 0,
-            losses: 0,
-            roster: [],
-            schedule: [],
-            standings: [],
-            recentGames: [],
-            gameNumber: 0,
-            selectedTeam: null,
-            isTeamSelected: false,
-            settings: {
-                difficulty: 'normal',
-                salaryCap: true,
-                injuries: true,
-                seasonLength: 82,
-                expansionMode: false
-            },
-            streak: 0,
-            streakType: '',
-            chemistry: 78,
-            chemistryTrend: 'up',
-            fanSupport: 82,
-            payroll: 72400000,
-            luxuryTax: 102300000,
-            ownerBudget: 125000000,
-            savedLeagues: [],
-            currentLeagueId: null
-        };
-
-        // Team Names
-        const teamNames = [
-            'Lakers', 'Celtics', 'Warriors', 'Heat', 'Bucks', 
-            'Nets', 'Nuggets', 'Suns', '76ers', 'Mavericks', 'Clippers',
-            'Grizzlies', 'Timberwolves', 'Pelicans', 'Hawks'
-        ];
-
-        // Available Teams for Selection
-        const availableTeams = [
-            {
-                id: 'dragons',
-                city: 'Seattle',
-                mascot: 'Dragons',
-                colors: ['#DC2626', '#991B1B'],
-                logo: '🐉',
-                description: 'Fierce competitors with a storied history'
-            },
-            {
-                id: 'thunder',
-                city: 'Pittsburgh',
-                mascot: 'Thunder',
-                colors: ['#7C3AED', '#5B21B6'],
-                logo: '⚡',
-                description: 'Electric offense and lightning-fast defense'
-            },
-            {
-                id: 'wolves',
-                city: 'Portland',
-                mascot: 'Wolves',
-                colors: ['#059669', '#047857'],
-                logo: '🐺',
-                description: 'Pack mentality and relentless pursuit'
-            },
-            {
-                id: 'aces',
-                city: 'Las Vegas',
-                mascot: 'Aces',
-                colors: ['#EA580C', '#C2410C'],
-                logo: '🔥',
-                description: 'Rising champions with hot hands'
-            },
-            {
-                id: 'knights',
-                city: 'Nashville',
-                mascot: 'Knights',
-                colors: ['#0891B2', '#0E7490'],
-                logo: '⚔️',
-                description: 'Defending the court with honor and skill'
-            },
-            {
-                id: 'comets',
-                city: 'Austin',
-                mascot: 'Comets',
-                colors: ['#2563EB', '#1D4ED8'],
-                logo: '☄️',
-                description: 'Fast-paced and out of this world'
-            },
-            {
-                id: 'panthers',
-                city: 'Tampa',
-                mascot: 'Panthers',
-                colors: ['#000000', '#374151'],
-                logo: '🐆',
-                description: 'Stealth, speed, and precision on the court'
-            },
-            {
-                id: 'hawks',
-                city: 'Baltimore',
-                mascot: 'Hawks',
-                colors: ['#F59E0B', '#D97706'],
-                logo: '🦅',
-                description: 'Soaring above the competition'
-            },
-            {
-                id: 'pioneers',
-                city: 'Denver',
-                mascot: 'Pioneers',
-                colors: ['#8B4513', '#654321'],
-                logo: '⛰️',
-                description: 'Trailblazers of the modern game'
-            },
-            {
-                id: 'storm',
-                city: 'Kansas City',
-                mascot: 'Storm',
-                colors: ['#4B5563', '#1F2937'],
-                logo: '🌪️',
-                description: 'Unleashing chaos on opponents'
-            },
-            {
-                id: 'vipers',
-                city: 'Phoenix',
-                mascot: 'Vipers',
-                colors: ['#10B981', '#059669'],
-                logo: '🐍',
-                description: 'Strike fast, strike hard'
-            },
-            {
-                id: 'bulls',
-                city: 'Louisville',
-                mascot: 'Bulls',
-                colors: ['#B91C1C', '#7F1D1D'],
-                logo: '🐂',
-                description: 'Charging to victory with raw power'
-            },
-            {
-                id: 'raptors',
-                city: 'Vancouver',
-                mascot: 'Raptors',
-                colors: ['#7C2D12', '#581C0F'],
-                logo: '🦖',
-                description: 'Prehistoric dominance in the paint'
-            },
-            {
-                id: 'titans',
-                city: 'San Diego',
-                mascot: 'Titans',
-                colors: ['#1E40AF', '#1E3A8A'],
-                logo: '⚡',
-                description: 'Towering over the competition'
-            },
-            {
-                id: 'sharks',
-                city: 'San Jose',
-                mascot: 'Sharks',
-                colors: ['#0E7490', '#155E75'],
-                logo: '🦈',
-                description: 'Aggressive and always hunting'
-            },
-            {
-                id: 'eagles',
-                city: 'Philadelphia',
-                mascot: 'Eagles',
-                colors: ['#064E3B', '#065F46'],
-                logo: '🦅',
-                description: 'Philadelphia pride on display'
-            },
-            {
-                id: 'monarchs',
-                city: 'Sacramento',
-                mascot: 'Monarchs',
-                colors: ['#6B21A8', '#581C87'],
-                logo: '👑',
-                description: 'Royalty on the hardwood'
-            },
-            {
-                id: 'blaze',
-                city: 'Atlanta',
-                mascot: 'Blaze',
-                colors: ['#DC2626', '#F97316'],
-                logo: '🔥',
-                description: 'Setting the league on fire'
-            },
-            {
-                id: 'lynx',
-                city: 'Minneapolis',
-                mascot: 'Lynx',
-                colors: ['#6366F1', '#4F46E5'],
-                logo: '🐱',
-                description: 'Cunning and calculated'
-            },
-            {
-                id: 'bison',
-                city: 'Buffalo',
-                mascot: 'Bison',
-                colors: ['#92400E', '#78350F'],
-                logo: '🦬',
-                description: 'Unstoppable force of nature'
-            },
-            {
-                id: 'bears',
-                city: 'Memphis',
-                mascot: 'Bears',
-                colors: ['#1C1917', '#78716C'],
-                logo: '🐻',
-                description: 'Grit and grind mentality'
-            },
-            {
-                id: 'stallions',
-                city: 'Indianapolis',
-                mascot: 'Stallions',
-                colors: ['#1E3A8A', '#FBBF24'],
-                logo: '🐎',
-                description: 'Racing to championship glory'
-            },
-            {
-                id: 'cobras',
-                city: 'Charlotte',
-                mascot: 'Cobras',
-                colors: ['#14532D', '#166534'],
-                logo: '🐍',
-                description: 'Venomous on both ends of the floor'
-            },
-            {
-                id: 'scorpions',
-                city: 'Tucson',
-                mascot: 'Scorpions',
-                colors: ['#B45309', '#92400E'],
-                logo: '🦂',
-                description: 'Desert warriors with a deadly sting'
-            },
-            {
-                id: 'cyclones',
-                city: 'Oklahoma City',
-                mascot: 'Cyclones',
-                colors: ['#0369A1', '#0C4A6E'],
-                logo: '🌀',
-                description: 'Spinning opponents into confusion'
-            },
-            {
-                id: 'ravens',
-                city: 'Seattle',
-                mascot: 'Ravens',
-                colors: ['#18181B', '#27272A'],
-                logo: '🦅',
-                description: 'Dark and mysterious excellence'
-            },
-            {
-                id: 'flames',
-                city: 'Calgary',
-                mascot: 'Flames',
-                colors: ['#DC2626', '#FACC15'],
-                logo: '🔥',
-                description: 'Burning bright in the north'
-            },
-            {
-                id: 'spartans',
-                city: 'Columbus',
-                mascot: 'Spartans',
-                colors: ['#991B1B', '#713F12'],
-                logo: '🛡️',
-                description: 'Warriors built for battle'
-            },
-            {
-                id: 'hornets',
-                city: 'New Orleans',
-                mascot: 'Hornets',
-                colors: ['#7C3AED', '#FBBF24'],
-                logo: '🐝',
-                description: 'Small but mighty with a powerful sting'
-            },
-            {
-                id: 'mavericks',
-                city: 'Omaha',
-                mascot: 'Mavericks',
-                colors: ['#0F766E', '#134E4A'],
-                logo: '🤠',
-                description: 'Independent spirits chasing glory'
-            }
-        ];
-
-        // Player Names - Fictional
-        const firstNames = ['Marcus', 'Devon', 'Tyler', 'Brandon', 'Jordan', 'Ryan', 'Alex', 'Cameron', 'Derek', 'Justin', 'Kyle', 'Travis', 'Ethan', 'Mason', 'Lucas', 'Isaiah', 'Caleb', 'Aaron', 'Dominic', 'Victor', 'Adrian', 'Elijah', 'Nathan', 'Oscar', 'Quincy'];
-        const lastNames = ['Anderson', 'Bennett', 'Carter', 'Davis', 'Edwards', 'Foster', 'Griffin', 'Harrison', 'Irving', 'Jackson', 'Kennedy', 'Lopez', 'Mitchell', 'Nelson', 'Parker', 'Reynolds', 'Stevens', 'Turner', 'Walker', 'Young', 'Brooks', 'Coleman', 'Hayes', 'Morgan', 'Price'];
-
-        // Initialize
-        function init() {
-            renderTeamSelection();
-            showScreen('home');
-            loadSettings();
-            loadSavedLeagues();
-        }
-
-        // League Management Functions
-        function loadSavedLeagues() {
-            const savedData = localStorage.getItem('hoopsGMLeagues');
-            if (savedData) {
-                gameState.savedLeagues = JSON.parse(savedData);
-            }
-            updateSavedLeaguesList();
-        }
-
-        function updateSavedLeaguesList() {
-            const listContainer = document.getElementById('saved-leagues-list');
-            const noLeaguesMsg = document.getElementById('no-leagues-message');
-            
-            if (gameState.savedLeagues.length === 0) {
-                listContainer.classList.add('hidden');
-                noLeaguesMsg.classList.remove('hidden');
-            } else {
-                listContainer.classList.remove('hidden');
-                noLeaguesMsg.classList.add('hidden');
-                
-                // Sort by saved date (newest first)
-                const sortedLeagues = [...gameState.savedLeagues].sort((a, b) => 
-                    new Date(b.savedDate) - new Date(a.savedDate)
-                );
-                
-                listContainer.innerHTML = sortedLeagues.map((league, index) => {
-                    const actualIndex = gameState.savedLeagues.findIndex(l => l.id === league.id);
-                    const savedDate = new Date(league.savedDate);
-                    const dateStr = savedDate.toLocaleDateString() + ' ' + savedDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    
-                    return `
-                    <div class="bg-gray-900 border border-gray-700 p-3 hover:border-blue-700 transition-colors cursor-pointer"
-                         onclick="loadLeague(${actualIndex})">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="flex items-center gap-3 flex-1">
-                                <div class="text-2xl">${league.teamLogo}</div>
-                                <div class="flex-1">
-                                    <div class="text-sm font-medium">${league.teamName}</div>
-                                    <div class="text-xs text-gray-400">
-                                        ${league.season} • ${league.wins}-${league.losses} • Games: ${league.gameNumber}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="text-gray-500">Saved: ${dateStr}</span>
-                            <div class="flex items-center gap-2">
-                                <button onclick="loadLeague(${actualIndex}); event.stopPropagation();" 
-                                        class="text-blue-400 hover:text-blue-300 px-2 py-1 border border-blue-700 hover:bg-blue-700 hover:bg-opacity-20">
-                                    Load
-                                </button>
-                                <button onclick="deleteLeague(${actualIndex}); event.stopPropagation();" 
-                                        class="text-red-400 hover:text-red-300 px-2 py-1 border border-red-700 hover:bg-red-700 hover:bg-opacity-20">
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                }).join('');
-            }
-        }
-
-        function createNewLeague() {
-            // Generate a unique league ID
-            gameState.currentLeagueId = 'league_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            showScreen('team-selection');
-        }
-
-        function saveCurrentLeague() {
-            if (!gameState.selectedTeam) return;
-            
-            const yourTeamName = `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}`;
-            const yourTeam = gameState.standings.find(t => t.team === yourTeamName) || { wins: 0, losses: 0 };
-            
-            const leagueData = {
-                id: gameState.currentLeagueId || ('league_' + Date.now()),
-                teamName: yourTeamName,
-                teamLogo: gameState.selectedTeam.logo,
-                teamColors: gameState.selectedTeam.colors,
-                season: gameState.season,
-                wins: yourTeam.wins,
-                losses: yourTeam.losses,
-                budget: gameState.budget,
-                roster: gameState.roster,
-                schedule: gameState.schedule,
-                standings: gameState.standings,
-                gameNumber: gameState.gameNumber,
-                chemistry: gameState.chemistry,
-                fanSupport: gameState.fanSupport,
-                payroll: gameState.payroll,
-                settings: gameState.settings,
-                selectedTeam: gameState.selectedTeam,
-                savedDate: new Date().toISOString()
-            };
-            
-            // Ensure league has an ID
-            if (!gameState.currentLeagueId) {
-                gameState.currentLeagueId = leagueData.id;
-            }
-            
-            // Check if this specific league already exists (by ID) and update it
-            const existingIndex = gameState.savedLeagues.findIndex(
-                league => league.id === gameState.currentLeagueId
-            );
-            
-            if (existingIndex >= 0) {
-                // Update existing league
-                gameState.savedLeagues[existingIndex] = leagueData;
-            } else {
-                // Add new league
-                gameState.savedLeagues.push(leagueData);
-            }
-            
-            localStorage.setItem('hoopsGMLeagues', JSON.stringify(gameState.savedLeagues));
-            updateSavedLeaguesList();
-        }
-
-        function loadLeague(index) {
-            const league = gameState.savedLeagues[index];
-            if (!league) return;
-            
-            // Restore all game state including the league ID
-            gameState.currentLeagueId = league.id;
-            gameState.selectedTeam = league.selectedTeam;
-            gameState.isTeamSelected = true;
-            gameState.season = league.season;
-            gameState.budget = league.budget;
-            gameState.roster = league.roster || [];
-            gameState.schedule = league.schedule || [];
-            gameState.standings = league.standings || [];
-            gameState.gameNumber = league.gameNumber || 0;
-            gameState.chemistry = league.chemistry || 78;
-            gameState.fanSupport = league.fanSupport || 82;
-            gameState.payroll = league.payroll || 72400000;
-            gameState.settings = league.settings || gameState.settings;
-            gameState.recentGames = [];
-            
-            // Rebuild recent games from schedule
-            const playedGames = gameState.schedule.filter(g => g.played);
-            gameState.recentGames = playedGames.slice(-5).reverse();
-            
-            // Go directly to game screen
-            showScreen('game');
-            showTab('team');
-            updateDisplay();
-            
-            // Apply gradient after loading
-            setTimeout(() => {
-                applyTeamHeaderGradient();
-            }, 100);
-        }
-
-        function deleteLeague(index) {
-            if (confirm('Are you sure you want to delete this league?')) {
-                gameState.savedLeagues.splice(index, 1);
-                localStorage.setItem('hoopsGMLeagues', JSON.stringify(gameState.savedLeagues));
-                updateSavedLeaguesList();
-            }
-        }
-
-        // Settings Functions
-        function openSettings() {
-            document.getElementById('settings-modal').classList.add('active');
-            updateSettingsUI();
-        }
-
-        function closeSettings() {
-            saveSettings();
-            document.getElementById('settings-modal').classList.remove('active');
-        }
-
-        function closeSettingsIfClickedOutside(event) {
-            if (event.target.id === 'settings-modal') {
-                closeSettings();
-            }
-        }
-
-        function setSetting(key, value) {
-            gameState.settings[key] = value;
-            updateSettingsUI();
-            
-            // Apply setting changes
-            if (key === 'seasonLength') {
-                generateSchedule();
-            }
-        }
-
-        function updateSettingsUI() {
-            // Update difficulty buttons
-            document.querySelectorAll('.difficulty-btn').forEach(btn => {
-                if (btn.dataset.value === gameState.settings.difficulty) {
-                    btn.classList.remove('border-gray-600');
-                    btn.classList.add('border-2', 'border-blue-700', 'text-blue-400');
-                } else {
-                    btn.classList.remove('border-2', 'border-blue-700', 'text-blue-400');
-                    btn.classList.add('border', 'border-gray-600');
-                }
-            });
-
-            // Update salary cap buttons
-            document.querySelectorAll('.salaryCap-btn').forEach(btn => {
-                if (btn.dataset.value === String(gameState.settings.salaryCap)) {
-                    btn.classList.remove('border-gray-600');
-                    btn.classList.add('border-2', 'border-blue-700', 'text-blue-400');
-                } else {
-                    btn.classList.remove('border-2', 'border-blue-700', 'text-blue-400');
-                    btn.classList.add('border', 'border-gray-600');
-                }
-            });
-
-            // Update injuries buttons
-            document.querySelectorAll('.injuries-btn').forEach(btn => {
-                if (btn.dataset.value === String(gameState.settings.injuries)) {
-                    btn.classList.remove('border-gray-600');
-                    btn.classList.add('border-2', 'border-blue-700', 'text-blue-400');
-                } else {
-                    btn.classList.remove('border-2', 'border-blue-700', 'text-blue-400');
-                    btn.classList.add('border', 'border-gray-600');
-                }
-            });
-
-            // Update season length buttons
-            document.querySelectorAll('.seasonLength-btn').forEach(btn => {
-                if (btn.dataset.value === String(gameState.settings.seasonLength)) {
-                    btn.classList.remove('border-gray-600');
-                    btn.classList.add('border-2', 'border-blue-700', 'text-blue-400');
-                } else {
-                    btn.classList.remove('border-2', 'border-blue-700', 'text-blue-400');
-                    btn.classList.add('border', 'border-gray-600');
-                }
-            });
-
-            // Update expansion mode buttons
-            document.querySelectorAll('.expansionMode-btn').forEach(btn => {
-                if (btn.dataset.value === String(gameState.settings.expansionMode)) {
-                    btn.classList.remove('border-gray-600');
-                    btn.classList.add('border-2', 'border-blue-700', 'text-blue-400');
-                } else {
-                    btn.classList.remove('border-2', 'border-blue-700', 'text-blue-400');
-                    btn.classList.add('border', 'border-gray-600');
-                }
-            });
-        }
-
-        function loadSettings() {
-            // Load settings from localStorage if available
-            const savedSettings = localStorage.getItem('hoopsGMSettings');
-            if (savedSettings) {
-                gameState.settings = { ...gameState.settings, ...JSON.parse(savedSettings) };
-            }
-        }
-
-        function saveSettings() {
-            localStorage.setItem('hoopsGMSettings', JSON.stringify(gameState.settings));
-        }
-
-        // Screen Navigation
-        function showScreen(screenName) {
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.remove('active');
-            });
-            
-            const screenId = screenName === 'home' ? 'home-screen' : 
-                            screenName === 'league-menu' ? 'league-menu-screen' :
-                            screenName === 'team-selection' ? 'team-selection-screen' :
-                            screenName === 'dashboard' ? 'dashboard-screen' :
-                            'game-screen';
-            
-            document.getElementById(screenId).classList.add('active');
-            
-            if (screenName === 'game') {
-                initializeStandings();
-                generateSchedule();
-                updateDisplay();
-            }
-            
-            if (screenName === 'league-menu') {
-                updateSavedLeaguesList();
-            }
-        }
-
-        // Render Team Selection
-        function renderTeamSelection() {
-            const grid = document.getElementById('teams-grid');
-            grid.innerHTML = availableTeams.map(team => `
-                <div class="team-card bg-gray-800 border-2 border-gray-700 p-4 ${gameState.selectedTeam?.id === team.id ? 'selected' : ''}"
-                     onclick="selectTeam('${team.id}')"
-                     id="team-${team.id}">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="text-3xl flex-shrink-0">${team.logo}</div>
-                        <div class="flex-1 min-w-0">
-                            <h3 class="text-sm font-medium text-gray-400 truncate">${team.city}</h3>
-                            <p class="text-lg font-light truncate" style="color: ${team.colors[0]}">${team.mascot}</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-2 mb-3">
-                        <div class="w-6 h-6 rounded-full flex-shrink-0" style="background-color: ${team.colors[0]}"></div>
-                        <div class="w-6 h-6 rounded-full flex-shrink-0" style="background-color: ${team.colors[1]}"></div>
-                    </div>
-                    <button class="w-full py-1.5 text-xs border border-blue-700 text-blue-400 hover:bg-blue-700 hover:text-white transition-colors">
-                        Select
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        // Select Team
-        function selectTeam(teamId) {
-            gameState.selectedTeam = availableTeams.find(t => t.id === teamId);
-            gameState.isTeamSelected = true;
-            
-            // Update visual selection
-            document.querySelectorAll('.team-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            document.getElementById(`team-${teamId}`).classList.add('selected');
-            
-            // Enable continue button
-            const continueBtn = document.getElementById('continue-btn');
-            continueBtn.disabled = false;
-            continueBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-        }
-
-        // Continue to Game
-        function continueToGame() {
-            if (!gameState.isTeamSelected) return;
-            
-            // Update dashboard with selected team
-            document.getElementById('dashboard-logo').textContent = gameState.selectedTeam.logo;
-            document.getElementById('dashboard-team-name').textContent = gameState.selectedTeam.mascot;
-            document.getElementById('dashboard-team-city').textContent = gameState.selectedTeam.city;
-            document.getElementById('dashboard-full-name').textContent = 
-                `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}`;
-            
-            // Set team colors
-            document.getElementById('dashboard-color-1').style.backgroundColor = gameState.selectedTeam.colors[0];
-            document.getElementById('dashboard-color-2').style.backgroundColor = gameState.selectedTeam.colors[1];
-            
-            showScreen('dashboard');
-            
-            // Initialize game after a brief moment and apply gradient
-            setTimeout(() => {
-                showTab('team');
-                applyTeamHeaderGradient();
-                
-                // Save the newly created league
-                saveCurrentLeague();
-            }, 100);
-        }
-
-        // Tab Navigation
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('border-blue-700', 'text-gray-100');
-                btn.classList.add('border-transparent', 'text-gray-300');
-            });
-            
-            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-            document.getElementById(`nav-${tabName}`).classList.add('border-blue-700', 'text-gray-100');
-            
-            // Update header when entering game screen
-            if (gameState.selectedTeam) {
-                document.getElementById('header-logo').textContent = gameState.selectedTeam.logo;
-                document.getElementById('header-team-name').textContent = gameState.selectedTeam.mascot;
-                
-                // Update dashboard team header and gradient
-                updateDashboardHeader();
-                
-                // Apply gradient when switching to team tab
-                if (tabName === 'team') {
-                    setTimeout(() => {
-                        applyTeamHeaderGradient();
-                    }, 50);
-                }
-                
-                // Update roster display when switching to roster tab
-                if (tabName === 'roster') {
-                    if (gameState.roster && gameState.roster.length > 0) {
-                        updateRosterDisplay();
-                        updateDepthChart();
-                    }
-                }
-            }
-        }
-
-        // Update Dashboard Header
-        function updateDashboardHeader() {
-            if (gameState.selectedTeam) {
-                document.getElementById('dashboard-team-logo').textContent = gameState.selectedTeam.logo;
-                document.getElementById('dashboard-full-team-name').textContent = 
-                    `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}`;
-                document.getElementById('team-color-1').style.backgroundColor = gameState.selectedTeam.colors[0];
-                document.getElementById('team-color-2').style.backgroundColor = gameState.selectedTeam.colors[1];
-                
-                // Apply gradient background
-                applyTeamHeaderGradient();
-            }
-        }
-
-        // Apply Team Header Gradient
-        function applyTeamHeaderGradient() {
-            const headerBar = document.getElementById('team-header-bar');
-            
-            if (gameState.selectedTeam && gameState.selectedTeam.colors) {
-                const color1 = gameState.selectedTeam.colors[0];
-                const color2 = gameState.selectedTeam.colors[1];
-                
-                // Create gradient from primary to secondary color
-                headerBar.style.background = `linear-gradient(90deg, ${color1}, ${color2})`;
-            } else {
-                // Fallback gradient
-                headerBar.style.background = 'linear-gradient(90deg, #1E1E1E, #2A2A2A)';
-            }
-        }
-
-        // Generate Random Player
-        function generatePlayer(position, isStarter = false, jerseyNum = 0) {
-            const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-            const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-            const age = 19 + Math.floor(Math.random() * 15);
-            
-            let overall;
-            if (isStarter) {
-                overall = 70 + Math.floor(Math.random() * 20); // 70-89
-            } else {
-                overall = 55 + Math.floor(Math.random() * 25); // 55-79
-            }
-            
-            const potential = Math.min(99, overall + Math.floor(Math.random() * 15));
-            const archetypes = ['Sharpshooter', 'Playmaker', 'Slasher', 'Lockdown Defender', 'Two-Way', 'Post Scorer', 'Stretch Big', '3&D Wing'];
-            const heights = { 'PG': '6\'1"', 'SG': '6\'5"', 'SF': '6\'8"', 'PF': '6\'10"', 'C': '7\'0"' };
-            const weights = { 'PG': '185', 'SG': '205', 'SF': '220', 'PF': '240', 'C': '260' };
-            
-            // Bio data
-            const cities = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego', 'Dallas', 'San Jose', 'Austin', 'Jacksonville', 'Fort Worth', 'Columbus', 'Charlotte', 'Seattle', 'Denver', 'Boston', 'Detroit', 'Memphis'];
-            const states = ['NY', 'CA', 'IL', 'TX', 'AZ', 'PA', 'TX', 'CA', 'TX', 'CA', 'TX', 'FL', 'TX', 'OH', 'NC', 'WA', 'CO', 'MA', 'MI', 'TN'];
-            const countries = [
-                { name: 'USA', flag: '🇺🇸' },
-                { name: 'Canada', flag: '🇨🇦' },
-                { name: 'Spain', flag: '🇪🇸' },
-                { name: 'France', flag: '🇫🇷' },
-                { name: 'Germany', flag: '🇩🇪' },
-                { name: 'Australia', flag: '🇦🇺' },
-                { name: 'Serbia', flag: '🇷🇸' },
-                { name: 'Greece', flag: '🇬🇷' }
-            ];
-            const colleges = ['Duke', 'Kentucky', 'North Carolina', 'Kansas', 'UCLA', 'Arizona', 'Michigan State', 'Syracuse', 'Villanova', 'Gonzaga', 'None', 'Overseas'];
-            const draftTeams = ['Hawks', 'Celtics', 'Nets', 'Hornets', 'Bulls', 'Cavaliers', 'Mavericks', 'Nuggets', 'Pistons', 'Warriors', 'Rockets', 'Pacers', 'Clippers', 'Lakers', 'Grizzlies', 'Heat'];
-            const awards = ['All-Star', 'All-Rookie', 'Sixth Man', 'Most Improved', 'Defensive POY', 'Champion', 'Finals MVP', 'All-Defense', 'All-NBA'];
-            
-            const birthYear = 2025 - age;
-            const birthMonth = Math.floor(Math.random() * 12) + 1;
-            const birthDay = Math.floor(Math.random() * 28) + 1;
-            const cityIndex = Math.floor(Math.random() * cities.length);
-            const country = countries[Math.floor(Math.random() * countries.length)];
-            const experience = Math.max(0, age - 19);
-            
-            // Generate awards based on overall rating and age
-            const playerAwards = [];
-            if (overall >= 85 && age >= 25) {
-                const allStarCount = Math.floor(Math.random() * 5) + 1;
-                if (allStarCount > 1) playerAwards.push(`${allStarCount}× All-Star`);
-                else playerAwards.push('All-Star');
-            }
-            if (overall >= 80 && Math.random() > 0.7) {
-                playerAwards.push('All-NBA');
-            }
-            if (age <= 23 && Math.random() > 0.6) {
-                playerAwards.push('All-Rookie');
-            }
-            if (Math.random() > 0.9) {
-                playerAwards.push('Champion');
-            }
-            
-            // Height in metric
-            const heightInches = { 'PG': 73, 'SG': 77, 'SF': 80, 'PF': 82, 'C': 84 }[position] || 78;
-            const heightCm = Math.round(heightInches * 2.54);
-            const weightKg = Math.round(parseInt(weights[position] || '210') * 0.453592);
-            
-            return {
-                id: Date.now() + Math.random(),
-                jersey: jerseyNum,
-                name: `${firstName} ${lastName}`,
-                position: position,
-                age: age,
-                overall: overall,
-                potential: potential,
-                archetype: archetypes[Math.floor(Math.random() * archetypes.length)],
-                height: heights[position] || '6\'6"',
-                heightCm: heightCm,
-                weight: weights[position] || '210',
-                weightKg: weightKg,
-                handedness: Math.random() > 0.1 ? 'Right' : 'Left',
-                ppg: (overall * 0.2 + Math.random() * 5).toFixed(1),
-                rpg: (overall * 0.1 + Math.random() * 3).toFixed(1),
-                apg: (overall * 0.08 + Math.random() * 2).toFixed(1),
-                salary: Math.floor((overall * 100000) + Math.random() * 5000000),
-                contractYears: 1 + Math.floor(Math.random() * 4),
-                status: Math.random() > 0.9 ? 'Injured' : 'Healthy',
-                injuryType: Math.random() > 0.9 ? 'Minor Ankle Sprain' : null,
-                injuryDuration: Math.random() > 0.9 ? Math.floor(Math.random() * 14) + 1 : 0,
-                morale: 60 + Math.floor(Math.random() * 40),
-                fatigue: Math.floor(Math.random() * 30),
-                minutes: 0,
-                // Bio data
-                birthDate: `${birthMonth}/${birthDay}/${birthYear}`,
-                birthplace: `${cities[cityIndex]}, ${states[cityIndex]}`,
-                country: country.name,
-                countryFlag: country.flag,
-                college: colleges[Math.floor(Math.random() * colleges.length)],
-                draftYear: birthYear + 19,
-                draftRound: Math.random() > 0.7 ? 1 : 2,
-                draftPick: Math.floor(Math.random() * 30) + 1,
-                draftTeam: draftTeams[Math.floor(Math.random() * draftTeams.length)],
-                experience: experience,
-                awards: playerAwards,
-                // Ratings object
-                ratings: {
-                    inside: 50 + Math.floor(Math.random() * 50),
-                    mid: 50 + Math.floor(Math.random() * 50),
-                    three: 50 + Math.floor(Math.random() * 50),
-                    playmaking: 50 + Math.floor(Math.random() * 50),
-                    perimD: 50 + Math.floor(Math.random() * 50),
-                    intD: 50 + Math.floor(Math.random() * 50),
-                    rebounding: 50 + Math.floor(Math.random() * 50),
-                    athleticism: 50 + Math.floor(Math.random() * 50),
-                    iq: 50 + Math.floor(Math.random() * 50)
-                }
-            };
-        }
-
-        // Generate Roster
-        function generateRoster() {
-            gameState.roster = [
-                // Starters (5 players)
-                generatePlayer('PG', true, 1),
-                generatePlayer('SG', true, 2),
-                generatePlayer('SF', true, 3),
-                generatePlayer('PF', true, 4),
-                generatePlayer('C', true, 5),
-                // Bench (10 players)
-                generatePlayer('PG', false, 10),
-                generatePlayer('SG', false, 11),
-                generatePlayer('SF', false, 12),
-                generatePlayer('PF', false, 13),
-                generatePlayer('C', false, 14),
-                generatePlayer('PG', false, 20),
-                generatePlayer('SG', false, 21),
-                generatePlayer('SF', false, 22),
-                generatePlayer('PF', false, 23),
-                generatePlayer('C', false, 24)
-            ];
-            
-            updateRosterDisplay();
-            updateDepthChart();
-        }
-
-        // Update Roster Display
-        function updateRosterDisplay() {
-            const tbody = document.getElementById('roster-table-body');
-            const yourTeamName = gameState.selectedTeam ? 
-                `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}` : 
-                'Your Team';
-            const yourTeam = gameState.standings.find(t => t.team === yourTeamName) || { wins: 0, losses: 0 };
-            
-            document.getElementById('roster-team-name').textContent = yourTeamName;
-            document.getElementById('roster-record').textContent = `${yourTeam.wins}-${yourTeam.losses}`;
-            document.getElementById('roster-player-count').textContent = gameState.roster.length;
-            
-            if (gameState.roster.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="11" class="p-4 text-center text-gray-500">Generate a roster to begin</td></tr>';
-                return;
-            }
-            
-            const getOvrClass = (ovr) => {
-                if (ovr >= 80) return 'ovr-high';
-                if (ovr >= 65) return 'ovr-mid';
-                return 'ovr-low';
-            };
-            
-            const getMoraleIcon = (morale) => {
-                if (morale >= 80) return '😊';
-                if (morale >= 50) return '😐';
-                return '😞';
-            };
-            
-            tbody.innerHTML = gameState.roster.map((player, index) => `
-                <tr class="roster-row border-b border-gray-700">
-                    <td class="p-2 text-gray-400">${player.jersey}</td>
-                    <td class="p-2 font-medium">
-                        <span class="cursor-pointer hover:text-blue-400 underline decoration-transparent hover:decoration-blue-400 transition-all" 
-                              onclick="openPlayerModal(${index})">
-                            ${player.name}
-                        </span>
-                    </td>
-                    <td class="p-2 text-center text-blue-400">${player.position}</td>
-                    <td class="p-2 text-center">${player.age}</td>
-                    <td class="p-2 text-center ${getOvrClass(player.overall)}">${player.overall}</td>
-                    <td class="p-2 text-center text-gray-400">${player.potential}</td>
-                    <td class="p-2 text-xs">${player.archetype}</td>
-                    <td class="p-2 text-center text-xs">${player.height}</td>
-                    <td class="p-2 text-center text-xs">${player.contractYears}yr / $${(player.salary/1000000).toFixed(1)}M</td>
-                    <td class="p-2 text-center">
-                        ${player.status === 'Healthy' ? 
-                            '<span class="text-green-400 text-xs">✓</span>' : 
-                            '<span class="text-red-400 text-xs">INJ</span>'
-                        }
-                    </td>
-                    <td class="p-2 text-center">${getMoraleIcon(player.morale)}</td>
-                </tr>
-            `).join('');
-        }
-
-        // Filter Roster
-        let rosterFilters = { position: 'all', status: 'all', contract: 'all' };
-        let rosterSort = { column: null, ascending: true };
-
-        function filterRoster() {
-            rosterFilters.position = document.getElementById('filter-position').value;
-            rosterFilters.status = document.getElementById('filter-status').value;
-            rosterFilters.contract = document.getElementById('filter-contract').value;
-            
-            let filtered = [...gameState.roster];
-            
-            if (rosterFilters.position !== 'all') {
-                filtered = filtered.filter(p => p.position === rosterFilters.position);
-            }
-            
-            if (rosterFilters.status === 'healthy') {
-                filtered = filtered.filter(p => p.status === 'Healthy');
-            } else if (rosterFilters.status === 'injured') {
-                filtered = filtered.filter(p => p.status === 'Injured');
-            }
-            
-            if (rosterFilters.contract === 'expiring') {
-                filtered = filtered.filter(p => p.contractYears === 1);
-            } else if (rosterFilters.contract === 'multi') {
-                filtered = filtered.filter(p => p.contractYears > 1);
-            }
-            
-            // Re-apply current sort
-            if (rosterSort.column) {
-                sortRosterArray(filtered, rosterSort.column);
-            }
-            
-            displayFilteredRoster(filtered);
-        }
-
-        function sortRoster(column) {
-            if (rosterSort.column === column) {
-                rosterSort.ascending = !rosterSort.ascending;
-            } else {
-                rosterSort.column = column;
-                rosterSort.ascending = true;
-            }
-            
-            let sorted = [...gameState.roster];
-            sortRosterArray(sorted, column);
-            displayFilteredRoster(sorted);
-        }
-
-        function sortRosterArray(arr, column) {
-            const columnMap = {
-                '#': 'jersey',
-                'name': 'name',
-                'position': 'position',
-                'age': 'age',
-                'ovr': 'overall',
-                'pot': 'potential'
-            };
-            
-            const key = columnMap[column] || column;
-            
-            arr.sort((a, b) => {
-                let aVal = a[key];
-                let bVal = b[key];
-                
-                if (typeof aVal === 'string') {
-                    aVal = aVal.toLowerCase();
-                    bVal = bVal.toLowerCase();
-                }
-                
-                if (rosterSort.ascending) {
-                    return aVal > bVal ? 1 : -1;
-                } else {
-                    return aVal < bVal ? 1 : -1;
-                }
-            });
-        }
-
-        function displayFilteredRoster(players) {
-            const tbody = document.getElementById('roster-table-body');
-            
-            if (players.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="11" class="p-4 text-center text-gray-500">No players match filters</td></tr>';
-                return;
-            }
-            
-            const getOvrClass = (ovr) => {
-                if (ovr >= 80) return 'ovr-high';
-                if (ovr >= 65) return 'ovr-mid';
-                return 'ovr-low';
-            };
-            
-            const getMoraleIcon = (morale) => {
-                if (morale >= 80) return '😊';
-                if (morale >= 50) return '😐';
-                return '😞';
-            };
-            
-            tbody.innerHTML = players.map((player) => {
-                const index = gameState.roster.findIndex(p => p.id === player.id);
-                return `
-                <tr class="roster-row border-b border-gray-700">
-                    <td class="p-2 text-gray-400">${player.jersey}</td>
-                    <td class="p-2 font-medium">
-                        <span class="cursor-pointer hover:text-blue-400 underline decoration-transparent hover:decoration-blue-400 transition-all" 
-                              onclick="openPlayerModal(${index})">
-                            ${player.name}
-                        </span>
-                    </td>
-                    <td class="p-2 text-center text-blue-400">${player.position}</td>
-                    <td class="p-2 text-center">${player.age}</td>
-                    <td class="p-2 text-center ${getOvrClass(player.overall)}">${player.overall}</td>
-                    <td class="p-2 text-center text-gray-400">${player.potential}</td>
-                    <td class="p-2 text-xs">${player.archetype}</td>
-                    <td class="p-2 text-center text-xs">${player.height}</td>
-                    <td class="p-2 text-center text-xs">${player.contractYears}yr / $${(player.salary/1000000).toFixed(1)}M</td>
-                    <td class="p-2 text-center">
-                        ${player.status === 'Healthy' ? 
-                            '<span class="text-green-400 text-xs">✓</span>' : 
-                            '<span class="text-red-400 text-xs">INJ</span>'
-                        }
-                    </td>
-                    <td class="p-2 text-center">${getMoraleIcon(player.morale)}</td>
-                </tr>
-                `;
-            }).join('');
-        }
-
-        // Depth Chart Management
-        function updateDepthChart() {
-            if (!gameState.depthChart) {
-                gameState.depthChart = { PG: [], SG: [], SF: [], PF: [], C: [] };
-                autoAssignDepthChart();
-                return;
-            }
-            
-            const positions = ['PG', 'SG', 'SF', 'PF', 'C'];
-            positions.forEach(pos => {
-                const container = document.getElementById(`depth-${pos.toLowerCase()}`);
-                if (!container) return;
-                
-                const posPlayers = gameState.depthChart[pos] || [];
-                
-                container.innerHTML = posPlayers.slice(0, 3).map((playerId, index) => {
-                    const player = gameState.roster.find(p => p.id === playerId);
-                    if (!player) return '';
-                    
-                    const starterBadge = index === 0 ? '<span class="text-xs text-yellow-400">★</span>' : '';
-                    return `
-                        <div class="depth-slot bg-gray-700 p-2 rounded mb-1 cursor-pointer hover:bg-gray-600" 
-                             onclick="removeFromDepth('${pos}', ${index})">
-                            ${starterBadge} ${player.jersey} ${player.name}
-                            <span class="text-xs text-gray-400">(${player.overall})</span>
-                        </div>
-                    `;
-                }).join('') || '<div class="text-xs text-gray-500">No players assigned</div>';
-            });
-            
-            if (document.getElementById('minutes-distribution')) {
-                updateMinutesDisplay();
-            }
-        }
-
-        function autoAssignDepthChart() {
-            const positions = ['PG', 'SG', 'SF', 'PF', 'C'];
-            gameState.depthChart = { PG: [], SG: [], SF: [], PF: [], C: [] };
-            
-            positions.forEach(pos => {
-                const posPlayers = gameState.roster
-                    .filter(p => p.position === pos)
-                    .sort((a, b) => b.overall - a.overall)
-                    .slice(0, 3);
-                
-                gameState.depthChart[pos] = posPlayers.map(p => p.id);
-            });
-            
-            // Initialize minutes for all players
-            gameState.roster.forEach(player => {
-                if (!player.minutes) player.minutes = 30;
-            });
-            
-            distributeMinutes();
-            
-            if (document.getElementById('depth-pg')) {
-                updateDepthChart();
-            }
-            saveLeague();
-        }
-
-        function removeFromDepth(position, index) {
-            if (gameState.depthChart[position]) {
-                gameState.depthChart[position].splice(index, 1);
-                updateDepthChart();
-                saveLeague();
-            }
-        }
-
-        function addToDepth(playerId, position) {
-            if (!gameState.depthChart[position]) {
-                gameState.depthChart[position] = [];
-            }
-            if (!gameState.depthChart[position].includes(playerId)) {
-                gameState.depthChart[position].push(playerId);
-                updateDepthChart();
-                saveLeague();
-            }
-        }
-
-        // Minutes Distribution
-        function updateMinutesDisplay() {
-            const container = document.getElementById('minutes-distribution');
-            if (!container || !gameState.depthChart) return;
-            
-            const starters = [];
-            
-            ['PG', 'SG', 'SF', 'PF', 'C'].forEach(pos => {
-                if (gameState.depthChart[pos] && gameState.depthChart[pos].length > 0) {
-                    const playerId = gameState.depthChart[pos][0];
-                    const player = gameState.roster.find(p => p.id === playerId);
-                    if (player) starters.push(player);
-                }
-            });
-            
-            if (starters.length === 0) {
-                container.innerHTML = '<div class="text-sm text-gray-500">No starters assigned</div>';
-                return;
-            }
-            
-            container.innerHTML = starters.map(player => `
-                <div class="mb-3">
-                    <div class="flex justify-between mb-1">
-                        <span class="text-sm">${player.jersey} ${player.name} (${player.position})</span>
-                        <span class="text-sm text-blue-400" id="minutes-value-${player.id}">${player.minutes || 30}</span>
-                    </div>
-                    <input type="range" min="0" max="48" value="${player.minutes || 30}" 
-                           class="minutes-slider w-full" 
-                           oninput="updatePlayerMinutes(${player.id}, this.value)">
-                </div>
-            `).join('');
-            
-            updateTotalMinutes();
-        }
-
-        function updatePlayerMinutes(playerId, minutes) {
-            const player = gameState.roster.find(p => p.id === playerId);
-            if (player) {
-                player.minutes = parseInt(minutes);
-                document.getElementById(`minutes-value-${playerId}`).textContent = minutes;
-                updateTotalMinutes();
-                saveLeague();
-            }
-        }
-
-        function updateTotalMinutes() {
-            if (!gameState.depthChart) return;
-            
-            const starters = [];
-            ['PG', 'SG', 'SF', 'PF', 'C'].forEach(pos => {
-                if (gameState.depthChart[pos] && gameState.depthChart[pos].length > 0) {
-                    const playerId = gameState.depthChart[pos][0];
-                    const player = gameState.roster.find(p => p.id === playerId);
-                    if (player) starters.push(player);
-                }
-            });
-            
-            const total = starters.reduce((sum, p) => sum + (p.minutes || 30), 0);
-            const totalElement = document.getElementById('total-minutes');
-            if (totalElement) {
-                totalElement.textContent = total;
-                totalElement.className = total === 240 ? 'text-green-400' : 'text-red-400';
-            }
-        }
-
-        function distributeMinutes() {
-            if (!gameState.depthChart) return;
-            
-            const starters = [];
-            ['PG', 'SG', 'SF', 'PF', 'C'].forEach(pos => {
-                if (gameState.depthChart[pos] && gameState.depthChart[pos].length > 0) {
-                    const playerId = gameState.depthChart[pos][0];
-                    const player = gameState.roster.find(p => p.id === playerId);
-                    if (player) starters.push(player);
-                }
-            });
-            
-            if (starters.length === 0) return;
-            
-            // Distribute 240 minutes among starters
-            const baseMinutes = 30;
-            const totalOverall = starters.reduce((sum, p) => sum + p.overall, 0);
-            
-            starters.forEach(player => {
-                const weight = player.overall / totalOverall;
-                player.minutes = Math.round(baseMinutes + (weight * 90)); // 30 + weighted portion of remaining 90
-            });
-            
-            // Balance to exactly 240
-            let currentTotal = starters.reduce((sum, p) => sum + p.minutes, 0);
-            if (currentTotal !== 240 && starters.length > 0) {
-                const diff = 240 - currentTotal;
-                starters[0].minutes += diff;
-            }
-            
-            if (document.getElementById('minutes-distribution')) {
-                updateMinutesDisplay();
-            }
-            saveLeague();
-        }
-
-        // Player Modal Functions
-        let currentPlayerIndex = null;
-
-        function openPlayerModal(playerIndex) {
-            currentPlayerIndex = playerIndex;
-            const player = gameState.roster[playerIndex];
-            if (!player) return;
-            
-            // Update modal header with null checks
-            const modalName = document.getElementById('modal-player-name');
-            const modalPosition = document.getElementById('modal-player-position');
-            const modalOverall = document.getElementById('modal-player-overall');
-            
-            if (!modalName || !modalPosition || !modalOverall) {
-                console.warn('Player modal elements not found');
-                return;
-            }
-            
-            modalName.textContent = player.name;
-            modalPosition.textContent = player.position;
-            modalOverall.textContent = player.overall;
-            
-            // Show Overview tab by default
-            showPlayerTab('overview');
-            
-            // Populate Overview tab with Bio Panel
-            const modalOverview = document.getElementById('modal-overview');
-            if (!modalOverview) return;
-            
-            // Generate award chips
-            const awardsHTML = player.awards && player.awards.length > 0 
-                ? player.awards.map(award => `<span class="inline-block bg-blue-900 bg-opacity-50 border border-blue-600 text-blue-400 text-xs px-2 py-1 rounded-full mr-1 mb-1">${award}</span>`).join('')
-                : '<span class="text-gray-500 text-sm">None</span>';
-            
-            modalOverview.innerHTML = `
-                <!-- Player Portrait and Quick Stats -->
-                <div class="flex gap-4 mb-6">
-                    <div class="flex-shrink-0 w-20 h-20 bg-gray-700 rounded-lg flex items-center justify-center text-4xl">
-                        ${player.countryFlag || '👤'}
-                    </div>
-                    <div class="flex-1">
-                        <div class="grid grid-cols-3 gap-4 mb-2">
-                            <div class="text-center">
-                                <div class="text-2xl text-blue-400 font-bold">${player.ppg}</div>
-                                <div class="text-xs text-gray-400">PPG</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl text-blue-400 font-bold">${player.rpg}</div>
-                                <div class="text-xs text-gray-400">RPG</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl text-blue-400 font-bold">${player.apg}</div>
-                                <div class="text-xs text-gray-400">APG</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Player Bio Panel -->
-                <div class="border-t border-gray-700 pt-4">
-                    <h3 class="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Player Bio</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-sm">
-                        <!-- Left Column -->
-                        <div class="flex justify-between py-1.5 border-b border-gray-800">
-                            <span class="text-gray-400">Position</span>
-                            <span class="text-gray-100 font-medium">${player.position}</span>
-                        </div>
-                        <div class="flex justify-between py-1.5 border-b border-gray-800">
-                            <span class="text-gray-400">Shoots</span>
-                            <span class="text-gray-100">${player.handedness}</span>
-                        </div>
-                        <div class="flex justify-between py-1.5 border-b border-gray-800">
-                            <span class="text-gray-400">Height</span>
-                            <span class="text-gray-100">${player.height} <span class="text-gray-500">(${player.heightCm} cm)</span></span>
-                        </div>
-                        <div class="flex justify-between py-1.5 border-b border-gray-800">
-                            <span class="text-gray-400">Weight</span>
-                            <span class="text-gray-100">${player.weight} lbs <span class="text-gray-500">(${player.weightKg} kg)</span></span>
-                        </div>
-                        <div class="flex justify-between py-1.5 border-b border-gray-800">
-                            <span class="text-gray-400">Born</span>
-                            <span class="text-gray-100">${player.birthDate} <span class="text-gray-500">(${player.age} yrs)</span></span>
-                        </div>
-                        <div class="flex justify-between py-1.5 border-b border-gray-800">
-                            <span class="text-gray-400">Birthplace</span>
-                            <span class="text-gray-100">${player.birthplace}</span>
-                        </div>
-                        <div class="flex justify-between py-1.5 border-b border-gray-800">
-                            <span class="text-gray-400">Country</span>
-                            <span class="text-gray-100">${player.countryFlag} ${player.country}</span>
-                        </div>
-                        <div class="flex justify-between py-1.5 border-b border-gray-800">
-                            <span class="text-gray-400">College</span>
-                            <span class="text-gray-100">${player.college}</span>
-                        </div>
-                        <div class="flex justify-between py-1.5 border-b border-gray-800">
-                            <span class="text-gray-400">Draft</span>
-                            <span class="text-gray-100">${player.draftYear}, Rd ${player.draftRound}, Pk ${player.draftPick}</span>
-                        </div>
-                        <div class="flex justify-between py-1.5 border-b border-gray-800">
-                            <span class="text-gray-400">Draft Team</span>
-                            <span class="text-gray-100">${player.draftTeam}</span>
-                        </div>
-                        <div class="flex justify-between py-1.5 border-b border-gray-800">
-                            <span class="text-gray-400">Experience</span>
-                            <span class="text-gray-100">${player.experience} ${player.experience === 1 ? 'season' : 'seasons'}</span>
-                        </div>
-                        <div class="flex justify-between py-1.5 border-b border-gray-800">
-                            <span class="text-gray-400">Jersey</span>
-                            <span class="text-gray-100">#${player.jersey}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Awards Section -->
-                <div class="border-t border-gray-700 pt-4 mt-4">
-                    <h3 class="text-sm font-semibold text-gray-300 mb-2 uppercase tracking-wide">Career Awards</h3>
-                    <div class="flex flex-wrap">
-                        ${awardsHTML}
-                    </div>
-                </div>
-
-                <!-- Archetype Badge -->
-                <div class="border-t border-gray-700 pt-4 mt-4">
-                    <h3 class="text-sm font-semibold text-gray-300 mb-2 uppercase tracking-wide">Player Type</h3>
-                    <div class="inline-block bg-gradient-to-r from-blue-900 to-blue-800 border border-blue-600 text-blue-300 px-4 py-2 rounded-lg font-medium">
-                        ${player.archetype}
-                    </div>
-                </div>
-            `;
-            
-            // Populate Ratings tab
-            const getRatingColor = (rating) => {
-                if (rating >= 80) return 'bg-green-600';
-                if (rating >= 65) return 'bg-blue-600';
-                if (rating >= 50) return 'bg-yellow-600';
-                return 'bg-gray-600';
-            };
-            
-            const modalRatings = document.getElementById('modal-ratings');
-            if (modalRatings) {
-                modalRatings.innerHTML = `
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="flex justify-between items-center">
-                            <span>Inside Scoring</span>
-                            <span class="rating-badge ${getRatingColor(player.ratings.inside)}">${player.ratings.inside}</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span>Mid-Range</span>
-                            <span class="rating-badge ${getRatingColor(player.ratings.mid)}">${player.ratings.mid}</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span>Three-Point</span>
-                            <span class="rating-badge ${getRatingColor(player.ratings.three)}">${player.ratings.three}</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span>Playmaking</span>
-                            <span class="rating-badge ${getRatingColor(player.ratings.playmaking)}">${player.ratings.playmaking}</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span>Perimeter Defense</span>
-                            <span class="rating-badge ${getRatingColor(player.ratings.perimD)}">${player.ratings.perimD}</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span>Interior Defense</span>
-                            <span class="rating-badge ${getRatingColor(player.ratings.intD)}">${player.ratings.intD}</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span>Rebounding</span>
-                            <span class="rating-badge ${getRatingColor(player.ratings.rebounding)}">${player.ratings.rebounding}</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span>Athleticism</span>
-                            <span class="rating-badge ${getRatingColor(player.ratings.athleticism)}">${player.ratings.athleticism}</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span>Basketball IQ</span>
-                            <span class="rating-badge ${getRatingColor(player.ratings.iq)}">${player.ratings.iq}</span>
-                        </div>
-                    </div>
-                    <div class="mt-4 pt-4 border-t border-gray-700">
-                        <div class="flex justify-between">
-                            <span>Potential</span>
-                            <span class="text-yellow-400">${player.potential}</span>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // Populate Contract tab
-            const modalContract = document.getElementById('modal-contract');
-            if (modalContract) {
-                modalContract.innerHTML = `
-                    <div class="mb-4">
-                        <div class="text-xs text-gray-400 mb-1">Annual Salary</div>
-                        <div class="text-2xl text-green-400">$${(player.salary/1000000).toFixed(2)}M</div>
-                    </div>
-                    <div class="mb-4">
-                        <div class="text-xs text-gray-400 mb-1">Contract Length</div>
-                        <div class="text-lg">${player.contractYears} ${player.contractYears === 1 ? 'year' : 'years'} remaining</div>
-                    </div>
-                    <div class="mb-4">
-                        <div class="text-xs text-gray-400 mb-1">Total Value</div>
-                        <div class="text-lg">$${(player.salary * player.contractYears / 1000000).toFixed(2)}M</div>
-                    </div>
-                    ${player.contractYears === 1 ? 
-                        '<div class="bg-yellow-900 bg-opacity-30 border border-yellow-600 rounded p-3 text-sm"><span class="text-yellow-400">⚠️</span> Expiring Contract</div>' : 
-                        ''
-                    }
-                `;
-            }
-            
-            // Populate Health & Form tab
-            const getMoraleColor = (morale) => {
-                if (morale >= 80) return 'text-green-400';
-                if (morale >= 50) return 'text-yellow-400';
-                return 'text-red-400';
-            };
-            
-            const getFatigueColor = (fatigue) => {
-                if (fatigue >= 60) return 'text-red-400';
-                if (fatigue >= 30) return 'text-yellow-400';
-                return 'text-green-400';
-            };
-            
-            const modalHealth = document.getElementById('modal-health');
-            if (modalHealth) {
-                modalHealth.innerHTML = `
-                    <div class="mb-4">
-                        <div class="text-xs text-gray-400 mb-1">Health Status</div>
-                        <div class="text-lg ${player.status === 'Healthy' ? 'text-green-400' : 'text-red-400'}">
-                            ${player.status}
-                        </div>
-                    </div>
-                    ${player.status === 'Injured' ? `
-                        <div class="mb-4">
-                            <div class="text-xs text-gray-400 mb-1">Injury Details</div>
-                            <div>${player.injuryType}</div>
-                            <div class="text-sm text-gray-400 mt-1">${player.injuryDuration} games remaining</div>
-                        </div>
-                    ` : ''}
-                    <div class="mb-4">
-                        <div class="text-xs text-gray-400 mb-1">Morale</div>
-                        <div class="flex items-center gap-2">
-                            <div class="flex-1 bg-gray-700 rounded-full h-2">
-                                <div class="${getMoraleColor(player.morale).replace('text-', 'bg-')} h-2 rounded-full" 
-                                     style="width: ${player.morale}%"></div>
-                            </div>
-                            <span class="${getMoraleColor(player.morale)}">${player.morale}</span>
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <div class="text-xs text-gray-400 mb-1">Fatigue</div>
-                        <div class="flex items-center gap-2">
-                            <div class="flex-1 bg-gray-700 rounded-full h-2">
-                                <div class="${getFatigueColor(player.fatigue).replace('text-', 'bg-')} h-2 rounded-full" 
-                                     style="width: ${player.fatigue}%"></div>
-                            </div>
-                            <span class="${getFatigueColor(player.fatigue)}">${player.fatigue}</span>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // Populate Actions tab
-            const isStarter = ['PG', 'SG', 'SF', 'PF', 'C'].some(pos => 
-                gameState.depthChart[pos] && gameState.depthChart[pos][0] === player.id
-            );
-            
-            const modalActions = document.getElementById('modal-actions');
-            if (modalActions) {
-                modalActions.innerHTML = `
-                    <div class="space-y-3">
-                        ${!isStarter ? `
-                            <button onclick="setAsStarter(${playerIndex})" 
-                                    class="w-full bg-blue-700 hover:bg-blue-600 p-3 rounded">
-                                Set as Starter
-                            </button>
-                        ` : '<div class="text-green-400 text-center p-3">✓ Starting Lineup</div>'}
-                        <button onclick="closePlayerModal()" 
-                                class="w-full bg-gray-700 hover:bg-gray-600 p-3 rounded">
-                            Close
-                        </button>
-                    </div>
-                `;
-            }
-            
-            // Show modal
-            const playerModal = document.getElementById('player-modal');
-            if (playerModal) {
-                playerModal.classList.remove('hidden');
-            }
-        }
-
-        function closePlayerModal() {
-            const playerModal = document.getElementById('player-modal');
-            if (playerModal) {
-                playerModal.classList.add('hidden');
-            }
-            currentPlayerIndex = null;
-        }
-
-        function showPlayerTab(tabName) {
-            // Hide all tabs
-            ['overview', 'ratings', 'contract', 'health', 'actions'].forEach(tab => {
-                const tabEl = document.getElementById(`modal-${tab}`);
-                if (tabEl) tabEl.classList.add('hidden');
-            });
-            
-            // Remove active class from all buttons
-            document.querySelectorAll('.modal-tab-btn').forEach(btn => {
-                btn.classList.remove('bg-blue-700');
-                btn.classList.add('bg-gray-700');
-            });
-            
-            // Show selected tab
-            const selectedTab = document.getElementById(`modal-${tabName}`);
-            if (selectedTab) {
-                selectedTab.classList.remove('hidden');
-            }
-            
-            // Highlight active button
-            const activeBtn = Array.from(document.querySelectorAll('.modal-tab-btn'))
-                .find(btn => btn.textContent.toLowerCase().includes(tabName));
-            if (activeBtn) {
-                activeBtn.classList.remove('bg-gray-700');
-                activeBtn.classList.add('bg-blue-700');
-            }
-        }
-
-        function setAsStarter(playerIndex) {
-            const player = gameState.roster[playerIndex];
-            if (!player) return;
-            
-            const position = player.position;
-            
-            // Remove player from depth chart if already there
-            Object.keys(gameState.depthChart).forEach(pos => {
-                const index = gameState.depthChart[pos].indexOf(player.id);
-                if (index !== -1) {
-                    gameState.depthChart[pos].splice(index, 1);
-                }
-            });
-            
-            // Add as first in position depth chart
-            if (!gameState.depthChart[position]) {
-                gameState.depthChart[position] = [];
-            }
-            gameState.depthChart[position].unshift(player.id);
-            
-            // Update displays
-            updateDepthChart();
-            distributeMinutes();
-            closePlayerModal();
-            saveLeague();
-        }
-
-        // Initialize Standings
-        function initializeStandings() {
-            const yourTeamName = gameState.selectedTeam ? 
-                `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}` : 
-                'Your Team';
-            
-            gameState.standings = [yourTeamName, ...teamNames].map(team => ({
-                team: team,
-                wins: 0,
-                losses: 0,
-                pct: 0,
-                rating: team === yourTeamName ? 75 : 60 + Math.floor(Math.random() * 30)
-            }));
-            updateStandingsDisplay();
-        }
-
-        // Generate Schedule
-        function generateSchedule() {
-            gameState.schedule = [];
-            const totalGames = gameState.settings.seasonLength;
-            
-            for (let i = 0; i < totalGames; i++) {
-                const opponent = teamNames[Math.floor(Math.random() * teamNames.length)];
-                gameState.schedule.push({
-                    game: i + 1,
-                    opponent: opponent,
-                    played: false,
-                    result: null
-                });
-            }
-            updateScheduleDisplay();
-        }
-
-        // Simulate Game
-        function simulateGame() {
-            if (gameState.gameNumber >= gameState.schedule.length) {
-                alert('Season complete!');
-                return;
-            }
-
-            const yourTeamName = gameState.selectedTeam ? 
-                `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}` : 
-                'Your Team';
-
-            const game = gameState.schedule[gameState.gameNumber];
-            const yourTeam = gameState.standings.find(t => t.team === yourTeamName);
-            const opponent = gameState.standings.find(t => t.team === game.opponent);
-            
-            // Simple simulation based on team ratings
-            const yourScore = 90 + Math.floor(Math.random() * 30) + (yourTeam.rating - 75) * 0.3;
-            const oppScore = 90 + Math.floor(Math.random() * 30) + (opponent.rating - 75) * 0.3;
-            
-            const won = yourScore > oppScore;
-            
-            game.played = true;
-            game.result = won ? 'W' : 'L';
-            game.score = `${Math.round(yourScore)}-${Math.round(oppScore)}`;
-            
-            if (won) {
-                yourTeam.wins++;
-                opponent.losses++;
-            } else {
-                yourTeam.losses++;
-                opponent.wins++;
-            }
-            
-            yourTeam.pct = (yourTeam.wins / (yourTeam.wins + yourTeam.losses)).toFixed(3);
-            opponent.pct = (opponent.wins / (opponent.wins + opponent.losses)).toFixed(3);
-            
-            gameState.recentGames.unshift({
-                opponent: game.opponent,
-                result: game.result,
-                score: game.score
-            });
-            
-            if (gameState.recentGames.length > 5) {
-                gameState.recentGames.pop();
-            }
-            
-            gameState.gameNumber++;
-            
-            // Update chemistry based on result
-            if (won) {
-                gameState.chemistry = Math.min(100, gameState.chemistry + Math.floor(Math.random() * 3));
-                gameState.chemistryTrend = 'up';
-                gameState.fanSupport = Math.min(100, gameState.fanSupport + 1);
-            } else {
-                gameState.chemistry = Math.max(50, gameState.chemistry - Math.floor(Math.random() * 2));
-                gameState.chemistryTrend = 'down';
-                gameState.fanSupport = Math.max(40, gameState.fanSupport - 1);
-            }
-            
-            document.getElementById('fan-support').textContent = gameState.fanSupport;
-            
-            updateDisplay();
-            
-            // Auto-save after each game
-            saveCurrentLeague();
-        }
-
-        // Simulate Week
-        function simulateWeek() {
-            for (let i = 0; i < 3; i++) {
-                if (gameState.gameNumber < gameState.schedule.length) {
-                    simulateGame();
-                }
-            }
-        }
-
-        // Simulate Season
-        function simulateSeason() {
-            while (gameState.gameNumber < gameState.schedule.length) {
-                simulateGame();
-            }
-        }
-
-        // Update Display
-        function updateDisplay() {
-            const yourTeamName = gameState.selectedTeam ? 
-                `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}` : 
-                'Your Team';
-            
-            const yourTeam = gameState.standings.find(t => t.team === yourTeamName);
-            if (!yourTeam) return;
-            
-            // Basic stats with null checks
-            const teamRecord = document.getElementById('team-record');
-            const budget = document.getElementById('budget');
-            const teamRating = document.getElementById('team-rating');
-            
-            if (teamRecord) teamRecord.textContent = `${yourTeam.wins}-${yourTeam.losses}`;
-            if (budget) budget.textContent = `$${(gameState.budget / 1000000).toFixed(1)}M`;
-            if (teamRating) teamRating.textContent = yourTeam.rating;
-            
-            // Dashboard specific updates
-            const recordWins = document.getElementById('record-wins');
-            const recordLosses = document.getElementById('record-losses');
-            const recordPct = document.getElementById('record-pct');
-            const teamOvr = document.getElementById('team-ovr');
-            
-            if (recordWins) recordWins.textContent = yourTeam.wins;
-            if (recordLosses) recordLosses.textContent = yourTeam.losses;
-            if (recordPct) recordPct.textContent = yourTeam.pct || '.000';
-            if (teamOvr) teamOvr.textContent = yourTeam.rating;
-            
-            // Update conference rank
-            const sortedStandings = [...gameState.standings].sort((a, b) => {
-                if (b.wins !== a.wins) return b.wins - a.wins;
-                return a.losses - b.losses;
-            });
-            const rank = sortedStandings.findIndex(t => t.team === yourTeamName) + 1;
-            const rankSuffix = rank === 1 ? 'st' : rank === 2 ? 'nd' : rank === 3 ? 'rd' : 'th';
-            
-            const confRank = document.getElementById('conf-rank');
-            const quickConfRank = document.getElementById('quick-conf-rank');
-            if (confRank) confRank.textContent = rank;
-            if (quickConfRank) quickConfRank.textContent = `${rank}${rankSuffix}`;
-            
-            // Update streak
-            updateStreak();
-            
-            // Update chemistry
-            updateChemistry();
-            
-            // Update finances
-            updateFinances();
-            
-            // Update next game
-            updateNextGame();
-            
-            updateRecentGames();
-            updateStandingsDisplay();
-            updateScheduleDisplay();
-        }
-
-        // Update Streak
-        function updateStreak() {
-            if (gameState.recentGames.length === 0) {
-                document.getElementById('team-streak').textContent = '-';
-                return;
-            }
-            
-            let streak = 1;
-            const lastResult = gameState.recentGames[0].result;
-            
-            for (let i = 1; i < gameState.recentGames.length; i++) {
-                if (gameState.recentGames[i].result === lastResult) {
-                    streak++;
-                } else {
-                    break;
-                }
-            }
-            
-            gameState.streak = streak;
-            gameState.streakType = lastResult;
-            document.getElementById('team-streak').textContent = `${lastResult}${streak}`;
-        }
-
-        // Update Chemistry
-        function updateChemistry() {
-            const chemValue = gameState.chemistry;
-            document.getElementById('chemistry-value').textContent = `${chemValue}%`;
-            document.getElementById('chemistry-bar').style.width = `${chemValue}%`;
-            
-            const trend = gameState.chemistryTrend === 'up' ? '↗ Trending Up' : '↘ Trending Down';
-            const trendClass = gameState.chemistryTrend === 'up' ? 'trend-up' : 'trend-down';
-            const trendElement = document.getElementById('chemistry-trend');
-            trendElement.textContent = trend;
-            trendElement.className = `${trendClass} text-sm`;
-            
-            // Update sub-stats (with some variation)
-            document.getElementById('chem-offense').textContent = Math.min(100, chemValue + Math.floor(Math.random() * 10));
-            document.getElementById('chem-defense').textContent = Math.max(60, chemValue - Math.floor(Math.random() * 10));
-            document.getElementById('chem-teamwork').textContent = chemValue;
-        }
-
-        // Update Finances
-        function updateFinances() {
-            document.getElementById('current-payroll').textContent = `$${(gameState.payroll / 1000000).toFixed(1)}M`;
-            document.getElementById('salary-cap').textContent = `$${(gameState.budget / 1000000).toFixed(1)}M`;
-            document.getElementById('luxury-tax').textContent = `$${(gameState.luxuryTax / 1000000).toFixed(1)}M`;
-            document.getElementById('owner-budget').textContent = `$${(gameState.ownerBudget / 1000000).toFixed(0)}M`;
-            
-            const capPercentage = (gameState.payroll / gameState.budget) * 100;
-            document.getElementById('cap-space-bar').style.width = `${capPercentage}%`;
-        }
-
-        // Update Next Game
-        function updateNextGame() {
-            if (gameState.gameNumber >= gameState.schedule.length) {
-                document.getElementById('next-opponent').textContent = 'Season Complete';
-                document.getElementById('next-game-location').textContent = '';
-                return;
-            }
-            
-            const nextGame = gameState.schedule[gameState.gameNumber];
-            document.getElementById('next-opponent').textContent = nextGame.opponent;
-            document.getElementById('next-opponent-logo').textContent = '🏀';
-            document.getElementById('next-game-location').textContent = Math.random() > 0.5 ? 'Home' : 'Away';
-        }
-
-        // Update Recent Games
-        function updateRecentGames() {
-            const container = document.getElementById('recent-games');
-            if (gameState.recentGames.length === 0) {
-                container.innerHTML = '<div class="text-gray-500 text-sm">No games played yet</div>';
-                return;
-            }
-            
-            container.innerHTML = gameState.recentGames.map(game => `
-                <div class="flex justify-between items-center p-3 bg-gray-900 border border-gray-700">
-                    <div class="flex items-center gap-3">
-                        <span class="text-sm font-medium ${game.result === 'W' ? 'text-green-400' : 'text-red-400'}">${game.result}</span>
-                        <span class="text-sm">vs ${game.opponent}</span>
-                    </div>
-                    <span class="text-sm text-gray-400">${game.score}</span>
-                </div>
-            `).join('');
-        }
-
-        // Update Standings
-        function updateStandingsDisplay() {
-            const yourTeamName = gameState.selectedTeam ? 
-                `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}` : 
-                'Your Team';
-            
-            const sortedStandings = [...gameState.standings].sort((a, b) => {
-                if (b.wins !== a.wins) return b.wins - a.wins;
-                return a.losses - b.losses;
-            });
-            
-            const leader = sortedStandings[0];
-            const tbody = document.getElementById('standings-table');
-            
-            tbody.innerHTML = sortedStandings.map((team, index) => {
-                const gb = ((leader.wins - team.wins) + (team.losses - leader.losses)) / 2;
-                const isYourTeam = team.team === yourTeamName;
-                
-                return `
-                    <tr class="border-b border-gray-700 ${isYourTeam ? 'bg-blue-900 bg-opacity-20' : ''}">
-                        <td class="p-3">${index + 1}</td>
-                        <td class="p-3 ${isYourTeam ? 'text-blue-400 font-medium' : ''}">${team.team}</td>
-                        <td class="p-3 text-center">${team.wins}</td>
-                        <td class="p-3 text-center">${team.losses}</td>
-                        <td class="p-3 text-center">${team.pct || '0.000'}</td>
-                        <td class="p-3 text-center">${gb === 0 ? '-' : gb.toFixed(1)}</td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // Update Schedule Display
-        function updateScheduleDisplay() {
-            const container = document.getElementById('schedule-list');
-            const displayGames = gameState.schedule.slice(0, 20);
-            
-            container.innerHTML = displayGames.map(game => `
-                <div class="flex justify-between items-center p-3 bg-gray-900 border border-gray-700">
-                    <div class="flex items-center gap-3">
-                        <span class="text-sm text-gray-400">Game ${game.game}</span>
-                        <span class="text-sm">vs ${game.opponent}</span>
-                    </div>
-                    <div class="text-sm">
-                        ${game.played ? 
-                            `<span class="${game.result === 'W' ? 'text-green-400' : 'text-red-400'}">${game.result} ${game.score}</span>` : 
-                            '<span class="text-gray-500">Not played</span>'
-                        }
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Generate Draft Class
-        function generateDraftClass() {
-            const draftClass = [];
-            for (let i = 0; i < 30; i++) {
-                const player = generatePlayer(['PG', 'SG', 'SF', 'PF', 'C'][Math.floor(Math.random() * 5)], i < 5);
-                player.pick = i + 1;
-                player.potential = player.overall + Math.floor(Math.random() * 15);
-                draftClass.push(player);
-            }
-            
-            const container = document.getElementById('draft-prospects');
-            container.innerHTML = draftClass.map(player => `
-                <div class="flex justify-between items-center p-3 bg-gray-900 border border-gray-700">
-                    <div class="flex items-center gap-4">
-                        <span class="text-gray-400 text-sm w-8">#${player.pick}</span>
-                        <div>
-                            <div class="text-sm font-medium">${player.name}</div>
-                            <div class="text-xs text-gray-400">${player.position} • Age ${player.age}</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <div class="text-right">
-                            <div class="text-sm">Overall: <span class="text-blue-400">${player.overall}</span></div>
-                            <div class="text-xs text-gray-400">Potential: ${player.potential}</div>
-                        </div>
-                        <button onclick="draftPlayer(${player.pick})" class="btn-primary bg-blue-700 text-white px-3 py-1 text-xs">Draft</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Draft Player
-        function draftPlayer(pick) {
-            alert(`Drafted player #${pick}! (Feature in development)`);
-        }
-
-        // Initialize on load
-        init();
-    </script>
+  </div>
+
+  <script>
+    // -------------------------------
+    // Minimal data model (expandable)
+    // -------------------------------
+    const DEFAULT_RULES = {
+      cap: 149_000_000,     // 2026 example cap
+      tax: 181_000_000,     // tax threshold
+      apron1: 189_000_000,  // first apron
+      apron2: 199_000_000,  // second apron
+      rosterLimit: 15
+    };
+
+    const initialState = {
+      meta: { teamName: "San Francisco Riptide", season: 2026, rules: DEFAULT_RULES },
+      roster: [
+        {id: uid(), name:"D. Lawson", pos:"PG", age:27, ovr:84, salary:24_500_000, years:3, notes:"Primary ball-handler"},
+        {id: uid(), name:"K. Ajayi", pos:"SG", age:24, ovr:82, salary:18_200_000, years:2, notes:"Slasher, plus defender"},
+        {id: uid(), name:"M. Petrovic", pos:"C",  age:29, ovr:80, salary:16_000_000, years:2, notes:"Drop big, elite screener"},
+        {id: uid(), name:"R. Vega", pos:"SF", age:22, ovr:76, salary:8_200_000, years:2, notes:"3&D, team opt Yr2"},
+        {id: uid(), name:"T. Han", pos:"PF", age:31, ovr:74, salary:5_100_000, years:1, notes:"Vet floor spacer"}
+      ],
+      events: [
+        {ts: Date.now(), text:"Hired analytics intern who speaks exclusively in effective field goal percentage."}
+      ],
+      prospects: []
+    };
+
+    // -------------------------------
+    // Storage
+    // -------------------------------
+    const STORAGE_KEY = "hoops-mini-gm";
+    function load(){
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || initialState }
+      catch { return initialState }
+    }
+    function save(state){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      toast("Saved league.");
+    }
+
+    // -------------------------------
+    // Utilities
+    // -------------------------------
+    function uid(){ return Math.random().toString(36).slice(2,9) }
+    const fmt = (n) => "$" + Math.round(n).toLocaleString();
+    function sum(a, f){ return a.reduce((t,x)=>t+f(x),0) }
+    function by(key, dir=1){ return (a,b)=> (a[key]>b[key]?1:-1)*dir }
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)) }
+
+    // -------------------------------
+    // State (live)
+    // -------------------------------
+    let STATE = load();
+
+    // -------------------------------
+    // DOM helpers
+    // -------------------------------
+    const $ = (q, root=document)=>root.querySelector(q);
+    const $$ = (q, root=document)=>Array.from(root.querySelectorAll(q));
+
+    // -------------------------------
+    // Navigation
+    // -------------------------------
+    $$("#nav .nav-btn").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const view = btn.dataset.view;
+        $$("#nav .nav-btn").forEach(b=>b.classList.toggle("active", b===btn));
+        $$("main section.panel").forEach(sec=>{
+          sec.hidden = (sec.dataset.view !== view);
+        });
+        if(view === "roster") renderRoster();
+        if(view === "cap") renderCapSheet();
+      });
+    });
+    $$("[data-view-jump]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const target = btn.getAttribute("data-view-jump");
+        $(`#nav .nav-btn[data-view="${target}"]`).click();
+      });
+    });
+
+    // -------------------------------
+    // Topbar actions
+    // -------------------------------
+    $("#saveBtn").addEventListener("click", ()=> save(STATE));
+    $("#resetBtn").addEventListener("click", ()=>{
+      if(confirm("Reset league to defaults?")){ STATE = structuredClone(initialState); rerenderAll(); toast("League reset."); }
+    });
+    $("#simDayBtn").addEventListener("click", ()=>{
+      const ev = {ts: Date.now(), text:"You advanced a day. Rival GM leaked a cryptic tweet with a cap calculator emoji."};
+      STATE.events.unshift(ev);
+      renderFeed();
+    });
+
+    // -------------------------------
+    // Settings
+    // -------------------------------
+    $("#applySettings").addEventListener("click", ()=>{
+      STATE.meta.teamName = $("#teamName").value.trim() || "My Team";
+      STATE.meta.season = Number($("#seasonInput").value) || STATE.meta.season;
+      $(".title").textContent = STATE.meta.teamName;
+      $("#seasonTag").textContent = `Season: ${STATE.meta.season}`;
+      toast("Settings applied.");
+    });
+
+    // -------------------------------
+    // Dashboard
+    // -------------------------------
+    function renderDashboardCaps(){
+      const {cap,tax,apron1,apron2} = STATE.meta.rules;
+      const payroll = sum(STATE.roster, p=>p.salary);
+      const pct = clamp((payroll/cap)*100,0,100);
+      $("#capFill").style.width = pct.toFixed(1)+"%";
+      $("#capKpi").textContent = `${fmt(payroll)} / ${fmt(cap)}`;
+      $("#spacePill").textContent = `Cap Space: ${fmt(cap - payroll)}`;
+      $("#taxPill").textContent = `Tax Room: ${fmt(tax - payroll)}`;
+      $("#apronPill").textContent = `Apron Room: ${fmt(apron1 - payroll)} (A1) • ${fmt(apron2 - payroll)} (A2)`;
+    }
+    function renderFeed(){
+      const feed = $("#feed");
+      if(!STATE.events.length){ feed.className="empty"; feed.textContent="No events yet. Your beat writer is doomscrolling."; return; }
+      feed.className="";
+      feed.innerHTML = STATE.events.slice(0,6).map(e=>{
+        const d = new Date(e.ts).toLocaleString();
+        return `<div style="padding:8px 0; border-bottom:1px dashed var(--border)"><span class="tag" style="margin-right:8px">${d}</span>${e.text}</div>`;
+      }).join("");
+    }
+
+    // -------------------------------
+    // Roster
+    // -------------------------------
+    let currentSort = {key:"ovr", dir:-1};
+    $("#sortOVR").addEventListener("click", ()=>{
+      currentSort = {key:"ovr", dir:-1};
+      renderRoster();
+    });
+    $$("#rosterTable thead th[data-sort]").forEach(th=>{
+      th.addEventListener("click", ()=>{
+        const key = th.dataset.sort;
+        if(currentSort.key===key){ currentSort.dir *= -1 } else { currentSort = {key, dir: key==="name"||key==="pos"?1:-1}; }
+        renderRoster();
+      });
+    });
+
+    function renderRoster(){
+      const tbody = $("#rosterBody");
+      const roster = [...STATE.roster].sort(by(currentSort.key, currentSort.dir));
+      $("#rosterCount").textContent = `${roster.length}/${STATE.meta.rules.rosterLimit}`;
+      if(!roster.length){ tbody.innerHTML = `<tr><td colspan="7" class="empty">Add players to begin your dynasty.</td></tr>`; return; }
+      tbody.innerHTML = roster.map(p=>`
+        <tr>
+          <td><strong>${escapeHtml(p.name)}</strong><div class="tag" style="margin-top:4px">${escapeHtml(p.notes||"")}</div></td>
+          <td class="pos">${p.pos}</td>
+          <td class="num">${p.age}</td>
+          <td class="num ovr">${p.ovr}</td>
+          <td class="num">${fmt(p.salary)}</td>
+          <td class="num">${p.years}</td>
+          <td class="num">
+            <button class="btn ghost" data-act="bump" data-id="${p.id}" title="Increase OVR">▲</button>
+            <button class="btn ghost" data-act="drop" data-id="${p.id}" title="Decrease OVR">▼</button>
+            <button class="btn bad" data-act="waive" data-id="${p.id}" title="Remove">Waive</button>
+          </td>
+        </tr>
+      `).join("");
+      // actions
+      $("#rosterBody").querySelectorAll("[data-act]").forEach(b=>{
+        b.addEventListener("click", ()=>{
+          const id = b.dataset.id;
+          const p = STATE.roster.find(x=>x.id===id);
+          if(!p) return;
+          if(b.dataset.act==="waive"){
+            if(confirm(`Waive ${p.name}?`)){ STATE.roster = STATE.roster.filter(x=>x.id!==id); addEvent(`${p.name} was waived.`); rerenderAll(); }
+          }
+          if(b.dataset.act==="bump"){ p.ovr = Math.min(99, p.ovr+1); renderRoster(); }
+          if(b.dataset.act==="drop"){ p.ovr = Math.max(40, p.ovr-1); renderRoster(); }
+          renderDashboardCaps();
+          renderCapSheet();
+        });
+      });
+      renderDashboardCaps();
+      renderCapSheet();
+    }
+
+    // Add Player Modal
+    const modal = $("#modal");
+    $("#addPlayerBtn").addEventListener("click", ()=> modal.style.display="flex");
+    $("#closeModal").addEventListener("click", ()=> modal.style.display="none");
+    $("#submitPlayer").addEventListener("click", ()=>{
+      const name = $("#pName").value.trim();
+      if(!name){ alert("Name required."); return; }
+      const pos = $("#pPos").value;
+      const age = Number($("#pAge").value)||24;
+      const ovr = Number($("#pOvr").value)||70;
+      const salary = Number($("#pSalary").value)||0;
+      const years = Number($("#pYears").value)||1;
+      const notes = $("#pNotes").value.trim();
+      STATE.roster.push({id:uid(), name, pos, age, ovr, salary, years, notes});
+      addEvent(`${name} signed a ${years}-yr deal for ${fmt(salary)}.`);
+      modal.style.display="none";
+      clearModalInputs();
+      rerenderAll();
+    });
+    function clearModalInputs(){
+      ["pName","pAge","pOvr","pSalary","pYears","pNotes"].forEach(id=>{ const el = $("#"+id); if(el) el.value = el.type==="number" ? el.value : "" });
+    }
+
+    // -------------------------------
+    // Cap Sheet
+    // -------------------------------
+    function renderCapSheet(){
+      const {cap,tax,apron1,apron2} = STATE.meta.rules;
+      $("#capNum").textContent = fmt(cap);
+      $("#taxNum").textContent = fmt(tax);
+      $("#apron1Num").textContent = fmt(apron1);
+      $("#apron2Num").textContent = fmt(apron2);
+
+      const body = $("#capBody");
+      if(!STATE.roster.length){ body.innerHTML = `<tr><td colspan="5" class="empty">No contracts on the books.</td></tr>`; return; }
+      body.innerHTML = STATE.roster.map(p=>{
+        const y1 = p.salary;
+        const y2 = Math.round(p.years>=2 ? p.salary*1.05 : 0);
+        const y3 = Math.round(p.years>=3 ? y2*1.05 : 0);
+        const opt = /opt|option/i.test(p.notes||"") ? "Team Opt" : "";
+        return `<tr>
+          <td>${escapeHtml(p.name)}</td>
+          <td class="num">${y1?fmt(y1):"-"}</td>
+          <td class="num">${y2?fmt(y2):"-"}</td>
+          <td class="num">${y3?fmt(y3):"-"}</td>
+          <td class="num">${opt||"-"}</td>
+        </tr>`;
+      }).join("");
+    }
+
+    // -------------------------------
+    // Trades (stub) & Draft (stub)
+    // -------------------------------
+    $("#tradeIdea").addEventListener("click", ()=>{
+      const need = inferTeamNeed();
+      $("#tradeArea").className="";
+      $("#tradeArea").innerHTML = `
+        <div style="padding:8px 0">
+          <strong>Idea:</strong> Package your ${need} + 2028 1st (top-10 protected) for a higher-OVR wing on an expiring. This keeps future cap space flexible while addressing your rotation.
+        </div>
+        <div class="tag">Prototype logic — to be replaced with real matching & AI preferences.</div>
+      `;
+    });
+
+    $("#genProspects").addEventListener("click", ()=>{
+      STATE.prospects = Array.from({length:10}).map((_,i)=>({
+        id:uid(),
+        name: genName(),
+        pos: ["PG","SG","SF","PF","C"][Math.floor(Math.random()*5)],
+        age: 19,
+        ovr: 65 + Math.floor(Math.random()*20),
+        scouted: ["B-","B","B+","A-","A"][Math.floor(Math.random()*5)]
+      }));
+      $("#draftArea").className="";
+      $("#draftArea").innerHTML = `
+        <table style="width:100%">
+          <thead><tr><th>Name</th><th>Pos</th><th class="num">OVR (foggy)</th><th class="num">Scout Grade</th></tr></thead>
+          <tbody>
+            ${STATE.prospects.map(p=>`<tr><td>${escapeHtml(p.name)}</td><td>${p.pos}</td><td class="num">${p.ovr}</td><td class="num">${p.scouted}</td></tr>`).join("")}
+          </tbody>
+        </table>
+      `;
+    });
+
+    // -------------------------------
+    // Helpers
+    // -------------------------------
+    function rerenderAll(){
+      $(".title").textContent = STATE.meta.teamName;
+      $("#seasonTag").textContent = `Season: ${STATE.meta.season}`;
+      renderDashboardCaps();
+      renderFeed();
+      renderRoster();
+      renderCapSheet();
+    }
+    function addEvent(text){ STATE.events.unshift({ts:Date.now(), text}); }
+    function toast(msg){
+      const el = document.createElement("div");
+      el.textContent = msg;
+      el.style.position="fixed"; el.style.bottom="16px"; el.style.right="16px";
+      el.style.background="var(--bg-3)"; el.style.color="var(--text-0)";
+      el.style.border="1px solid var(--border)"; el.style.padding="10px 12px";
+      el.style.borderRadius="8px"; el.style.boxShadow="var(--shadow)"; el.style.zIndex=9999;
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(), 1800);
+    }
+    function escapeHtml(s){ return (s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) }
+    function inferTeamNeed(){
+      // naive: find lowest OVR position
+      const byPos = {};
+      for(const p of STATE.roster){ byPos[p.pos] = Math.max(byPos[p.pos]||0, p.ovr); }
+      const order = ["PG","SG","SF","PF","C"].map(pos=>({pos,ovr:byPos[pos]||0})).sort((a,b)=>a.ovr-b.ovr);
+      return order[0]?.pos || "wing";
+    }
+    function genName(){
+      const first=["Jalen","Maya","Kei","Rico","Devon","Luka","Tiana","Anya","Jude","Zion","Niko","Rhea","Kobe","Imani","Kai"];
+      const last=["Lawson","Ajayi","Vega","Petrovic","Nguyen","Rodriguez","Okafor","Han","Silva","Rossi","Dubois","Khan","Ivanov","Yamamoto","O'Neal"];
+      return first[Math.floor(Math.random()*first.length)]+" "+last[Math.floor(Math.random()*last.length)];
+    }
+
+    // Init
+    rerenderAll();
+  </script>
 </body>
 </html>
