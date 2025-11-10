@@ -79,6 +79,29 @@
         .settings-btn:hover {
             transform: rotate(45deg);
         }
+        .progress-bar {
+            height: 8px;
+            background-color: rgb(55, 65, 81);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: rgb(29, 78, 216);
+            transition: width 0.3s ease;
+        }
+        .trend-up {
+            color: #10B981;
+        }
+        .trend-down {
+            color: #EF4444;
+        }
+        .inbox-item {
+            transition: background-color 0.2s ease;
+        }
+        .inbox-item:hover {
+            background-color: rgb(55, 65, 81);
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
@@ -311,27 +334,276 @@
         
         <!-- Team Overview Tab -->
         <div id="tab-team" class="tab-content">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div class="stat-card bg-gray-800 p-4 border border-gray-700">
-                    <div class="text-gray-400 text-sm mb-1">Record</div>
-                    <div class="text-3xl font-light" id="team-record">0-0</div>
-                </div>
-                <div class="stat-card bg-gray-800 p-4 border border-gray-700">
-                    <div class="text-gray-400 text-sm mb-1">Conference Rank</div>
-                    <div class="text-3xl font-light" id="conf-rank">-</div>
-                </div>
-                <div class="stat-card bg-gray-800 p-4 border border-gray-700">
-                    <div class="text-gray-400 text-sm mb-1">Team Rating</div>
-                    <div class="text-3xl font-light" id="team-rating">75</div>
+            <!-- Team Header Section -->
+            <div class="bg-gray-800 border border-gray-700 mb-6 p-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="text-5xl" id="dashboard-team-logo">🏀</div>
+                        <div>
+                            <h2 class="text-2xl font-light" id="dashboard-full-team-name">Your Team</h2>
+                            <div class="flex items-center gap-3 mt-1">
+                                <span class="text-sm text-gray-400" id="current-season">Season 2024-25</span>
+                                <div class="flex gap-2">
+                                    <div class="w-4 h-4 rounded-full" id="team-color-1"></div>
+                                    <div class="w-4 h-4 rounded-full" id="team-color-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-gray-800 p-6 border border-gray-700 mb-6">
-                <h2 class="text-xl font-light mb-4">Quick Actions</h2>
-                <div class="flex gap-3">
-                    <button onclick="simulateGame()" class="btn-primary bg-blue-700 text-white px-6 py-2 text-sm">Simulate Game</button>
-                    <button onclick="simulateWeek()" class="btn-primary bg-blue-700 text-white px-6 py-2 text-sm">Simulate Week</button>
-                    <button onclick="simulateSeason()" class="btn-primary bg-blue-700 text-white px-6 py-2 text-sm">Simulate Season</button>
+            <!-- Quick Stats Row -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="stat-card bg-gray-800 p-4 border border-gray-700">
+                    <div class="text-gray-400 text-xs mb-1">Team Overall</div>
+                    <div class="text-2xl font-light">
+                        <span class="text-blue-400" id="team-ovr">86</span>
+                        <span class="text-sm text-gray-500 ml-1">OVR</span>
+                    </div>
+                </div>
+                <div class="stat-card bg-gray-800 p-4 border border-gray-700">
+                    <div class="text-gray-400 text-xs mb-1">Conference Rank</div>
+                    <div class="text-2xl font-light" id="quick-conf-rank">5th</div>
+                </div>
+                <div class="stat-card bg-gray-800 p-4 border border-gray-700">
+                    <div class="text-gray-400 text-xs mb-1">Current Streak</div>
+                    <div class="text-2xl font-light" id="team-streak">-</div>
+                </div>
+                <div class="stat-card bg-gray-800 p-4 border border-gray-700">
+                    <div class="text-gray-400 text-xs mb-1">Fan Support</div>
+                    <div class="text-2xl font-light">
+                        <span id="fan-support">82</span><span class="text-sm">%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <!-- Left Column -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Team Record Card -->
+                    <div class="bg-gray-800 p-6 border border-gray-700">
+                        <h3 class="text-lg font-light mb-4">Team Record</h3>
+                        <div class="grid grid-cols-3 gap-4 mb-4">
+                            <div class="text-center">
+                                <div class="text-gray-400 text-sm mb-1">Wins</div>
+                                <div class="text-3xl font-light text-green-400" id="record-wins">0</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-gray-400 text-sm mb-1">Losses</div>
+                                <div class="text-3xl font-light text-red-400" id="record-losses">0</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-gray-400 text-sm mb-1">Win %</div>
+                                <div class="text-3xl font-light" id="record-pct">.000</div>
+                            </div>
+                        </div>
+                        <div class="border-t border-gray-700 pt-4">
+                            <div class="text-sm text-gray-400 mb-2">Next Game</div>
+                            <div class="flex items-center justify-between bg-gray-900 p-3 border border-gray-700">
+                                <div class="flex items-center gap-3">
+                                    <div class="text-2xl" id="next-opponent-logo">🏀</div>
+                                    <div>
+                                        <div class="font-medium" id="next-opponent">TBD</div>
+                                        <div class="text-xs text-gray-400" id="next-game-location">Home</div>
+                                    </div>
+                                </div>
+                                <button onclick="simulateGame()" class="btn-primary bg-blue-700 text-white px-4 py-2 text-sm">
+                                    Simulate
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team Chemistry Card -->
+                    <div class="bg-gray-800 p-6 border border-gray-700">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-light">Team Chemistry</h3>
+                            <span class="trend-up text-sm" id="chemistry-trend">↗ Trending Up</span>
+                        </div>
+                        <div class="mb-2">
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="text-gray-400">Overall Chemistry</span>
+                                <span class="text-blue-400 font-medium" id="chemistry-value">78%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="chemistry-bar" style="width: 78%"></div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 mt-4 text-center text-sm">
+                            <div>
+                                <div class="text-gray-400">Offense</div>
+                                <div class="text-lg" id="chem-offense">82</div>
+                            </div>
+                            <div>
+                                <div class="text-gray-400">Defense</div>
+                                <div class="text-lg" id="chem-defense">75</div>
+                            </div>
+                            <div>
+                                <div class="text-gray-400">Teamwork</div>
+                                <div class="text-lg" id="chem-teamwork">77</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Finances Card -->
+                    <div class="bg-gray-800 p-6 border border-gray-700">
+                        <h3 class="text-lg font-light mb-4">Team Finances</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Current Payroll</span>
+                                <span class="text-xl font-light" id="current-payroll">$72.4M</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Salary Cap</span>
+                                <span class="text-lg" id="salary-cap">$85.2M</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Luxury Tax Line</span>
+                                <span class="text-lg text-red-400" id="luxury-tax">$102.3M</span>
+                            </div>
+                            <div class="border-t border-gray-700 pt-3 mt-3">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-400">Owner Budget</span>
+                                    <span class="text-lg text-green-400" id="owner-budget">$125M</span>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <div class="text-xs text-gray-400 mb-2">Cap Space Used</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="cap-space-bar" style="width: 85%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Schedule Snapshot -->
+                    <div class="bg-gray-800 p-6 border border-gray-700">
+                        <h3 class="text-lg font-light mb-4">Upcoming Games</h3>
+                        <div class="space-y-2" id="upcoming-games">
+                            <div class="flex items-center justify-between bg-gray-900 p-3 border border-gray-700">
+                                <div class="flex items-center gap-3">
+                                    <div class="text-xl">🏀</div>
+                                    <div>
+                                        <div class="text-sm font-medium">Lakers</div>
+                                        <div class="text-xs text-gray-400">Dec 15, 2024</div>
+                                    </div>
+                                </div>
+                                <span class="text-xs bg-gray-700 px-2 py-1 rounded">H</span>
+                            </div>
+                            <div class="flex items-center justify-between bg-gray-900 p-3 border border-gray-700">
+                                <div class="flex items-center gap-3">
+                                    <div class="text-xl">🏀</div>
+                                    <div>
+                                        <div class="text-sm font-medium">Celtics</div>
+                                        <div class="text-xs text-gray-400">Dec 17, 2024</div>
+                                    </div>
+                                </div>
+                                <span class="text-xs bg-blue-700 px-2 py-1 rounded">A</span>
+                            </div>
+                            <div class="flex items-center justify-between bg-gray-900 p-3 border border-gray-700">
+                                <div class="flex items-center gap-3">
+                                    <div class="text-xl">🏀</div>
+                                    <div>
+                                        <div class="text-sm font-medium">Warriors</div>
+                                        <div class="text-xs text-gray-400">Dec 19, 2024</div>
+                                    </div>
+                                </div>
+                                <span class="text-xs bg-gray-700 px-2 py-1 rounded">H</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="space-y-6">
+                    <!-- Quick Actions -->
+                    <div class="bg-gray-800 p-6 border border-gray-700">
+                        <h3 class="text-lg font-light mb-4">Quick Actions</h3>
+                        <div class="space-y-2">
+                            <button onclick="simulateGame()" class="w-full btn-primary bg-blue-700 text-white px-4 py-2 text-sm">Simulate Game</button>
+                            <button onclick="simulateWeek()" class="w-full btn-primary bg-blue-700 text-white px-4 py-2 text-sm">Simulate Week</button>
+                            <button onclick="simulateSeason()" class="w-full btn-primary bg-blue-700 text-white px-4 py-2 text-sm">Simulate Season</button>
+                        </div>
+                    </div>
+
+                    <!-- GM Profile Widget -->
+                    <div class="bg-gray-800 p-6 border border-gray-700">
+                        <h3 class="text-lg font-light mb-4">GM Profile</h3>
+                        <div class="text-center mb-4">
+                            <div class="text-4xl mb-2">👤</div>
+                            <div class="text-lg font-medium" id="gm-name">General Manager</div>
+                        </div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Job Security</span>
+                                <span class="text-green-400" id="job-security">Stable (75%)</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Reputation</span>
+                                <span id="reputation">★★★★☆</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Years with Team</span>
+                                <span id="gm-years">1</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inbox / Alerts Card -->
+                    <div class="bg-gray-800 p-6 border border-gray-700">
+                        <h3 class="text-lg font-light mb-4 flex items-center justify-between">
+                            Inbox
+                            <span class="text-xs bg-blue-700 text-white px-2 py-1 rounded-full">3</span>
+                        </h3>
+                        <div class="space-y-2" id="inbox-messages">
+                            <div class="inbox-item p-3 bg-gray-900 border border-gray-700 cursor-pointer text-sm">
+                                <div class="flex items-start gap-2">
+                                    <span class="text-lg">📨</span>
+                                    <div class="flex-1">
+                                        <div class="font-medium text-blue-400">Trade Offer</div>
+                                        <div class="text-xs text-gray-400">From Seattle Dragons</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inbox-item p-3 bg-gray-900 border border-gray-700 cursor-pointer text-sm">
+                                <div class="flex items-start gap-2">
+                                    <span class="text-lg">🏥</span>
+                                    <div class="flex-1">
+                                        <div class="font-medium">Player Update</div>
+                                        <div class="text-xs text-gray-400">Minor injury reported</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inbox-item p-3 bg-gray-900 border border-gray-700 cursor-pointer text-sm">
+                                <div class="flex items-start gap-2">
+                                    <span class="text-lg">💼</span>
+                                    <div class="flex-1">
+                                        <div class="font-medium">Owner Expectations</div>
+                                        <div class="text-xs text-gray-400">45+ wins expected</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Preview -->
+                    <div class="bg-gray-800 p-6 border border-gray-700">
+                        <h3 class="text-lg font-light mb-4">Team Trends</h3>
+                        <div class="bg-gray-900 border border-gray-700 p-4 text-center">
+                            <div class="text-gray-500 text-sm mb-2">Chemistry Trend Over Time</div>
+                            <div class="h-32 flex items-end justify-around gap-1 mt-4">
+                                <div class="bg-blue-700 w-full" style="height: 45%"></div>
+                                <div class="bg-blue-700 w-full" style="height: 52%"></div>
+                                <div class="bg-blue-700 w-full" style="height: 58%"></div>
+                                <div class="bg-blue-700 w-full" style="height: 68%"></div>
+                                <div class="bg-blue-700 w-full" style="height: 72%"></div>
+                                <div class="bg-blue-700 w-full" style="height: 75%"></div>
+                                <div class="bg-blue-700 w-full" style="height: 78%"></div>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-3">Last 7 games</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -446,7 +718,15 @@
                 injuries: true,
                 seasonLength: 82,
                 expansionMode: false
-            }
+            },
+            streak: 0,
+            streakType: '',
+            chemistry: 78,
+            chemistryTrend: 'up',
+            fanSupport: 82,
+            payroll: 72400000,
+            luxuryTax: 102300000,
+            ownerBudget: 125000000
         };
 
         // Team Names
@@ -907,6 +1187,20 @@
             if (gameState.selectedTeam) {
                 document.getElementById('header-logo').textContent = gameState.selectedTeam.logo;
                 document.getElementById('header-team-name').textContent = gameState.selectedTeam.mascot;
+                
+                // Update dashboard team header
+                updateDashboardHeader();
+            }
+        }
+
+        // Update Dashboard Header
+        function updateDashboardHeader() {
+            if (gameState.selectedTeam) {
+                document.getElementById('dashboard-team-logo').textContent = gameState.selectedTeam.logo;
+                document.getElementById('dashboard-full-team-name').textContent = 
+                    `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}`;
+                document.getElementById('team-color-1').style.backgroundColor = gameState.selectedTeam.colors[0];
+                document.getElementById('team-color-2').style.backgroundColor = gameState.selectedTeam.colors[1];
             }
         }
 
@@ -1052,6 +1346,20 @@
             }
             
             gameState.gameNumber++;
+            
+            // Update chemistry based on result
+            if (won) {
+                gameState.chemistry = Math.min(100, gameState.chemistry + Math.floor(Math.random() * 3));
+                gameState.chemistryTrend = 'up';
+                gameState.fanSupport = Math.min(100, gameState.fanSupport + 1);
+            } else {
+                gameState.chemistry = Math.max(50, gameState.chemistry - Math.floor(Math.random() * 2));
+                gameState.chemistryTrend = 'down';
+                gameState.fanSupport = Math.max(40, gameState.fanSupport - 1);
+            }
+            
+            document.getElementById('fan-support').textContent = gameState.fanSupport;
+            
             updateDisplay();
         }
 
@@ -1079,9 +1387,16 @@
             
             const yourTeam = gameState.standings.find(t => t.team === yourTeamName);
             
+            // Basic stats
             document.getElementById('team-record').textContent = `${yourTeam.wins}-${yourTeam.losses}`;
             document.getElementById('budget').textContent = `$${(gameState.budget / 1000000).toFixed(1)}M`;
             document.getElementById('team-rating').textContent = yourTeam.rating;
+            
+            // Dashboard specific updates
+            document.getElementById('record-wins').textContent = yourTeam.wins;
+            document.getElementById('record-losses').textContent = yourTeam.losses;
+            document.getElementById('record-pct').textContent = yourTeam.pct || '.000';
+            document.getElementById('team-ovr').textContent = yourTeam.rating;
             
             // Update conference rank
             const sortedStandings = [...gameState.standings].sort((a, b) => {
@@ -1089,11 +1404,91 @@
                 return a.losses - b.losses;
             });
             const rank = sortedStandings.findIndex(t => t.team === yourTeamName) + 1;
+            const rankSuffix = rank === 1 ? 'st' : rank === 2 ? 'nd' : rank === 3 ? 'rd' : 'th';
             document.getElementById('conf-rank').textContent = rank;
+            document.getElementById('quick-conf-rank').textContent = `${rank}${rankSuffix}`;
+            
+            // Update streak
+            updateStreak();
+            
+            // Update chemistry
+            updateChemistry();
+            
+            // Update finances
+            updateFinances();
+            
+            // Update next game
+            updateNextGame();
             
             updateRecentGames();
             updateStandingsDisplay();
             updateScheduleDisplay();
+        }
+
+        // Update Streak
+        function updateStreak() {
+            if (gameState.recentGames.length === 0) {
+                document.getElementById('team-streak').textContent = '-';
+                return;
+            }
+            
+            let streak = 1;
+            const lastResult = gameState.recentGames[0].result;
+            
+            for (let i = 1; i < gameState.recentGames.length; i++) {
+                if (gameState.recentGames[i].result === lastResult) {
+                    streak++;
+                } else {
+                    break;
+                }
+            }
+            
+            gameState.streak = streak;
+            gameState.streakType = lastResult;
+            document.getElementById('team-streak').textContent = `${lastResult}${streak}`;
+        }
+
+        // Update Chemistry
+        function updateChemistry() {
+            const chemValue = gameState.chemistry;
+            document.getElementById('chemistry-value').textContent = `${chemValue}%`;
+            document.getElementById('chemistry-bar').style.width = `${chemValue}%`;
+            
+            const trend = gameState.chemistryTrend === 'up' ? '↗ Trending Up' : '↘ Trending Down';
+            const trendClass = gameState.chemistryTrend === 'up' ? 'trend-up' : 'trend-down';
+            const trendElement = document.getElementById('chemistry-trend');
+            trendElement.textContent = trend;
+            trendElement.className = `${trendClass} text-sm`;
+            
+            // Update sub-stats (with some variation)
+            document.getElementById('chem-offense').textContent = Math.min(100, chemValue + Math.floor(Math.random() * 10));
+            document.getElementById('chem-defense').textContent = Math.max(60, chemValue - Math.floor(Math.random() * 10));
+            document.getElementById('chem-teamwork').textContent = chemValue;
+        }
+
+        // Update Finances
+        function updateFinances() {
+            document.getElementById('current-payroll').textContent = `$${(gameState.payroll / 1000000).toFixed(1)}M`;
+            document.getElementById('salary-cap').textContent = `$${(gameState.budget / 1000000).toFixed(1)}M`;
+            document.getElementById('luxury-tax').textContent = `$${(gameState.luxuryTax / 1000000).toFixed(1)}M`;
+            document.getElementById('owner-budget').textContent = `$${(gameState.ownerBudget / 1000000).toFixed(0)}M`;
+            
+            const capPercentage = (gameState.payroll / gameState.budget) * 100;
+            document.getElementById('cap-space-bar').style.width = `${capPercentage}%`;
+        }
+
+        // Update Next Game
+        function updateNextGame() {
+            if (gameState.gameNumber >= gameState.schedule.length) {
+                document.getElementById('next-opponent').textContent = 'Season Complete';
+                document.getElementById('next-game-location').textContent = '';
+                return;
+            }
+            
+            const nextGame = gameState.schedule[gameState.gameNumber];
+            document.getElementById('next-opponent').textContent = nextGame.opponent;
+            document.getElementById('next-opponent-logo').textContent = '🏀';
+            document.getElementById('next-game-location').textContent = Math.random() > 0.5 ? 'Home' : 'Away';
         }
 
         // Update Recent Games
