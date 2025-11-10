@@ -209,9 +209,70 @@
                 <div class="text-6xl mb-4">🏀</div>
                 <h1 class="text-5xl font-light mb-4">Basketball GM</h1>
                 <p class="text-gray-400 mb-8 text-lg">Build your dynasty. Manage your team. Win championships.</p>
-                <button onclick="showScreen('team-selection')" class="btn-primary bg-blue-700 text-white px-8 py-3 text-lg">
-                    Start New Game
+                <button onclick="showScreen('league-menu')" class="btn-primary bg-blue-700 text-white px-8 py-3 text-lg">
+                    Play Now
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- League Menu Screen -->
+    <div id="league-menu-screen" class="screen">
+        <div class="min-h-screen flex items-center justify-center px-4 fade-in">
+            <!-- Settings Button -->
+            <button onclick="openSettings()" 
+                    class="settings-btn fixed top-4 right-4 text-gray-400 hover:text-blue-400 text-3xl z-50"
+                    title="Settings">
+                ⚙️
+            </button>
+            
+            <div class="max-w-4xl w-full">
+                <div class="text-center mb-8">
+                    <h2 class="text-4xl font-light mb-3">League Management</h2>
+                    <p class="text-gray-400">Create a new league or continue an existing one</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Create New League -->
+                    <div class="bg-gray-800 border-2 border-gray-700 p-8 hover:border-blue-700 transition-colors cursor-pointer"
+                         onclick="createNewLeague()">
+                        <div class="text-center">
+                            <div class="text-6xl mb-4">➕</div>
+                            <h3 class="text-2xl font-light mb-3">Create New League</h3>
+                            <p class="text-gray-400 text-sm mb-4">
+                                Start fresh with a new league. Choose your team and begin your journey to championship glory.
+                            </p>
+                            <div class="btn-primary bg-blue-700 text-white px-6 py-2 text-sm inline-block">
+                                Create League
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Continue Existing -->
+                    <div class="bg-gray-800 border-2 border-gray-700 p-8">
+                        <div class="text-center mb-4">
+                            <div class="text-6xl mb-4">💾</div>
+                            <h3 class="text-2xl font-light mb-3">Continue</h3>
+                            <p class="text-gray-400 text-sm mb-4">
+                                Load and continue from your saved leagues
+                            </p>
+                        </div>
+                        
+                        <div id="saved-leagues-list" class="space-y-2 max-h-64 overflow-y-auto">
+                            <!-- Saved leagues will be inserted here -->
+                        </div>
+
+                        <div id="no-leagues-message" class="text-center text-gray-500 text-sm py-8">
+                            No saved leagues yet. Create a new league to get started!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-6">
+                    <button onclick="showScreen('home')" class="text-gray-400 hover:text-gray-100 text-sm">
+                        ← Back to Home
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -726,7 +787,8 @@
             fanSupport: 82,
             payroll: 72400000,
             luxuryTax: 102300000,
-            ownerBudget: 125000000
+            ownerBudget: 125000000,
+            savedLeagues: []
         };
 
         // Team Names
@@ -989,6 +1051,138 @@
             renderTeamSelection();
             showScreen('home');
             loadSettings();
+            loadSavedLeagues();
+        }
+
+        // League Management Functions
+        function loadSavedLeagues() {
+            const savedData = localStorage.getItem('hoopsGMLeagues');
+            if (savedData) {
+                gameState.savedLeagues = JSON.parse(savedData);
+            }
+            updateSavedLeaguesList();
+        }
+
+        function updateSavedLeaguesList() {
+            const listContainer = document.getElementById('saved-leagues-list');
+            const noLeaguesMsg = document.getElementById('no-leagues-message');
+            
+            if (gameState.savedLeagues.length === 0) {
+                listContainer.classList.add('hidden');
+                noLeaguesMsg.classList.remove('hidden');
+            } else {
+                listContainer.classList.remove('hidden');
+                noLeaguesMsg.classList.add('hidden');
+                
+                listContainer.innerHTML = gameState.savedLeagues.map((league, index) => `
+                    <div class="bg-gray-900 border border-gray-700 p-3 hover:border-blue-700 transition-colors cursor-pointer"
+                         onclick="loadLeague(${index})">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="text-2xl">${league.teamLogo}</div>
+                                <div>
+                                    <div class="text-sm font-medium">${league.teamName}</div>
+                                    <div class="text-xs text-gray-400">
+                                        Season ${league.season} • ${league.wins}-${league.losses}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="loadLeague(${index}); event.stopPropagation();" 
+                                        class="text-blue-400 hover:text-blue-300 text-xs px-2 py-1">
+                                    Load
+                                </button>
+                                <button onclick="deleteLeague(${index}); event.stopPropagation();" 
+                                        class="text-red-400 hover:text-red-300 text-xs px-2 py-1">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function createNewLeague() {
+            showScreen('team-selection');
+        }
+
+        function saveCurrentLeague() {
+            if (!gameState.selectedTeam) return;
+            
+            const yourTeamName = `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}`;
+            const yourTeam = gameState.standings.find(t => t.team === yourTeamName) || { wins: 0, losses: 0 };
+            
+            const leagueData = {
+                teamName: yourTeamName,
+                teamLogo: gameState.selectedTeam.logo,
+                teamColors: gameState.selectedTeam.colors,
+                season: gameState.season,
+                wins: yourTeam.wins,
+                losses: yourTeam.losses,
+                budget: gameState.budget,
+                roster: gameState.roster,
+                schedule: gameState.schedule,
+                standings: gameState.standings,
+                gameNumber: gameState.gameNumber,
+                chemistry: gameState.chemistry,
+                fanSupport: gameState.fanSupport,
+                payroll: gameState.payroll,
+                settings: gameState.settings,
+                selectedTeam: gameState.selectedTeam,
+                savedDate: new Date().toISOString()
+            };
+            
+            // Check if league already exists and update it, otherwise add new
+            const existingIndex = gameState.savedLeagues.findIndex(
+                league => league.teamName === yourTeamName && league.season === gameState.season
+            );
+            
+            if (existingIndex >= 0) {
+                gameState.savedLeagues[existingIndex] = leagueData;
+            } else {
+                gameState.savedLeagues.push(leagueData);
+            }
+            
+            localStorage.setItem('hoopsGMLeagues', JSON.stringify(gameState.savedLeagues));
+            updateSavedLeaguesList();
+        }
+
+        function loadLeague(index) {
+            const league = gameState.savedLeagues[index];
+            if (!league) return;
+            
+            // Restore all game state
+            gameState.selectedTeam = league.selectedTeam;
+            gameState.isTeamSelected = true;
+            gameState.season = league.season;
+            gameState.budget = league.budget;
+            gameState.roster = league.roster || [];
+            gameState.schedule = league.schedule || [];
+            gameState.standings = league.standings || [];
+            gameState.gameNumber = league.gameNumber || 0;
+            gameState.chemistry = league.chemistry || 78;
+            gameState.fanSupport = league.fanSupport || 82;
+            gameState.payroll = league.payroll || 72400000;
+            gameState.settings = league.settings || gameState.settings;
+            gameState.recentGames = [];
+            
+            // Rebuild recent games from schedule
+            const playedGames = gameState.schedule.filter(g => g.played);
+            gameState.recentGames = playedGames.slice(-5).reverse();
+            
+            // Go directly to game screen
+            showScreen('game');
+            showTab('team');
+            updateDisplay();
+        }
+
+        function deleteLeague(index) {
+            if (confirm('Are you sure you want to delete this league?')) {
+                gameState.savedLeagues.splice(index, 1);
+                localStorage.setItem('hoopsGMLeagues', JSON.stringify(gameState.savedLeagues));
+                updateSavedLeaguesList();
+            }
         }
 
         // Settings Functions
@@ -1094,6 +1288,7 @@
             });
             
             const screenId = screenName === 'home' ? 'home-screen' : 
+                            screenName === 'league-menu' ? 'league-menu-screen' :
                             screenName === 'team-selection' ? 'team-selection-screen' :
                             screenName === 'dashboard' ? 'dashboard-screen' :
                             'game-screen';
@@ -1104,6 +1299,10 @@
                 initializeStandings();
                 generateSchedule();
                 updateDisplay();
+            }
+            
+            if (screenName === 'league-menu') {
+                updateSavedLeaguesList();
             }
         }
 
@@ -1361,6 +1560,9 @@
             document.getElementById('fan-support').textContent = gameState.fanSupport;
             
             updateDisplay();
+            
+            // Auto-save after each game
+            saveCurrentLeague();
         }
 
         // Simulate Week
