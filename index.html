@@ -1327,6 +1327,7 @@
             }
             
             if (screenName === 'league-menu') {
+                loadSavedLeagues();
                 updateSavedLeaguesList();
             }
         }
@@ -1394,6 +1395,9 @@
             setTimeout(() => {
                 showTab('team');
                 applyTeamHeaderGradient();
+                
+                // Save the newly created league
+                saveCurrentLeague();
             }, 100);
         }
 
