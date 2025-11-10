@@ -808,7 +808,8 @@
             payroll: 72400000,
             luxuryTax: 102300000,
             ownerBudget: 125000000,
-            savedLeagues: []
+            savedLeagues: [],
+            currentLeagueId: null
         };
 
         // Team Names
@@ -1094,36 +1095,52 @@
                 listContainer.classList.remove('hidden');
                 noLeaguesMsg.classList.add('hidden');
                 
-                listContainer.innerHTML = gameState.savedLeagues.map((league, index) => `
+                // Sort by saved date (newest first)
+                const sortedLeagues = [...gameState.savedLeagues].sort((a, b) => 
+                    new Date(b.savedDate) - new Date(a.savedDate)
+                );
+                
+                listContainer.innerHTML = sortedLeagues.map((league, index) => {
+                    const actualIndex = gameState.savedLeagues.findIndex(l => l.id === league.id);
+                    const savedDate = new Date(league.savedDate);
+                    const dateStr = savedDate.toLocaleDateString() + ' ' + savedDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    
+                    return `
                     <div class="bg-gray-900 border border-gray-700 p-3 hover:border-blue-700 transition-colors cursor-pointer"
-                         onclick="loadLeague(${index})">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
+                         onclick="loadLeague(${actualIndex})">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-3 flex-1">
                                 <div class="text-2xl">${league.teamLogo}</div>
-                                <div>
+                                <div class="flex-1">
                                     <div class="text-sm font-medium">${league.teamName}</div>
                                     <div class="text-xs text-gray-400">
-                                        Season ${league.season} • ${league.wins}-${league.losses}
+                                        ${league.season} • ${league.wins}-${league.losses} • Games: ${league.gameNumber}
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="text-gray-500">Saved: ${dateStr}</span>
                             <div class="flex items-center gap-2">
-                                <button onclick="loadLeague(${index}); event.stopPropagation();" 
-                                        class="text-blue-400 hover:text-blue-300 text-xs px-2 py-1">
+                                <button onclick="loadLeague(${actualIndex}); event.stopPropagation();" 
+                                        class="text-blue-400 hover:text-blue-300 px-2 py-1 border border-blue-700 hover:bg-blue-700 hover:bg-opacity-20">
                                     Load
                                 </button>
-                                <button onclick="deleteLeague(${index}); event.stopPropagation();" 
-                                        class="text-red-400 hover:text-red-300 text-xs px-2 py-1">
+                                <button onclick="deleteLeague(${actualIndex}); event.stopPropagation();" 
+                                        class="text-red-400 hover:text-red-300 px-2 py-1 border border-red-700 hover:bg-red-700 hover:bg-opacity-20">
                                     Delete
                                 </button>
                             </div>
                         </div>
                     </div>
-                `).join('');
+                `;
+                }).join('');
             }
         }
 
         function createNewLeague() {
+            // Generate a unique league ID
+            gameState.currentLeagueId = 'league_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             showScreen('team-selection');
         }
 
@@ -1134,6 +1151,7 @@
             const yourTeam = gameState.standings.find(t => t.team === yourTeamName) || { wins: 0, losses: 0 };
             
             const leagueData = {
+                id: gameState.currentLeagueId || ('league_' + Date.now()),
                 teamName: yourTeamName,
                 teamLogo: gameState.selectedTeam.logo,
                 teamColors: gameState.selectedTeam.colors,
@@ -1153,14 +1171,21 @@
                 savedDate: new Date().toISOString()
             };
             
-            // Check if league already exists and update it, otherwise add new
+            // Ensure league has an ID
+            if (!gameState.currentLeagueId) {
+                gameState.currentLeagueId = leagueData.id;
+            }
+            
+            // Check if this specific league already exists (by ID) and update it
             const existingIndex = gameState.savedLeagues.findIndex(
-                league => league.teamName === yourTeamName && league.season === gameState.season
+                league => league.id === gameState.currentLeagueId
             );
             
             if (existingIndex >= 0) {
+                // Update existing league
                 gameState.savedLeagues[existingIndex] = leagueData;
             } else {
+                // Add new league
                 gameState.savedLeagues.push(leagueData);
             }
             
@@ -1172,7 +1197,8 @@
             const league = gameState.savedLeagues[index];
             if (!league) return;
             
-            // Restore all game state
+            // Restore all game state including the league ID
+            gameState.currentLeagueId = league.id;
             gameState.selectedTeam = league.selectedTeam;
             gameState.isTeamSelected = true;
             gameState.season = league.season;
