@@ -1995,9 +1995,14 @@
             };
             
             tbody.innerHTML = gameState.roster.map((player, index) => `
-                <tr class="roster-row border-b border-gray-700" onclick="openPlayerModal(${index})">
+                <tr class="roster-row border-b border-gray-700">
                     <td class="p-2 text-gray-400">${player.jersey}</td>
-                    <td class="p-2 font-medium">${player.name}</td>
+                    <td class="p-2 font-medium">
+                        <span class="cursor-pointer hover:text-blue-400 underline decoration-transparent hover:decoration-blue-400 transition-all" 
+                              onclick="openPlayerModal(${index})">
+                            ${player.name}
+                        </span>
+                    </td>
                     <td class="p-2 text-center text-blue-400">${player.position}</td>
                     <td class="p-2 text-center">${player.age}</td>
                     <td class="p-2 text-center ${getOvrClass(player.overall)}">${player.overall}</td>
@@ -2116,9 +2121,14 @@
             tbody.innerHTML = players.map((player) => {
                 const index = gameState.roster.findIndex(p => p.id === player.id);
                 return `
-                <tr class="roster-row border-b border-gray-700" onclick="openPlayerModal(${index})">
+                <tr class="roster-row border-b border-gray-700">
                     <td class="p-2 text-gray-400">${player.jersey}</td>
-                    <td class="p-2 font-medium">${player.name}</td>
+                    <td class="p-2 font-medium">
+                        <span class="cursor-pointer hover:text-blue-400 underline decoration-transparent hover:decoration-blue-400 transition-all" 
+                              onclick="openPlayerModal(${index})">
+                            ${player.name}
+                        </span>
+                    </td>
                     <td class="p-2 text-center text-blue-400">${player.position}</td>
                     <td class="p-2 text-center">${player.age}</td>
                     <td class="p-2 text-center ${getOvrClass(player.overall)}">${player.overall}</td>
