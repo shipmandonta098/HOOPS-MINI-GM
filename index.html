@@ -30,13 +30,133 @@
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; font-family:var(--sans); background:linear-gradient(180deg,var(--bg-0),var(--bg-1));
+      margin:0; font-family:var(--sans); 
+      background:linear-gradient(135deg, #0a0c10 0%, #11151b 25%, #0d0f14 50%, #151a21 75%, #0d0f14 100%);
+      background-size:400% 400%;
+      animation:gradientShift 15s ease infinite;
       color:var(--text-0); letter-spacing:.2px;
     }
-    .app{
-      display:grid; grid-template-columns:260px 1fr; grid-template-rows:56px 1fr; height:100vh;
-      grid-template-areas: "sidebar topbar" "sidebar main";
+    @keyframes gradientShift{
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
     }
+
+    /* Setup Screen */
+    .setup-screen{
+      min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+      opacity:1; transition:opacity 0.5s ease;
+    }
+    .setup-screen.fade-out{opacity:0}
+    .setup-container{
+      width:min(680px, 100%); 
+      background:linear-gradient(135deg, rgba(17,21,27,0.95) 0%, rgba(13,15,20,0.98) 100%);
+      border:1px solid var(--border); border-radius:16px; 
+      box-shadow:0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(106,162,255,0.1);
+      backdrop-filter:blur(20px);
+      overflow:hidden;
+    }
+    .setup-header{
+      padding:32px 32px 24px; text-align:center; 
+      background:linear-gradient(180deg, rgba(106,162,255,0.08) 0%, transparent 100%);
+      border-bottom:1px solid var(--border);
+    }
+    .setup-header h1{
+      margin:0 0 8px; font-size:32px; font-weight:700; 
+      background:linear-gradient(135deg, var(--pri) 0%, #8bb9ff 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .setup-header .tagline{
+      color:var(--text-1); font-size:14px; font-style:italic;
+    }
+    .setup-body{padding:32px}
+    .form-group{margin-bottom:20px}
+    .form-group label{
+      display:block; margin-bottom:6px; font-size:13px; font-weight:600; 
+      color:var(--text-0); letter-spacing:0.3px;
+    }
+    .form-group input, .form-group select{
+      width:100%; padding:12px 14px; border-radius:10px; 
+      background:rgba(12,17,24,0.6); color:var(--text-0); 
+      border:1px solid var(--border); font-family:var(--sans); font-size:14px;
+      transition:all 0.2s ease;
+    }
+    .form-group input:focus, .form-group select:focus{
+      outline:none; border-color:var(--pri); 
+      box-shadow:0 0 0 3px rgba(106,162,255,0.15);
+    }
+    .form-row{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+    
+    .toggle-field{
+      display:flex; align-items:center; justify-content:space-between; 
+      padding:12px 14px; background:rgba(12,17,24,0.4); 
+      border:1px solid var(--border); border-radius:10px;
+      cursor:pointer; transition:background 0.2s ease;
+    }
+    .toggle-field:hover{background:rgba(27,33,43,0.6)}
+    .toggle-field label{margin:0; cursor:pointer; font-size:14px}
+    .toggle-switch{
+      position:relative; width:44px; height:24px; 
+      background:var(--bg-3); border-radius:999px; 
+      border:1px solid var(--border); transition:all 0.3s ease;
+    }
+    .toggle-switch::after{
+      content:""; position:absolute; top:2px; left:2px; 
+      width:18px; height:18px; background:var(--text-1); 
+      border-radius:50%; transition:all 0.3s ease;
+    }
+    input[type="checkbox"]:checked + .toggle-switch{
+      background:var(--pri); border-color:var(--pri);
+    }
+    input[type="checkbox"]:checked + .toggle-switch::after{
+      left:22px; background:white;
+    }
+    input[type="checkbox"]{display:none}
+
+    .advanced-toggle{
+      margin:24px 0 16px; padding:12px; background:rgba(106,162,255,0.05); 
+      border:1px solid rgba(106,162,255,0.2); border-radius:10px; 
+      cursor:pointer; text-align:center; font-weight:600; 
+      color:var(--pri); transition:all 0.2s ease;
+    }
+    .advanced-toggle:hover{background:rgba(106,162,255,0.1)}
+    .advanced-settings{
+      max-height:0; overflow:hidden; transition:max-height 0.4s ease;
+    }
+    .advanced-settings.open{max-height:400px}
+
+    .setup-actions{
+      padding:24px 32px 32px; display:flex; gap:12px; 
+      border-top:1px solid var(--border);
+    }
+    .setup-btn{
+      flex:1; padding:14px 24px; border-radius:10px; 
+      font-size:15px; font-weight:600; cursor:pointer; 
+      border:1px solid var(--border); transition:all 0.2s ease;
+    }
+    .setup-btn.primary{
+      background:linear-gradient(135deg, var(--pri) 0%, var(--pri-2) 100%);
+      border-color:var(--pri); color:white; 
+      box-shadow:0 4px 16px rgba(106,162,255,0.3);
+    }
+    .setup-btn.primary:hover{
+      transform:translateY(-2px); 
+      box-shadow:0 6px 24px rgba(106,162,255,0.4);
+    }
+    .setup-btn.secondary{
+      background:var(--bg-3); color:var(--text-0);
+    }
+    .setup-btn.secondary:hover{background:var(--bg-2)}
+    .setup-btn.secondary:hover{background:var(--bg-2)}
+
+    /* Main App */
+    .app{
+      display:none; grid-template-columns:260px 1fr; grid-template-rows:56px 1fr; height:100vh;
+      grid-template-areas: "sidebar topbar" "sidebar main";
+      opacity:0; transition:opacity 0.5s ease;
+    }
+    .app.active{display:grid; opacity:1}
     header{
       grid-area:topbar; display:flex; align-items:center; gap:10px; padding:0 16px; border-bottom:1px solid var(--border);
       background:linear-gradient(180deg,var(--bg-1),var(--bg-2));
@@ -107,6 +227,252 @@
 
     .empty{padding:24px; color:var(--muted); text-align:center}
 
+    /* Dashboard Enhancements */
+    .dashboard-grid{
+      display:grid; grid-template-columns:1fr 1fr; gap:var(--gap-lg); margin-bottom:var(--gap-lg);
+    }
+    .dashboard-left, .dashboard-right{display:flex; flex-direction:column; gap:var(--gap-lg)}
+    .dashboard-full{grid-column:1/-1}
+    
+    .record-strip{
+      display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-bottom:12px;
+      padding:12px; background:rgba(106,162,255,0.05); border:1px solid rgba(106,162,255,0.15);
+      border-radius:10px;
+    }
+    .record-item{display:flex; flex-direction:column; gap:2px}
+    .record-item label{font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px}
+    .record-item strong{font-size:18px; font-family:var(--mono); color:var(--text-0)}
+    
+    .perf-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px}
+    .perf-item{
+      padding:12px; background:rgba(12,17,24,0.5); border:1px solid var(--border); border-radius:8px;
+    }
+    .perf-item label{display:block; font-size:12px; color:var(--text-1); margin-bottom:4px}
+    .perf-item .value{font-size:16px; font-weight:600; font-family:var(--mono)}
+    .perf-item .value.good{color:var(--good)}
+    .perf-item .value.bad{color:var(--bad)}
+    .perf-item .value.neutral{color:var(--text-0)}
+    
+    .last-ten{display:flex; gap:4px; margin-top:8px}
+    .game-dot{
+      width:20px; height:20px; border-radius:4px; display:flex; align-items:center; justify-content:center;
+      font-size:10px; font-weight:700; border:1px solid var(--border);
+    }
+    .game-dot.w{background:var(--good); color:white; border-color:var(--good)}
+    .game-dot.l{background:var(--bad); color:white; border-color:var(--bad)}
+    
+    .finance-row{
+      display:flex; justify-content:space-between; align-items:center; padding:10px 0;
+      border-bottom:1px solid var(--border);
+    }
+    .finance-row:last-child{border-bottom:none}
+    .finance-label{font-size:13px; color:var(--text-1)}
+    .finance-value{font-family:var(--mono); font-size:14px; font-weight:600}
+    .status-badge{
+      padding:4px 10px; border-radius:999px; font-size:11px; font-weight:600;
+      text-transform:uppercase; letter-spacing:0.5px;
+    }
+    .status-badge.good{background:rgba(58,198,121,0.15); color:var(--good); border:1px solid rgba(58,198,121,0.3)}
+    .status-badge.warn{background:rgba(255,176,32,0.15); color:var(--warn); border:1px solid rgba(255,176,32,0.3)}
+    .status-badge.bad{background:rgba(255,107,107,0.15); color:var(--bad); border:1px solid rgba(255,107,107,0.3)}
+    
+    .feed-item{
+      padding:10px 12px; margin-bottom:8px; background:rgba(12,17,24,0.4);
+      border-left:3px solid var(--border); border-radius:6px; font-size:13px;
+      transition:all 0.2s ease;
+    }
+    .feed-item:hover{background:rgba(27,33,43,0.6); border-left-color:var(--pri)}
+    .feed-item .feed-tag{
+      display:inline-block; padding:2px 6px; border-radius:4px; font-size:10px;
+      font-weight:600; margin-right:6px; text-transform:uppercase;
+    }
+    .feed-item .feed-tag.trade{background:rgba(106,162,255,0.2); color:var(--pri)}
+    .feed-item .feed-tag.injury{background:rgba(255,107,107,0.2); color:var(--bad)}
+    .feed-item .feed-tag.league{background:rgba(124,135,150,0.2); color:var(--muted)}
+    
+    .headline-item{
+      padding:8px 0; border-bottom:1px solid var(--border); font-size:13px; color:var(--text-1);
+      transition:color 0.2s ease;
+    }
+    .headline-item:hover{color:var(--text-0)}
+    .headline-item:last-child{border-bottom:none}
+    
+    .top-performer{
+      display:flex; gap:16px; align-items:center; padding:16px;
+      background:linear-gradient(135deg, rgba(106,162,255,0.08) 0%, rgba(46,107,255,0.05) 100%);
+      border:1px solid rgba(106,162,255,0.2); border-radius:10px;
+    }
+    .performer-ovr{
+      width:60px; height:60px; border-radius:10px; display:flex; align-items:center;
+      justify-content:center; font-size:24px; font-weight:700; font-family:var(--mono);
+      background:linear-gradient(135deg, var(--pri), var(--pri-2)); color:white;
+      box-shadow:0 4px 12px rgba(106,162,255,0.3);
+    }
+    .performer-info{flex:1}
+    .performer-name{font-size:16px; font-weight:700; margin-bottom:2px}
+    .performer-meta{font-size:12px; color:var(--text-1); margin-bottom:8px}
+    .performer-stats{display:flex; gap:12px; font-family:var(--mono); font-size:12px}
+    .performer-stat{color:var(--text-1)}
+    .performer-stat strong{color:var(--text-0); margin-right:2px}
+    
+    .analytics-strip{
+      display:grid; grid-template-columns:2fr 1fr; gap:var(--gap); padding:20px;
+      background:linear-gradient(135deg, var(--bg-2) 0%, var(--bg-3) 100%);
+      border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow);
+    }
+    .efficiency-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:12px}
+    .efficiency-item{text-align:center}
+    .efficiency-item label{display:block; font-size:11px; color:var(--muted); margin-bottom:6px;
+      text-transform:uppercase; letter-spacing:0.5px}
+    .efficiency-value{font-size:20px; font-weight:700; font-family:var(--mono); margin-bottom:8px}
+    .efficiency-bar{
+      height:6px; background:rgba(12,17,24,0.8); border-radius:999px; overflow:hidden;
+      border:1px solid var(--border);
+    }
+    .efficiency-bar .fill{height:100%; transition:width 0.3s ease}
+    
+    .sentiment-container{display:flex; flex-direction:column; justify-content:center; gap:12px}
+    .sentiment-label{font-size:13px; color:var(--text-1); font-weight:600}
+    .sentiment-bar{
+      position:relative; height:32px; background:rgba(12,17,24,0.6); border-radius:999px;
+      border:1px solid var(--border); overflow:hidden;
+    }
+    .sentiment-bar .fill{
+      height:100%; background:linear-gradient(90deg, var(--bad) 0%, var(--warn) 50%, var(--good) 100%);
+      transition:width 0.3s ease;
+    }
+    .sentiment-emoji{font-size:24px; text-align:center}
+
+    /* Roster Tab Enhancements */
+    .roster-toolbar{
+      display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:16px;
+      padding:16px; background:rgba(27,33,43,0.4); border:1px solid var(--border); border-radius:10px;
+    }
+    .search-box{
+      flex:1; min-width:200px; position:relative;
+    }
+    .search-box input{
+      width:100%; padding:10px 10px 10px 36px; background:rgba(12,17,24,0.6);
+      border:1px solid var(--border); border-radius:8px; color:var(--text-0);
+      transition:all 0.2s ease;
+    }
+    .search-box input:focus{border-color:var(--pri); box-shadow:0 0 0 3px rgba(106,162,255,0.15)}
+    .search-box::before{
+      content:"🔍"; position:absolute; left:12px; top:50%; transform:translateY(-50%);
+      font-size:14px; pointer-events:none;
+    }
+    .filter-group{display:flex; gap:6px; flex-wrap:wrap}
+    .filter-btn{
+      padding:8px 14px; background:rgba(12,17,24,0.6); border:1px solid var(--border);
+      border-radius:8px; color:var(--text-1); cursor:pointer; font-size:13px;
+      font-weight:600; transition:all 0.2s ease;
+    }
+    .filter-btn:hover{background:var(--bg-3); color:var(--text-0)}
+    .filter-btn.active{background:var(--pri); border-color:var(--pri); color:white}
+    .view-toggle{display:flex; gap:4px; background:rgba(12,17,24,0.6); border-radius:8px; padding:4px}
+    .view-toggle button{
+      padding:6px 12px; background:transparent; border:none; color:var(--text-1);
+      border-radius:6px; cursor:pointer; transition:all 0.2s ease;
+    }
+    .view-toggle button.active{background:var(--pri); color:white}
+    
+    /* Player Cards */
+    .roster-grid{
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));
+      gap:16px; margin-top:16px;
+    }
+    .player-card{
+      background:linear-gradient(135deg, rgba(27,33,43,0.8) 0%, rgba(21,26,33,0.9) 100%);
+      border:1px solid var(--border); border-radius:12px; padding:16px;
+      transition:all 0.2s ease; cursor:pointer; position:relative;
+      overflow:hidden;
+    }
+    .player-card::before{
+      content:""; position:absolute; top:0; left:0; right:0; height:4px;
+      background:linear-gradient(90deg, var(--pri), var(--pri-2)); opacity:0;
+      transition:opacity 0.2s ease;
+    }
+    .player-card:hover{border-color:var(--pri); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+    .player-card:hover::before{opacity:1}
+    
+    .player-header{display:flex; align-items:start; gap:12px; margin-bottom:12px}
+    .player-ovr-badge{
+      width:56px; height:56px; border-radius:10px; display:flex; align-items:center;
+      justify-content:center; font-size:22px; font-weight:700; font-family:var(--mono);
+      background:linear-gradient(135deg, var(--pri), var(--pri-2)); color:white;
+      box-shadow:0 4px 12px rgba(106,162,255,0.3); flex-shrink:0;
+    }
+    .player-info{flex:1}
+    .player-name{font-size:16px; font-weight:700; margin-bottom:4px; color:var(--text-0)}
+    .player-meta{display:flex; gap:8px; flex-wrap:wrap; font-size:12px; color:var(--text-1)}
+    .player-meta .pos-badge{
+      background:rgba(106,162,255,0.15); color:var(--pri); padding:2px 8px;
+      border-radius:4px; font-weight:600;
+    }
+    
+    .player-stats{
+      display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:12px;
+      padding:12px; background:rgba(12,17,24,0.4); border-radius:8px;
+    }
+    .stat-item{text-align:center}
+    .stat-item label{display:block; font-size:10px; color:var(--muted); text-transform:uppercase; margin-bottom:2px}
+    .stat-item value{font-size:14px; font-weight:600; font-family:var(--mono)}
+    
+    .player-contract{
+      display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;
+      padding:8px 12px; background:rgba(12,17,24,0.3); border-radius:6px;
+    }
+    .contract-label{font-size:11px; color:var(--muted)}
+    .contract-value{font-family:var(--mono); font-size:13px; font-weight:600}
+    
+    .player-status{display:flex; gap:8px; align-items:center; margin-bottom:12px}
+    .status-badge{
+      padding:4px 10px; border-radius:999px; font-size:11px; font-weight:600;
+      text-transform:uppercase; letter-spacing:0.5px;
+    }
+    .status-badge.healthy{background:rgba(58,198,121,0.15); color:var(--good); border:1px solid rgba(58,198,121,0.3)}
+    .status-badge.injured{background:rgba(255,107,107,0.15); color:var(--bad); border:1px solid rgba(255,107,107,0.3)}
+    .status-badge.twoway{background:rgba(124,135,150,0.15); color:var(--muted); border:1px solid rgba(124,135,150,0.3)}
+    
+    .morale-bar{flex:1; height:8px; background:rgba(12,17,24,0.6); border-radius:999px; overflow:hidden; border:1px solid var(--border)}
+    .morale-bar .fill{height:100%; transition:width 0.3s ease}
+    .morale-emoji{font-size:16px}
+    
+    .player-actions{display:flex; gap:6px}
+    .player-actions .btn{flex:1; padding:6px 10px; font-size:12px}
+    
+    /* Enhanced Table View */
+    .roster-table-view{overflow-x:auto}
+    .roster-table-view table{margin-top:0}
+    .roster-table-view tbody tr{transition:all 0.2s ease}
+    .roster-table-view tbody tr:hover{background:rgba(106,162,255,0.08); transform:scale(1.005)}
+    
+    .height-weight{font-size:12px; color:var(--text-1); font-family:var(--mono)}
+    .morale-cell{display:flex; align-items:center; gap:8px}
+    .morale-mini{width:60px; height:6px; background:rgba(12,17,24,0.6); border-radius:999px; overflow:hidden}
+    .morale-mini .fill{height:100%}
+    
+    .team-totals{
+      margin-top:16px; padding:16px; background:rgba(106,162,255,0.05);
+      border:1px solid rgba(106,162,255,0.2); border-radius:10px;
+      display:flex; gap:24px; flex-wrap:wrap; justify-content:space-around;
+    }
+    .total-item{text-align:center}
+    .total-item label{display:block; font-size:11px; color:var(--muted); text-transform:uppercase; margin-bottom:4px}
+    .total-item value{font-size:18px; font-weight:700; font-family:var(--mono); color:var(--text-0)}
+    
+    /* Tooltip */
+    .player-tooltip{
+      position:absolute; background:var(--bg-3); border:1px solid var(--border);
+      border-radius:8px; padding:12px; box-shadow:0 8px 24px rgba(0,0,0,0.4);
+      z-index:100; pointer-events:none; opacity:0; transition:opacity 0.2s ease;
+      min-width:200px;
+    }
+    .player-tooltip.show{opacity:1}
+    .tooltip-stat{display:flex; justify-content:space-between; padding:4px 0; font-size:13px}
+    .tooltip-stat label{color:var(--text-1)}
+    .tooltip-stat value{font-family:var(--mono); font-weight:600}
+
     /* Modal */
     .modal-backdrop{
       position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:99;
@@ -128,11 +494,183 @@
       aside{flex-direction:row; overflow:auto; border-right:none; border-bottom:1px solid var(--border)}
       nav{flex-direction:row; flex-wrap:wrap}
       .nav-section{margin-top:0; margin-left:auto; border-top:none; border-left:1px dashed var(--border); padding-left:12px}
+      .dashboard-grid{grid-template-columns:1fr}
+      .analytics-strip{grid-template-columns:1fr}
+      .record-strip{flex-direction:column; align-items:flex-start}
+      .roster-toolbar{flex-direction:column; align-items:stretch}
+      .search-box{width:100%}
+      .filter-group{justify-content:center}
+      .roster-grid{grid-template-columns:1fr}
+      .team-totals{gap:12px}
     }
   </style>
 </head>
 <body>
-  <div class="app">
+  <!-- LEAGUE SETUP SCREEN -->
+  <div class="setup-screen" id="setupScreen">
+    <div class="setup-container">
+      <div class="setup-header">
+        <h1>🏀 Hoops Mini GM</h1>
+        <p class="tagline">Build your dynasty. Rewrite basketball history.</p>
+      </div>
+      
+      <div class="setup-body">
+        <div class="form-group">
+          <label for="leagueName">League Name</label>
+          <input type="text" id="leagueName" placeholder="My Basketball Empire" value="My League">
+        </div>
+
+        <div class="form-group">
+          <label for="teamToManage">Choose Your Team</label>
+          <select id="teamToManage">
+            <option value="Atlanta Apex">Atlanta Apex</option>
+            <option value="Boston Breakers">Boston Breakers</option>
+            <option value="Brooklyn Bridges">Brooklyn Bridges</option>
+            <option value="Charlotte Cobras">Charlotte Cobras</option>
+            <option value="Chicago Cyclones">Chicago Cyclones</option>
+            <option value="Cleveland Comets">Cleveland Comets</option>
+            <option value="Dallas Dynasty">Dallas Dynasty</option>
+            <option value="Denver Elevation">Denver Elevation</option>
+            <option value="Detroit Dynamos">Detroit Dynamos</option>
+            <option value="Golden State Guardians">Golden State Guardians</option>
+            <option value="Houston Heatwave">Houston Heatwave</option>
+            <option value="Indiana Ignition">Indiana Ignition</option>
+            <option value="LA Lightning">LA Lightning</option>
+            <option value="Los Angeles Legends">Los Angeles Legends</option>
+            <option value="Memphis Momentum">Memphis Momentum</option>
+            <option value="Miami Mirage">Miami Mirage</option>
+            <option value="Milwaukee Metros">Milwaukee Metros</option>
+            <option value="Minnesota Mavericks">Minnesota Mavericks</option>
+            <option value="New Orleans Neptunes">New Orleans Neptunes</option>
+            <option value="New York Navigators">New York Navigators</option>
+            <option value="Oklahoma City Outlaws">Oklahoma City Outlaws</option>
+            <option value="Orlando Overdrive">Orlando Overdrive</option>
+            <option value="Philadelphia Phoenixes">Philadelphia Phoenixes</option>
+            <option value="Phoenix Predators">Phoenix Predators</option>
+            <option value="Portland Pioneers">Portland Pioneers</option>
+            <option value="Sacramento Spartans">Sacramento Spartans</option>
+            <option value="San Antonio Strikers">San Antonio Strikers</option>
+            <option value="San Francisco Riptide" selected>San Francisco Riptide</option>
+            <option value="Toronto Tempest">Toronto Tempest</option>
+            <option value="Utah Uprising">Utah Uprising</option>
+            <option value="Washington Wildcats">Washington Wildcats</option>
+            <option value="random">🎲 Random Team</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="startSeason">Starting Season</label>
+            <select id="startSeason">
+              <option value="1996">1996-97</option>
+              <option value="2000">2000-01</option>
+              <option value="2005">2005-06</option>
+              <option value="2010">2010-11</option>
+              <option value="2015">2015-16</option>
+              <option value="2020">2020-21</option>
+              <option value="2026" selected>2026-27</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="numTeams">Number of Teams</label>
+            <select id="numTeams">
+              <option value="8">8 Teams</option>
+              <option value="12">12 Teams</option>
+              <option value="16">16 Teams</option>
+              <option value="20">20 Teams</option>
+              <option value="24">24 Teams</option>
+              <option value="30" selected>30 Teams</option>
+              <option value="32">32 Teams</option>
+              <option value="36">36 Teams</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="capMode">Salary Cap Mode</label>
+            <select id="capMode">
+              <option value="fixed">Fixed Cap</option>
+              <option value="dynamic" selected>Dynamic Cap</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="difficulty">Difficulty</label>
+            <select id="difficulty">
+              <option value="sandbox" selected>Sandbox</option>
+              <option value="balanced">Balanced</option>
+              <option value="hardcore">Hardcore</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="toggle-field">
+            <label for="confSplit">Conference Split</label>
+            <input type="checkbox" id="confSplit" checked>
+            <span class="toggle-switch"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="toggle-field">
+            <label for="randomNames">Randomize Team Names</label>
+            <input type="checkbox" id="randomNames">
+            <span class="toggle-switch"></span>
+          </div>
+        </div>
+
+        <div class="advanced-toggle" id="advancedToggle">
+          ⚙️ Advanced Settings
+        </div>
+
+        <div class="advanced-settings" id="advancedSettings">
+          <div class="form-group">
+            <div class="toggle-field">
+              <label for="expansionDraft">Expansion Draft</label>
+              <input type="checkbox" id="expansionDraft">
+              <span class="toggle-switch"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="toggle-field">
+              <label for="injuries">Player Injuries</label>
+              <input type="checkbox" id="injuries" checked>
+              <span class="toggle-switch"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="toggle-field">
+              <label for="morale">Morale System</label>
+              <input type="checkbox" id="morale" checked>
+              <span class="toggle-switch"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="toggle-field">
+              <label for="realisticContracts">Realistic Contracts</label>
+              <input type="checkbox" id="realisticContracts" checked>
+              <span class="toggle-switch"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="setup-actions">
+        <button class="setup-btn secondary" id="loadSaveBtn">Load Save</button>
+        <button class="setup-btn primary" id="startLeagueBtn">Start League</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div class="app" id="mainApp">
     <!-- SIDEBAR -->
     <aside>
       <div class="brand">
@@ -169,11 +707,32 @@
     <!-- MAIN -->
     <main id="viewRoot">
       <!-- DASHBOARD -->
-      <section class="panel" data-view="dashboard">
-        <h2>Team Overview</h2>
-        <div class="row">
-          <div class="col">
-            <div class="panel" style="padding:12px">
+      <section data-view="dashboard">
+        <div class="dashboard-grid">
+          <!-- LEFT COLUMN -->
+          <div class="dashboard-left">
+            <!-- Team Overview -->
+            <div class="panel">
+              <h2>Team Overview</h2>
+              <div class="record-strip">
+                <div class="record-item">
+                  <label>Record</label>
+                  <strong id="teamRecord">0-0</strong>
+                </div>
+                <div class="record-item">
+                  <label>Win %</label>
+                  <strong id="teamWinPct">.000</strong>
+                </div>
+                <div class="record-item">
+                  <label>Conf. Rank</label>
+                  <strong id="confRank">--</strong>
+                </div>
+                <div class="record-item">
+                  <label>Division</label>
+                  <strong id="divRank">--</strong>
+                </div>
+              </div>
+              
               <div class="capbar">
                 <div class="bar" aria-label="Payroll vs Cap"><div class="fill" id="capFill"></div></div>
                 <div class="kpi" id="capKpi">$0 / $0</div>
@@ -183,49 +742,201 @@
                 <span class="pill" id="taxPill">Tax Room: $0</span>
                 <span class="pill" id="apronPill">Apron Room: $0</span>
               </div>
+              
+              <div class="toolbar" style="margin-top:12px">
+                <button class="btn" data-view-jump="roster">Open Roster</button>
+                <button class="btn" data-view-jump="cap">Cap Sheet</button>
+                <button class="btn" data-view-jump="trades">Trades</button>
+              </div>
             </div>
-            <div class="toolbar">
-              <button class="btn" data-view-jump="roster">Open Roster</button>
-              <button class="btn" data-view-jump="cap">Open Cap Sheet</button>
-              <button class="btn" data-view-jump="trades">Open Trades</button>
+
+            <!-- Performance Snapshot -->
+            <div class="panel">
+              <h2>Performance Snapshot</h2>
+              <div class="perf-item">
+                <label>Last 10 Games</label>
+                <div class="last-ten" id="lastTen"></div>
+              </div>
+              
+              <div class="perf-grid">
+                <div class="perf-item">
+                  <label>Point Diff</label>
+                  <div class="value neutral" id="pointDiff">+0.0</div>
+                </div>
+                <div class="perf-item">
+                  <label>Current Streak</label>
+                  <div class="value neutral" id="streak">--</div>
+                </div>
+              </div>
+              
+              <div class="perf-item" style="margin-top:12px">
+                <label>Next Opponent</label>
+                <div class="value neutral" id="nextOpponent" style="font-size:14px">TBD</div>
+              </div>
+            </div>
+
+            <!-- Financial Summary -->
+            <div class="panel">
+              <h2>Financial Summary</h2>
+              <div class="finance-row">
+                <span class="finance-label">Total Payroll</span>
+                <span class="finance-value" id="totalPayroll">$0</span>
+              </div>
+              <div class="finance-row">
+                <span class="finance-label">Cap Room</span>
+                <span class="finance-value" id="capRoom">$0</span>
+              </div>
+              <div class="finance-row">
+                <span class="finance-label">Tax Status</span>
+                <span class="status-badge good" id="taxStatus">Under Cap</span>
+              </div>
+              <div class="finance-row">
+                <span class="finance-label">Next Season Projection</span>
+                <span class="finance-value" id="nextSeasonProj">$0 <span style="color:var(--muted); font-size:11px">↑</span></span>
+              </div>
             </div>
           </div>
-          <div class="col">
-            <div class="panel" style="padding:12px">
-              <div style="display:flex; justify-content:space-between; align-items:center">
-                <strong>Recent Activity</strong><span class="tag">Media • Morale • Injuries</span>
-              </div>
-              <div id="feed" class="empty">No events yet. Your beat writer is doomscrolling.</div>
+
+          <!-- RIGHT COLUMN -->
+          <div class="dashboard-right">
+            <!-- Recent Activity -->
+            <div class="panel">
+              <h2>Recent Activity</h2>
+              <div id="feed"></div>
             </div>
+
+            <!-- League Headlines -->
+            <div class="panel">
+              <h2>League Headlines</h2>
+              <div id="leagueHeadlines"></div>
+            </div>
+
+            <!-- Top Performer -->
+            <div class="panel">
+              <h2>Top Performer</h2>
+              <div id="topPerformer"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analytics & Fan Sentiment Strip -->
+        <div class="analytics-strip dashboard-full">
+          <div>
+            <h2 style="margin:0 0 16px; font-size:16px">Efficiency Trends</h2>
+            <div class="efficiency-grid">
+              <div class="efficiency-item">
+                <label>Off Rtg</label>
+                <div class="efficiency-value" id="offRtg" style="color:var(--good)">112.5</div>
+                <div class="efficiency-bar"><div class="fill" id="offRtgBar" style="width:75%; background:var(--good)"></div></div>
+              </div>
+              <div class="efficiency-item">
+                <label>Def Rtg</label>
+                <div class="efficiency-value" id="defRtg" style="color:var(--pri)">108.2</div>
+                <div class="efficiency-bar"><div class="fill" id="defRtgBar" style="width:68%; background:var(--pri)"></div></div>
+              </div>
+              <div class="efficiency-item">
+                <label>Pace</label>
+                <div class="efficiency-value" id="pace" style="color:var(--text-0)">98.7</div>
+                <div class="efficiency-bar"><div class="fill" id="paceBar" style="width:60%; background:var(--text-1)"></div></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="sentiment-container">
+            <div class="sentiment-label">Fan Sentiment</div>
+            <div class="sentiment-bar">
+              <div class="fill" id="sentimentFill" style="width:50%"></div>
+            </div>
+            <div class="sentiment-emoji" id="sentimentEmoji">😐</div>
           </div>
         </div>
       </section>
 
       <!-- ROSTER -->
-      <section class="panel" data-view="roster" hidden>
-        <h2>Roster</h2>
-        <div class="toolbar">
-          <button class="btn good" id="addPlayerBtn">Add Player</button>
-          <button class="btn ghost" id="sortOVR">Sort by OVR</button>
-          <span class="tag" id="rosterCount">0/15</span>
-        </div>
-        <div class="table-wrap">
-          <table id="rosterTable" aria-label="Roster table">
-            <thead>
-              <tr>
-                <th data-sort="name">Player</th>
-                <th data-sort="pos">Pos</th>
-                <th class="num" data-sort="age">Age</th>
-                <th class="num" data-sort="ovr">OVR</th>
-                <th class="num" data-sort="salary">Salary</th>
-                <th class="num" data-sort="years">Years</th>
-                <th class="num">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="rosterBody">
-              <tr><td colspan="7" class="empty">Add players to begin your dynasty.</td></tr>
-            </tbody>
-          </table>
+      <section data-view="roster" hidden>
+        <div class="panel">
+          <h2>Roster Management</h2>
+          
+          <!-- Toolbar -->
+          <div class="roster-toolbar">
+            <select id="teamSelector" class="btn" style="min-width:200px; font-weight:600">
+              <option value="myTeam">🏀 My Team</option>
+            </select>
+            
+            <div class="search-box">
+              <input type="text" id="playerSearch" placeholder="Search players...">
+            </div>
+            
+            <div class="filter-group">
+              <button class="filter-btn active" data-pos="all">All</button>
+              <button class="filter-btn" data-pos="PG">PG</button>
+              <button class="filter-btn" data-pos="SG">SG</button>
+              <button class="filter-btn" data-pos="SF">SF</button>
+              <button class="filter-btn" data-pos="PF">PF</button>
+              <button class="filter-btn" data-pos="C">C</button>
+            </div>
+            
+            <select id="sortBy" class="btn">
+              <option value="ovr">Sort by OVR</option>
+              <option value="age">Sort by Age</option>
+              <option value="salary">Sort by Salary</option>
+              <option value="morale">Sort by Morale</option>
+              <option value="name">Sort by Name</option>
+            </select>
+            
+            <div class="view-toggle">
+              <button class="active" data-view-mode="table">📋 Table</button>
+              <button data-view-mode="cards">🎴 Cards</button>
+            </div>
+            
+            <button class="btn good" id="addPlayerBtn">+ Add Player</button>
+            <span class="tag" id="rosterCount">0/15</span>
+          </div>
+
+          <!-- Table View -->
+          <div class="roster-table-view" id="rosterTableView">
+            <table id="rosterTable">
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th>Pos</th>
+                  <th class="num">Age</th>
+                  <th class="num">OVR</th>
+                  <th>Physical</th>
+                  <th class="num">Contract</th>
+                  <th>Morale</th>
+                  <th>Status</th>
+                  <th class="num">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="rosterBody">
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Card View -->
+          <div class="roster-grid" id="rosterCardView" style="display:none">
+          </div>
+
+          <!-- Team Totals -->
+          <div class="team-totals" id="teamTotals">
+            <div class="total-item">
+              <label>Avg Age</label>
+              <value id="avgAge">--</value>
+            </div>
+            <div class="total-item">
+              <label>Avg OVR</label>
+              <value id="avgOVR">--</value>
+            </div>
+            <div class="total-item">
+              <label>Total Salary</label>
+              <value id="totalSalary">$0</value>
+            </div>
+            <div class="total-item">
+              <label>Avg Morale</label>
+              <value id="avgMorale">--</value>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -340,6 +1051,226 @@
 
   <script>
     // -------------------------------
+    // League Setup Logic
+    // -------------------------------
+    const SETUP_STORAGE_KEY = "hoops-mini-gm-setup";
+    
+    // Check if league already exists
+    function hasExistingLeague(){
+      return localStorage.getItem(STORAGE_KEY) !== null;
+    }
+
+    // Advanced settings toggle
+    const advancedToggle = document.getElementById("advancedToggle");
+    const advancedSettings = document.getElementById("advancedSettings");
+    advancedToggle?.addEventListener("click", () => {
+      advancedSettings.classList.toggle("open");
+    });
+
+    // Start League button
+    document.getElementById("startLeagueBtn")?.addEventListener("click", () => {
+      const leagueSetup = {
+        leagueName: document.getElementById("leagueName").value || "My League",
+        teamToManage: document.getElementById("teamToManage").value,
+        startSeason: parseInt(document.getElementById("startSeason").value),
+        numTeams: parseInt(document.getElementById("numTeams").value),
+        capMode: document.getElementById("capMode").value,
+        difficulty: document.getElementById("difficulty").value,
+        conferenceSplit: document.getElementById("confSplit").checked,
+        randomNames: document.getElementById("randomNames").checked,
+        expansionDraft: document.getElementById("expansionDraft").checked,
+        injuries: document.getElementById("injuries").checked,
+        morale: document.getElementById("morale").checked,
+        realisticContracts: document.getElementById("realisticContracts").checked
+      };
+
+      // Save setup to localStorage
+      localStorage.setItem(SETUP_STORAGE_KEY, JSON.stringify(leagueSetup));
+
+      // Initialize new league with setup parameters
+      initializeLeague(leagueSetup);
+
+      // Fade transition
+      const setupScreen = document.getElementById("setupScreen");
+      const mainApp = document.getElementById("mainApp");
+      
+      setupScreen.classList.add("fade-out");
+      setTimeout(() => {
+        setupScreen.style.display = "none";
+        mainApp.classList.add("active");
+      }, 500);
+    });
+
+    // Load Save button
+    document.getElementById("loadSaveBtn")?.addEventListener("click", () => {
+      if (!hasExistingLeague()) {
+        alert("No saved league found. Please start a new league first.");
+        return;
+      }
+
+      // Load existing league
+      const setupScreen = document.getElementById("setupScreen");
+      const mainApp = document.getElementById("mainApp");
+      
+      setupScreen.classList.add("fade-out");
+      setTimeout(() => {
+        setupScreen.style.display = "none";
+        mainApp.classList.add("active");
+        // STATE will be loaded from localStorage automatically
+        rerenderAll();
+      }, 500);
+    });
+
+    // Auto-load if save exists
+    window.addEventListener("DOMContentLoaded", () => {
+      if (hasExistingLeague()) {
+        // Show load option more prominently
+        document.getElementById("loadSaveBtn").style.background = "linear-gradient(135deg, var(--good) 0%, #2d9d5f 100%)";
+        document.getElementById("loadSaveBtn").style.borderColor = "var(--good)";
+        document.getElementById("loadSaveBtn").style.color = "white";
+      }
+    });
+
+    // -------------------------------
+    // Initialize League from Setup
+    // -------------------------------
+    function initializeLeague(setup) {
+      let teamName;
+      
+      if (setup.teamToManage === "random") {
+        teamName = generateRandomTeamName();
+      } else if (setup.randomNames) {
+        teamName = generateRandomTeamName();
+      } else {
+        teamName = setup.teamToManage;
+      }
+      
+      const newState = {
+        meta: { 
+          teamName: teamName,
+          leagueName: setup.leagueName,
+          season: setup.startSeason, 
+          numTeams: setup.numTeams,
+          difficulty: setup.difficulty,
+          rules: DEFAULT_RULES 
+        },
+        roster: generateRoster(),
+        leagueRosters: generateLeagueRosters(),
+        events: [
+          {ts: Date.now(), text:`Welcome to ${setup.leagueName}! You're now managing the ${teamName}. Your journey begins in ${setup.startSeason}-${(setup.startSeason+1).toString().slice(2)}.`, type:"league"}
+        ],
+        prospects: [],
+        settings: setup,
+        dashboard: {
+          wins: 0,
+          losses: 0,
+          confRank: 8,
+          divRank: 3,
+          lastTen: [],
+          pointDiff: 0,
+          streak: { type: "none", count: 0 },
+          nextOpponent: "Memphis Momentum",
+          nextGameDate: "Nov 15",
+          offRtg: 112.5,
+          defRtg: 108.2,
+          pace: 98.7,
+          sentiment: 50
+        }
+      };
+
+      STATE = newState;
+      save(STATE);
+      rerenderAll();
+    }
+
+    function generateRandomTeamName() {
+      const cities = ["Phoenix", "Seattle", "Las Vegas", "Vancouver", "Montreal", "Austin", "Nashville", "San Diego", "Kansas City", "Louisville"];
+      const names = ["Thunder", "Dragons", "Vipers", "Raptors", "Lightning", "Titans", "Storm", "Fusion", "Eclipse", "Phoenix"];
+      return `${cities[Math.floor(Math.random()*cities.length)]} ${names[Math.floor(Math.random()*names.length)]}`;
+    }
+
+    // -------------------------------
+    // Player Generation
+    // -------------------------------
+    function generateRoster() {
+      const first = ["Darius","Kai","Marcus","Jalen","Devon","Rico","Maya","Tiana","Kobe","Zion","Luka","Anya","Niko","Imani","Rhea","Kenji","Sofia","Jamal","Elias","Zara"];
+      const last = ["Lawson","Ajayi","Vega","Rodriguez","Nguyen","Silva","Khan","Yamamoto","Dubois","Rossi","O'Neal","Okafor","Petrovic","Han","Ivanov","Chen","Diaz","Kim","Patel","Brown"];
+      const positions = ["PG","SG","SF","PF","C"];
+      const roster = [];
+      
+      // Generate 15 players
+      for (let i = 0; i < 15; i++) {
+        const pos = positions[i % 5]; // Ensure balanced positions
+        const age = 19 + Math.floor(Math.random() * 15); // 19-33
+        const ovr = 68 + Math.floor(Math.random() * 23); // 68-90
+        
+        // Height based on position
+        let height, weight;
+        if (pos === "PG") {
+          height = `6'${Math.floor(Math.random() * 5)}"`;
+          weight = 180 + Math.floor(Math.random() * 30);
+        } else if (pos === "SG") {
+          height = `6'${3 + Math.floor(Math.random() * 4)}"`;
+          weight = 190 + Math.floor(Math.random() * 30);
+        } else if (pos === "SF") {
+          height = `6'${5 + Math.floor(Math.random() * 4)}"`;
+          weight = 210 + Math.floor(Math.random() * 30);
+        } else if (pos === "PF") {
+          height = `6'${7 + Math.floor(Math.random() * 4)}"`;
+          weight = 225 + Math.floor(Math.random() * 30);
+        } else {
+          height = `6'${9 + Math.floor(Math.random() * 4)}"`;
+          weight = 240 + Math.floor(Math.random() * 40);
+        }
+        
+        // Salary based on OVR
+        let salary;
+        if (ovr >= 85) salary = 20_000_000 + Math.floor(Math.random() * 15_000_000);
+        else if (ovr >= 80) salary = 12_000_000 + Math.floor(Math.random() * 10_000_000);
+        else if (ovr >= 75) salary = 5_000_000 + Math.floor(Math.random() * 8_000_000);
+        else salary = 1_000_000 + Math.floor(Math.random() * 5_000_000);
+        
+        const years = 1 + Math.floor(Math.random() * 4); // 1-4 years
+        const morale = 40 + Math.floor(Math.random() * 60); // 40-100
+        
+        // Status probabilities
+        let status = "healthy";
+        const rand = Math.random();
+        if (rand < 0.05) status = "injured";
+        else if (rand < 0.1) status = "twoway";
+        
+        roster.push({
+          id: uid(),
+          name: `${first[Math.floor(Math.random() * first.length)]} ${last[Math.floor(Math.random() * last.length)]}`,
+          pos,
+          age,
+          ovr,
+          height,
+          weight,
+          salary,
+          years,
+          morale,
+          status,
+          notes: generatePlayerNote(pos, ovr)
+        });
+      }
+      
+      return roster.sort((a, b) => b.ovr - a.ovr); // Sort by OVR descending
+    }
+    
+    function generatePlayerNote(pos, ovr) {
+      const notes = {
+        PG: ["Floor general", "Playmaker", "Pick & roll maestro", "Defensive stopper", "Three-level scorer"],
+        SG: ["Perimeter threat", "Slasher", "Elite defender", "Catch & shoot specialist", "Two-way guard"],
+        SF: ["3&D wing", "Versatile scorer", "Lockdown defender", "Do-it-all forward", "Transition threat"],
+        PF: ["Stretch four", "Paint protector", "Pick & pop specialist", "Energy guy", "Rebounding machine"],
+        C: ["Rim protector", "Drop big", "Elite screener", "Back-to-basket scorer", "Modern center"]
+      };
+      const list = notes[pos] || notes.SF;
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    // -------------------------------
     // Minimal data model (expandable)
     // -------------------------------
     const DEFAULT_RULES = {
@@ -350,19 +1281,48 @@
       rosterLimit: 15
     };
 
+    const LEAGUE_TEAMS = [
+      "Atlanta Apex", "Boston Breakers", "Brooklyn Bridges", "Charlotte Cobras",
+      "Chicago Cyclones", "Cleveland Comets", "Dallas Dynasty", "Denver Elevation",
+      "Detroit Dynamos", "Golden State Guardians", "Houston Heatwave", "Indiana Ignition",
+      "LA Lightning", "Los Angeles Legends", "Memphis Momentum", "Miami Mirage",
+      "Milwaukee Metros", "Minnesota Mavericks", "New Orleans Neptunes", "New York Navigators",
+      "Oklahoma City Outlaws", "Orlando Overdrive", "Philadelphia Phoenixes", "Phoenix Predators",
+      "Portland Pioneers", "Sacramento Spartans", "San Antonio Strikers", "San Francisco Riptide",
+      "Toronto Tempest", "Utah Uprising", "Washington Wildcats"
+    ];
+
+    function generateLeagueRosters() {
+      const leagueRosters = {};
+      LEAGUE_TEAMS.forEach(team => {
+        leagueRosters[team] = generateRoster();
+      });
+      return leagueRosters;
+    }
+
     const initialState = {
       meta: { teamName: "San Francisco Riptide", season: 2026, rules: DEFAULT_RULES },
-      roster: [
-        {id: uid(), name:"D. Lawson", pos:"PG", age:27, ovr:84, salary:24_500_000, years:3, notes:"Primary ball-handler"},
-        {id: uid(), name:"K. Ajayi", pos:"SG", age:24, ovr:82, salary:18_200_000, years:2, notes:"Slasher, plus defender"},
-        {id: uid(), name:"M. Petrovic", pos:"C",  age:29, ovr:80, salary:16_000_000, years:2, notes:"Drop big, elite screener"},
-        {id: uid(), name:"R. Vega", pos:"SF", age:22, ovr:76, salary:8_200_000, years:2, notes:"3&D, team opt Yr2"},
-        {id: uid(), name:"T. Han", pos:"PF", age:31, ovr:74, salary:5_100_000, years:1, notes:"Vet floor spacer"}
-      ],
+      roster: generateRoster(),
+      leagueRosters: generateLeagueRosters(),
       events: [
-        {ts: Date.now(), text:"Hired analytics intern who speaks exclusively in effective field goal percentage."}
+        {ts: Date.now(), text:"Hired analytics intern who speaks exclusively in effective field goal percentage.", type:"league"}
       ],
-      prospects: []
+      prospects: [],
+      dashboard: {
+        wins: 0,
+        losses: 0,
+        confRank: 8,
+        divRank: 3,
+        lastTen: [],
+        pointDiff: 0,
+        streak: { type: "none", count: 0 },
+        nextOpponent: "Memphis Momentum",
+        nextGameDate: "Nov 15",
+        offRtg: 112.5,
+        defRtg: 108.2,
+        pace: 98.7,
+        sentiment: 50
+      }
     };
 
     // -------------------------------
@@ -370,7 +1330,14 @@
     // -------------------------------
     const STORAGE_KEY = "hoops-mini-gm";
     function load(){
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || initialState }
+      try { 
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || initialState;
+        // Ensure leagueRosters exists for backward compatibility
+        if (!saved.leagueRosters) {
+          saved.leagueRosters = generateLeagueRosters();
+        }
+        return saved;
+      }
       catch { return initialState }
     }
     function save(state){
@@ -405,7 +1372,7 @@
       btn.addEventListener("click", ()=>{
         const view = btn.dataset.view;
         $$("#nav .nav-btn").forEach(b=>b.classList.toggle("active", b===btn));
-        $$("main section.panel").forEach(sec=>{
+        $$("main section[data-view]").forEach(sec=>{
           sec.hidden = (sec.dataset.view !== view);
         });
         if(view === "roster") renderRoster();
@@ -427,10 +1394,81 @@
       if(confirm("Reset league to defaults?")){ STATE = structuredClone(initialState); rerenderAll(); toast("League reset."); }
     });
     $("#simDayBtn").addEventListener("click", ()=>{
-      const ev = {ts: Date.now(), text:"You advanced a day. Rival GM leaked a cryptic tweet with a cap calculator emoji."};
-      STATE.events.unshift(ev);
-      renderFeed();
+      simulateGame();
+      toast("Game simulated!");
+      rerenderAll();
     });
+
+    function simulateGame(){
+      if (!STATE.dashboard) {
+        STATE.dashboard = {
+          wins: 0, losses: 0, confRank: 8, divRank: 3, lastTen: [],
+          pointDiff: 0, streak: { type: "none", count: 0 },
+          nextOpponent: "Memphis Momentum", nextGameDate: "Nov 15",
+          offRtg: 112.5, defRtg: 108.2, pace: 98.7, sentiment: 50
+        };
+      }
+      
+      const d = STATE.dashboard;
+      
+      // Random game outcome
+      const won = Math.random() > 0.5;
+      const scoreDiff = Math.floor(Math.random() * 20) - 10;
+      
+      if (won) {
+        d.wins++;
+        if (d.streak.type === "w") {
+          d.streak.count++;
+        } else {
+          d.streak = { type: "w", count: 1 };
+        }
+        addEvent(`Victory! Won by ${Math.abs(scoreDiff)} points.`, "league");
+      } else {
+        d.losses++;
+        if (d.streak.type === "l") {
+          d.streak.count++;
+        } else {
+          d.streak = { type: "l", count: 1 };
+        }
+        addEvent(`Tough loss. Lost by ${Math.abs(scoreDiff)} points.`, "league");
+      }
+      
+      // Update last 10
+      d.lastTen.unshift(won ? "w" : "l");
+      if (d.lastTen.length > 10) d.lastTen = d.lastTen.slice(0, 10);
+      
+      // Update point differential
+      d.pointDiff = ((d.pointDiff * (d.wins + d.losses - 1)) + scoreDiff) / (d.wins + d.losses);
+      
+      // Update rankings (random walk)
+      d.confRank = Math.max(1, Math.min(15, d.confRank + (Math.random() > 0.5 ? -1 : 1)));
+      d.divRank = Math.max(1, Math.min(5, d.divRank + (Math.random() > 0.5 ? -1 : 1)));
+      
+      // Update efficiency ratings
+      d.offRtg += (Math.random() - 0.5) * 2;
+      d.defRtg += (Math.random() - 0.5) * 2;
+      d.pace += (Math.random() - 0.5);
+      
+      // Update sentiment based on recent performance
+      const recentWins = d.lastTen.filter(r => r === "w").length;
+      d.sentiment = (recentWins / Math.max(1, d.lastTen.length)) * 100;
+      
+      // Random next opponent
+      const teams = ["Memphis Momentum", "LA Lightning", "Boston Breakers", "Phoenix Predators", "Toronto Tempest", "Denver Elevation"];
+      d.nextOpponent = teams[Math.floor(Math.random() * teams.length)];
+      
+      // Random events
+      if (Math.random() > 0.7) {
+        const events = [
+          { text: "Player receives weekly award nomination.", type: "league" },
+          { text: "Minor injury reported to backup guard.", type: "injury" },
+          { text: "Trade rumors surface around veteran forward.", type: "trade" },
+          { text: "Coach praises team's defensive effort.", type: "league" }
+        ];
+        const event = events[Math.floor(Math.random() * events.length)];
+        addEvent(event.text, event.type);
+      }
+    }
 
     // -------------------------------
     // Settings
@@ -455,77 +1493,488 @@
       $("#spacePill").textContent = `Cap Space: ${fmt(cap - payroll)}`;
       $("#taxPill").textContent = `Tax Room: ${fmt(tax - payroll)}`;
       $("#apronPill").textContent = `Apron Room: ${fmt(apron1 - payroll)} (A1) • ${fmt(apron2 - payroll)} (A2)`;
+      
+      // Financial Summary
+      $("#totalPayroll").textContent = fmt(payroll);
+      $("#capRoom").textContent = fmt(cap - payroll);
+      
+      const taxStatus = $("#taxStatus");
+      if (payroll < cap) {
+        taxStatus.textContent = "Under Cap";
+        taxStatus.className = "status-badge good";
+      } else if (payroll < tax) {
+        taxStatus.textContent = "Over Cap";
+        taxStatus.className = "status-badge warn";
+      } else {
+        taxStatus.textContent = "In Tax";
+        taxStatus.className = "status-badge bad";
+      }
+      
+      const nextYear = payroll * 1.05;
+      $("#nextSeasonProj").innerHTML = `${fmt(nextYear)} <span style="color:var(--muted); font-size:11px">↑</span>`;
     }
+    
+    function renderDashboardRecord(){
+      if (!STATE.dashboard) {
+        STATE.dashboard = {
+          wins: 0, losses: 0, confRank: 8, divRank: 3, lastTen: [],
+          pointDiff: 0, streak: { type: "none", count: 0 },
+          nextOpponent: "Memphis Momentum", nextGameDate: "Nov 15",
+          offRtg: 112.5, defRtg: 108.2, pace: 98.7, sentiment: 50
+        };
+      }
+      
+      const d = STATE.dashboard;
+      const total = d.wins + d.losses;
+      const winPct = total > 0 ? (d.wins / total).toFixed(3) : ".000";
+      
+      $("#teamRecord").textContent = `${d.wins}-${d.losses}`;
+      $("#teamWinPct").textContent = winPct;
+      $("#confRank").textContent = d.confRank || "--";
+      $("#divRank").textContent = d.divRank || "--";
+    }
+    
+    function renderPerformance(){
+      if (!STATE.dashboard) return;
+      const d = STATE.dashboard;
+      
+      // Last 10 games
+      const lastTenEl = $("#lastTen");
+      if (d.lastTen.length === 0) {
+        lastTenEl.innerHTML = '<span style="color:var(--muted); font-size:12px">No games played yet</span>';
+      } else {
+        lastTenEl.innerHTML = d.lastTen.map(result => 
+          `<div class="game-dot ${result}">${result.toUpperCase()}</div>`
+        ).join("");
+      }
+      
+      // Point Differential
+      const diffEl = $("#pointDiff");
+      const diff = d.pointDiff || 0;
+      diffEl.textContent = diff >= 0 ? `+${diff.toFixed(1)}` : diff.toFixed(1);
+      diffEl.className = "value " + (diff > 0 ? "good" : diff < 0 ? "bad" : "neutral");
+      
+      // Streak
+      const streakEl = $("#streak");
+      if (d.streak.type === "none") {
+        streakEl.textContent = "--";
+        streakEl.className = "value neutral";
+      } else {
+        streakEl.textContent = `${d.streak.type.toUpperCase()}${d.streak.count}`;
+        streakEl.className = "value " + (d.streak.type === "w" ? "good" : "bad");
+      }
+      
+      // Next Opponent
+      $("#nextOpponent").textContent = `${d.nextOpponent} • ${d.nextGameDate}`;
+    }
+    
     function renderFeed(){
       const feed = $("#feed");
-      if(!STATE.events.length){ feed.className="empty"; feed.textContent="No events yet. Your beat writer is doomscrolling."; return; }
-      feed.className="";
+      if(!STATE.events.length){ 
+        feed.innerHTML = '<div class="empty">No events yet. Your beat writer is doomscrolling.</div>';
+        return;
+      }
       feed.innerHTML = STATE.events.slice(0,6).map(e=>{
-        const d = new Date(e.ts).toLocaleString();
-        return `<div style="padding:8px 0; border-bottom:1px dashed var(--border)"><span class="tag" style="margin-right:8px">${d}</span>${e.text}</div>`;
+        const type = e.type || "league";
+        const tagClass = `feed-tag ${type}`;
+        const tagText = type.charAt(0).toUpperCase() + type.slice(1);
+        return `<div class="feed-item"><span class="${tagClass}">${tagText}</span>${escapeHtml(e.text)}</div>`;
       }).join("");
+    }
+    
+    function renderLeagueHeadlines(){
+      const headlines = [
+        "Seattle Thunder extend winning streak to 8 games.",
+        "LA Legends shopping veteran forward ahead of deadline.",
+        "Phoenix Predators fire head coach after 2-10 start.",
+        "Toronto Tempest sign undrafted rookie to two-way deal.",
+        "Denver Elevation's star center out 4-6 weeks with injury.",
+        "Boston Breakers clinch playoff berth with dominant win.",
+        "Trade rumors swirl around Chicago Cyclones' franchise player.",
+        "New York Navigators make blockbuster three-team trade."
+      ];
+      
+      const shuffled = headlines.sort(() => Math.random() - 0.5).slice(0, 5);
+      $("#leagueHeadlines").innerHTML = shuffled.map(h => 
+        `<div class="headline-item">📰 ${h}</div>`
+      ).join("");
+    }
+    
+    function renderTopPerformer(){
+      if (!STATE.roster.length) {
+        $("#topPerformer").innerHTML = '<div class="empty">No players on roster</div>';
+        return;
+      }
+      
+      const topPlayer = STATE.roster.reduce((best, p) => p.ovr > best.ovr ? p : best, STATE.roster[0]);
+      
+      const ppg = (15 + Math.random() * 15).toFixed(1);
+      const rpg = (4 + Math.random() * 8).toFixed(1);
+      const apg = (3 + Math.random() * 7).toFixed(1);
+      
+      $("#topPerformer").innerHTML = `
+        <div class="top-performer">
+          <div class="performer-ovr">${topPlayer.ovr}</div>
+          <div class="performer-info">
+            <div class="performer-name">${escapeHtml(topPlayer.name)}</div>
+            <div class="performer-meta">${topPlayer.pos} • ${topPlayer.age} yrs old</div>
+            <div class="performer-stats">
+              <span class="performer-stat"><strong>${ppg}</strong>PPG</span>
+              <span class="performer-stat"><strong>${rpg}</strong>RPG</span>
+              <span class="performer-stat"><strong>${apg}</strong>APG</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    function renderAnalytics(){
+      if (!STATE.dashboard) return;
+      const d = STATE.dashboard;
+      
+      // Efficiency
+      $("#offRtg").textContent = d.offRtg.toFixed(1);
+      $("#defRtg").textContent = d.defRtg.toFixed(1);
+      $("#pace").textContent = d.pace.toFixed(1);
+      
+      $("#offRtgBar").style.width = `${clamp((d.offRtg - 90) / 30 * 100, 0, 100)}%`;
+      $("#defRtgBar").style.width = `${clamp((120 - d.defRtg) / 30 * 100, 0, 100)}%`;
+      $("#paceBar").style.width = `${clamp((d.pace - 85) / 30 * 100, 0, 100)}%`;
+      
+      // Sentiment
+      const sentiment = d.sentiment || 50;
+      $("#sentimentFill").style.width = `${sentiment}%`;
+      
+      const emoji = sentiment < 30 ? "😠" : sentiment < 50 ? "😐" : sentiment < 70 ? "🙂" : "😄";
+      $("#sentimentEmoji").textContent = emoji;
     }
 
     // -------------------------------
     // Roster
     // -------------------------------
     let currentSort = {key:"ovr", dir:-1};
-    $("#sortOVR").addEventListener("click", ()=>{
-      currentSort = {key:"ovr", dir:-1};
-      renderRoster();
-    });
-    $$("#rosterTable thead th[data-sort]").forEach(th=>{
-      th.addEventListener("click", ()=>{
-        const key = th.dataset.sort;
-        if(currentSort.key===key){ currentSort.dir *= -1 } else { currentSort = {key, dir: key==="name"||key==="pos"?1:-1}; }
+    let currentFilter = "all";
+    let searchQuery = "";
+    let viewMode = "table";
+    let currentViewingTeam = "myTeam"; // "myTeam" or team name from LEAGUE_TEAMS
+    
+    // Position filter buttons
+    $$(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        $$(".filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentFilter = btn.dataset.pos;
         renderRoster();
       });
     });
+    
+    // Search
+    $("#playerSearch")?.addEventListener("input", (e) => {
+      searchQuery = e.target.value.toLowerCase();
+      renderRoster();
+    });
+    
+    // Sort dropdown
+    $("#sortBy")?.addEventListener("change", (e) => {
+      const value = e.target.value;
+      currentSort = {
+        key: value,
+        dir: value === "name" ? 1 : -1
+      };
+      renderRoster();
+    });
+    
+    // View toggle
+    $$(".view-toggle button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        $$(".view-toggle button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        viewMode = btn.dataset.viewMode;
+        renderRoster();
+      });
+    });
+    
+    // Team selector - populate and handle changes
+    function initializeTeamSelector() {
+      const teamSelector = $("#teamSelector");
+      if (!teamSelector) return;
+      
+      // Populate dropdown with all teams
+      teamSelector.innerHTML = '<option value="myTeam">🏀 My Team</option>';
+      LEAGUE_TEAMS.forEach(team => {
+        const option = document.createElement("option");
+        option.value = team;
+        option.textContent = team;
+        teamSelector.appendChild(option);
+      });
+      
+      // Handle team selection changes
+      teamSelector.addEventListener("change", (e) => {
+        currentViewingTeam = e.target.value;
+        renderRoster();
+      });
+    }
+    
+    initializeTeamSelector();
 
     function renderRoster(){
-      const tbody = $("#rosterBody");
-      const roster = [...STATE.roster].sort(by(currentSort.key, currentSort.dir));
-      $("#rosterCount").textContent = `${roster.length}/${STATE.meta.rules.rosterLimit}`;
-      if(!roster.length){ tbody.innerHTML = `<tr><td colspan="7" class="empty">Add players to begin your dynasty.</td></tr>`; return; }
-      tbody.innerHTML = roster.map(p=>`
-        <tr>
-          <td><strong>${escapeHtml(p.name)}</strong><div class="tag" style="margin-top:4px">${escapeHtml(p.notes||"")}</div></td>
-          <td class="pos">${p.pos}</td>
-          <td class="num">${p.age}</td>
-          <td class="num ovr">${p.ovr}</td>
-          <td class="num">${fmt(p.salary)}</td>
-          <td class="num">${p.years}</td>
-          <td class="num">
-            <button class="btn ghost" data-act="bump" data-id="${p.id}" title="Increase OVR">▲</button>
-            <button class="btn ghost" data-act="drop" data-id="${p.id}" title="Decrease OVR">▼</button>
-            <button class="btn bad" data-act="waive" data-id="${p.id}" title="Remove">Waive</button>
-          </td>
-        </tr>
-      `).join("");
-      // actions
-      $("#rosterBody").querySelectorAll("[data-act]").forEach(b=>{
-        b.addEventListener("click", ()=>{
-          const id = b.dataset.id;
-          const p = STATE.roster.find(x=>x.id===id);
-          if(!p) return;
-          if(b.dataset.act==="waive"){
-            if(confirm(`Waive ${p.name}?`)){ STATE.roster = STATE.roster.filter(x=>x.id!==id); addEvent(`${p.name} was waived.`); rerenderAll(); }
-          }
-          if(b.dataset.act==="bump"){ p.ovr = Math.min(99, p.ovr+1); renderRoster(); }
-          if(b.dataset.act==="drop"){ p.ovr = Math.max(40, p.ovr-1); renderRoster(); }
-          renderDashboardCaps();
-          renderCapSheet();
-        });
-      });
+      // Check if roster elements exist (tab may be hidden on initial load)
+      const rosterBody = $("#rosterBody");
+      const rosterCount = $("#rosterCount");
+      const rosterTableView = $("#rosterTableView");
+      const rosterCardView = $("#rosterCardView");
+      
+      if (!rosterBody || !rosterCount || !rosterTableView || !rosterCardView) {
+        return; // Elements not ready yet
+      }
+      
+      // Get the appropriate roster based on current viewing team
+      let roster = currentViewingTeam === "myTeam" 
+        ? [...STATE.roster] 
+        : [...(STATE.leagueRosters?.[currentViewingTeam] || [])];
+      
+      console.log("Viewing team:", currentViewingTeam);
+      console.log("Roster first player:", roster[0]?.name);
+      console.log("Total league teams with rosters:", Object.keys(STATE.leagueRosters || {}).length);
+      
+      // If no roster found for this team, generate one
+      if (roster.length === 0 && currentViewingTeam !== "myTeam") {
+        if (!STATE.leagueRosters) STATE.leagueRosters = {};
+        STATE.leagueRosters[currentViewingTeam] = generateRoster();
+        roster = [...STATE.leagueRosters[currentViewingTeam]];
+      }
+      
+      // Apply filter
+      if (currentFilter !== "all") {
+        roster = roster.filter(p => p.pos === currentFilter);
+      }
+      
+      // Apply search
+      if (searchQuery) {
+        roster = roster.filter(p => 
+          p.name.toLowerCase().includes(searchQuery) ||
+          p.pos.toLowerCase().includes(searchQuery)
+        );
+      }
+      
+      // Apply sort
+      roster.sort(by(currentSort.key, currentSort.dir));
+      
+      rosterCount.textContent = `${STATE.roster.length}/${STATE.meta.rules.rosterLimit}`;
+      
+      if (viewMode === "table") {
+        rosterTableView.style.display = "block";
+        rosterCardView.style.display = "none";
+        renderRosterTable(roster);
+      } else {
+        rosterTableView.style.display = "none";
+        rosterCardView.style.display = "grid";
+        renderRosterCards(roster);
+      }
+      
+      // Show/hide Add Player button based on viewing team
+      const addPlayerBtn = $("#addPlayerBtn");
+      if (addPlayerBtn) {
+        addPlayerBtn.style.display = currentViewingTeam === "myTeam" ? "inline-block" : "none";
+      }
+      
+      renderTeamTotals();
       renderDashboardCaps();
       renderCapSheet();
     }
+    
+    function renderRosterTable(roster) {
+      const tbody = $("#rosterBody");
+      if (!roster.length) {
+        tbody.innerHTML = `<tr><td colspan="9" class="empty">No players found</td></tr>`;
+        return;
+      }
+      
+      tbody.innerHTML = roster.map(p => {
+        const moraleColor = p.morale >= 80 ? "var(--good)" : p.morale >= 50 ? "var(--warn)" : "var(--bad)";
+        const moraleEmoji = p.morale >= 80 ? "😃" : p.morale >= 50 ? "😐" : "😞";
+        const statusClass = p.status === "injured" ? "injured" : p.status === "twoway" ? "twoway" : "healthy";
+        
+        return `
+          <tr>
+            <td>
+              <div style="display:flex; align-items:center; gap:10px">
+                <div style="width:40px; height:40px; border-radius:8px; background:linear-gradient(135deg, var(--pri), var(--pri-2)); 
+                  display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:16px">
+                  ${p.ovr}
+                </div>
+                <div>
+                  <strong>${escapeHtml(p.name)}</strong>
+                  <div style="font-size:11px; color:var(--muted)">${escapeHtml(p.notes||"")}</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="pos-badge" style="background:rgba(106,162,255,0.15); color:var(--pri); padding:4px 8px; border-radius:4px; font-weight:600">${p.pos}</span></td>
+            <td class="num">${p.age}</td>
+            <td class="num ovr">${p.ovr}</td>
+            <td class="height-weight">${p.height || "6'6\""} • ${p.weight || 210}lb</td>
+            <td class="num">
+              <div style="font-family:var(--mono); font-weight:600">${fmt(p.salary)}</div>
+              <div style="font-size:11px; color:var(--muted)">${p.years} yr${p.years > 1 ? 's' : ''}</div>
+            </td>
+            <td>
+              <div class="morale-cell">
+                <div class="morale-mini">
+                  <div class="fill" style="width:${p.morale}%; background:${moraleColor}"></div>
+                </div>
+                <span>${moraleEmoji}</span>
+              </div>
+            </td>
+            <td><span class="status-badge ${statusClass}">${p.status}</span></td>
+            <td class="num">
+              <div style="display:flex; gap:4px; justify-content:flex-end">
+                ${currentViewingTeam === "myTeam" ? `
+                  <button class="btn ghost" data-act="edit" data-id="${p.id}" title="Edit" style="padding:4px 8px">✏️</button>
+                  <button class="btn ghost" data-act="trade" data-id="${p.id}" title="Trade" style="padding:4px 8px">🔄</button>
+                  <button class="btn bad" data-act="waive" data-id="${p.id}" title="Waive" style="padding:4px 8px; font-size:11px">Waive</button>
+                ` : '<span style="color:var(--muted); font-size:11px">View Only</span>'}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+      
+      attachRosterActions();
+    }
+    
+    function renderRosterCards(roster) {
+      const container = $("#rosterCardView");
+      if (!roster.length) {
+        container.innerHTML = '<div class="empty" style="grid-column:1/-1; padding:60px">No players found</div>';
+        return;
+      }
+      
+      container.innerHTML = roster.map(p => {
+        const moraleColor = p.morale >= 80 ? "var(--good)" : p.morale >= 50 ? "var(--warn)" : "var(--bad)";
+        const moraleEmoji = p.morale >= 80 ? "😃" : p.morale >= 50 ? "😐" : "😞";
+        const statusClass = p.status === "injured" ? "injured" : p.status === "twoway" ? "twoway" : "healthy";
+        const ppg = (10 + (p.ovr - 70) * 0.8).toFixed(1);
+        const rpg = (3 + Math.random() * 6).toFixed(1);
+        const apg = (2 + Math.random() * 5).toFixed(1);
+        
+        return `
+          <div class="player-card">
+            <div class="player-header">
+              <div class="player-ovr-badge">${p.ovr}</div>
+              <div class="player-info">
+                <div class="player-name">${escapeHtml(p.name)}</div>
+                <div class="player-meta">
+                  <span class="pos-badge">${p.pos}</span>
+                  <span>${p.age} yrs</span>
+                  <span>${p.height || "6'6\""}</span>
+                  <span>${p.weight || 210}lb</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="player-stats">
+              <div class="stat-item">
+                <label>PPG</label>
+                <value>${ppg}</value>
+              </div>
+              <div class="stat-item">
+                <label>RPG</label>
+                <value>${rpg}</value>
+              </div>
+              <div class="stat-item">
+                <label>APG</label>
+                <value>${apg}</value>
+              </div>
+            </div>
+            
+            <div class="player-contract">
+              <div>
+                <div class="contract-label">Contract</div>
+                <div class="contract-value">${fmt(p.salary)}</div>
+              </div>
+              <div style="text-align:right">
+                <div class="contract-label">Years Left</div>
+                <div class="contract-value">${p.years}</div>
+              </div>
+            </div>
+            
+            <div class="player-status">
+              <span class="status-badge ${statusClass}">${p.status}</span>
+              <div class="morale-bar">
+                <div class="fill" style="width:${p.morale}%; background:${moraleColor}"></div>
+              </div>
+              <span class="morale-emoji">${moraleEmoji}</span>
+            </div>
+            
+            <div style="font-size:12px; color:var(--text-1); margin-bottom:12px; font-style:italic">${escapeHtml(p.notes || "")}</div>
+            
+            <div class="player-actions">
+              ${currentViewingTeam === "myTeam" ? `
+                <button class="btn" data-act="edit" data-id="${p.id}">Edit</button>
+                <button class="btn" data-act="trade" data-id="${p.id}">Trade</button>
+                <button class="btn bad" data-act="waive" data-id="${p.id}">Waive</button>
+              ` : '<div style="text-align:center; color:var(--muted); font-size:12px; padding:8px">View Only</div>'}
+            </div>
+          </div>
+        `;
+      }).join("");
+      
+      attachRosterActions();
+    }
+    
+    function attachRosterActions() {
+      document.querySelectorAll("[data-act]").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.id;
+          const act = btn.dataset.act;
+          const p = STATE.roster.find(x => x.id === id);
+          if (!p) return;
+          
+          if (act === "waive") {
+            if (confirm(`Waive ${p.name}? This cannot be undone.`)) {
+              STATE.roster = STATE.roster.filter(x => x.id !== id);
+              addEvent(`${p.name} was waived.`, "league");
+              rerenderAll();
+            }
+          } else if (act === "edit") {
+            openEditPlayerModal(p);
+          } else if (act === "trade") {
+            toast("Trade interface coming soon!");
+          }
+        });
+      });
+    }
+    
+    function renderTeamTotals() {
+      const avgAgeEl = $("#avgAge");
+      const avgOVREl = $("#avgOVR");
+      const totalSalaryEl = $("#totalSalary");
+      const avgMoraleEl = $("#avgMorale");
+      
+      // Get the appropriate roster
+      const roster = currentViewingTeam === "myTeam" 
+        ? STATE.roster 
+        : (STATE.leagueRosters[currentViewingTeam] || []);
+      
+      if (!roster.length || !avgAgeEl || !avgOVREl || !totalSalaryEl || !avgMoraleEl) return;
+      
+      const avgAge = (sum(roster, p => p.age) / roster.length).toFixed(1);
+      const avgOVR = (sum(roster, p => p.ovr) / roster.length).toFixed(1);
+      const totalSalary = sum(roster, p => p.salary);
+      const avgMorale = (sum(roster, p => p.morale || 50) / roster.length).toFixed(0);
+      
+      avgAgeEl.textContent = avgAge;
+      avgOVREl.textContent = avgOVR;
+      totalSalaryEl.textContent = fmt(totalSalary);
+      avgMoraleEl.textContent = avgMorale;
+    }
 
-    // Add Player Modal
+    // Add Player Modal (keeping existing functionality)
     const modal = $("#modal");
-    $("#addPlayerBtn").addEventListener("click", ()=> modal.style.display="flex");
-    $("#closeModal").addEventListener("click", ()=> modal.style.display="none");
-    $("#submitPlayer").addEventListener("click", ()=>{
+    $("#addPlayerBtn")?.addEventListener("click", ()=> modal.style.display="flex");
+    $("#closeModal")?.addEventListener("click", ()=> modal.style.display="none");
+    $("#submitPlayer")?.addEventListener("click", ()=>{
       const name = $("#pName").value.trim();
       if(!name){ alert("Name required."); return; }
       const pos = $("#pPos").value;
@@ -534,14 +1983,98 @@
       const salary = Number($("#pSalary").value)||0;
       const years = Number($("#pYears").value)||1;
       const notes = $("#pNotes").value.trim();
-      STATE.roster.push({id:uid(), name, pos, age, ovr, salary, years, notes});
-      addEvent(`${name} signed a ${years}-yr deal for ${fmt(salary)}.`);
+      
+      // Generate height/weight based on position
+      let height, weight;
+      if (pos === "PG") { height = "6'2\""; weight = 190; }
+      else if (pos === "SG") { height = "6'5\""; weight = 205; }
+      else if (pos === "SF") { height = "6'7\""; weight = 220; }
+      else if (pos === "PF") { height = "6'9\""; weight = 235; }
+      else { height = "6'11\""; weight = 250; }
+      
+      STATE.roster.push({
+        id:uid(), name, pos, age, ovr, salary, years, notes,
+        height, weight, morale: 75, status: "healthy"
+      });
+      addEvent(`${name} signed a ${years}-yr deal for ${fmt(salary)}.`, "league");
       modal.style.display="none";
       clearModalInputs();
       rerenderAll();
     });
+    
     function clearModalInputs(){
-      ["pName","pAge","pOvr","pSalary","pYears","pNotes"].forEach(id=>{ const el = $("#"+id); if(el) el.value = el.type==="number" ? el.value : "" });
+      ["pName","pAge","pOvr","pSalary","pYears","pNotes"].forEach(id=>{ 
+        const el = $("#"+id); 
+        if(el) el.value = el.type==="number" ? el.value : "";
+      });
+    }
+    
+    // Edit Player Modal
+    function openEditPlayerModal(player) {
+      const editModal = document.createElement("div");
+      editModal.className = "modal-backdrop";
+      editModal.style.display = "flex";
+      editModal.innerHTML = `
+        <div class="modal">
+          <header style="padding:16px; display:flex; justify-content:space-between; align-items:center">
+            <h2 style="margin:0">Edit ${escapeHtml(player.name)}</h2>
+            <button class="btn ghost" id="closeEditModal">✕</button>
+          </header>
+          <div class="content">
+            <div class="form">
+              <div class="full">
+                <label>Overall (OVR)</label>
+                <input type="number" id="editOvr" value="${player.ovr}" min="40" max="99">
+              </div>
+              <div>
+                <label>Salary</label>
+                <input type="number" id="editSalary" value="${player.salary}" min="0">
+              </div>
+              <div>
+                <label>Years</label>
+                <input type="number" id="editYears" value="${player.years}" min="1" max="5">
+              </div>
+              <div>
+                <label>Morale</label>
+                <input type="number" id="editMorale" value="${player.morale || 75}" min="0" max="100">
+              </div>
+              <div>
+                <label>Status</label>
+                <select id="editStatus">
+                  <option value="healthy" ${player.status === "healthy" ? "selected" : ""}>Healthy</option>
+                  <option value="injured" ${player.status === "injured" ? "selected" : ""}>Injured</option>
+                  <option value="twoway" ${player.status === "twoway" ? "selected" : ""}>Two-Way</option>
+                </select>
+              </div>
+              <div class="full">
+                <label>Notes</label>
+                <input type="text" id="editNotes" value="${escapeHtml(player.notes || "")}">
+              </div>
+            </div>
+            <div style="margin-top:16px; display:flex; gap:8px">
+              <button class="btn good" id="saveEdit" style="flex:1">Save Changes</button>
+              <button class="btn ghost" id="cancelEdit">Cancel</button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(editModal);
+      
+      editModal.querySelector("#closeEditModal").addEventListener("click", () => editModal.remove());
+      editModal.querySelector("#cancelEdit").addEventListener("click", () => editModal.remove());
+      editModal.querySelector("#saveEdit").addEventListener("click", () => {
+        player.ovr = Number(editModal.querySelector("#editOvr").value);
+        player.salary = Number(editModal.querySelector("#editSalary").value);
+        player.years = Number(editModal.querySelector("#editYears").value);
+        player.morale = Number(editModal.querySelector("#editMorale").value);
+        player.status = editModal.querySelector("#editStatus").value;
+        player.notes = editModal.querySelector("#editNotes").value;
+        
+        addEvent(`Updated ${player.name}'s contract and status.`, "league");
+        editModal.remove();
+        rerenderAll();
+      });
     }
 
     // -------------------------------
@@ -612,11 +2145,16 @@
       $(".title").textContent = STATE.meta.teamName;
       $("#seasonTag").textContent = `Season: ${STATE.meta.season}`;
       renderDashboardCaps();
+      renderDashboardRecord();
+      renderPerformance();
       renderFeed();
+      renderLeagueHeadlines();
+      renderTopPerformer();
+      renderAnalytics();
       renderRoster();
       renderCapSheet();
     }
-    function addEvent(text){ STATE.events.unshift({ts:Date.now(), text}); }
+    function addEvent(text, type = "league"){ STATE.events.unshift({ts:Date.now(), text, type}); }
     function toast(msg){
       const el = document.createElement("div");
       el.textContent = msg;
