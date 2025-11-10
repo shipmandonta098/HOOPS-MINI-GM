@@ -1845,8 +1845,10 @@
                 
                 // Update roster display when switching to roster tab
                 if (tabName === 'roster') {
-                    updateRosterDisplay();
-                    updateDepthChart();
+                    if (gameState.roster && gameState.roster.length > 0) {
+                        updateRosterDisplay();
+                        updateDepthChart();
+                    }
                 }
             }
         }
@@ -2134,11 +2136,14 @@
             if (!gameState.depthChart) {
                 gameState.depthChart = { PG: [], SG: [], SF: [], PF: [], C: [] };
                 autoAssignDepthChart();
+                return;
             }
             
             const positions = ['PG', 'SG', 'SF', 'PF', 'C'];
             positions.forEach(pos => {
                 const container = document.getElementById(`depth-${pos.toLowerCase()}`);
+                if (!container) return;
+                
                 const posPlayers = gameState.depthChart[pos] || [];
                 
                 container.innerHTML = posPlayers.slice(0, 3).map((playerId, index) => {
@@ -2156,7 +2161,9 @@
                 }).join('') || '<div class="text-xs text-gray-500">No players assigned</div>';
             });
             
-            updateMinutesDisplay();
+            if (document.getElementById('minutes-distribution')) {
+                updateMinutesDisplay();
+            }
         }
 
         function autoAssignDepthChart() {
@@ -2172,8 +2179,16 @@
                 gameState.depthChart[pos] = posPlayers.map(p => p.id);
             });
             
+            // Initialize minutes for all players
+            gameState.roster.forEach(player => {
+                if (!player.minutes) player.minutes = 30;
+            });
+            
             distributeMinutes();
-            updateDepthChart();
+            
+            if (document.getElementById('depth-pg')) {
+                updateDepthChart();
+            }
             saveLeague();
         }
 
@@ -2199,6 +2214,8 @@
         // Minutes Distribution
         function updateMinutesDisplay() {
             const container = document.getElementById('minutes-distribution');
+            if (!container || !gameState.depthChart) return;
+            
             const starters = [];
             
             ['PG', 'SG', 'SF', 'PF', 'C'].forEach(pos => {
@@ -2208,6 +2225,11 @@
                     if (player) starters.push(player);
                 }
             });
+            
+            if (starters.length === 0) {
+                container.innerHTML = '<div class="text-sm text-gray-500">No starters assigned</div>';
+                return;
+            }
             
             container.innerHTML = starters.map(player => `
                 <div class="mb-3">
@@ -2235,6 +2257,8 @@
         }
 
         function updateTotalMinutes() {
+            if (!gameState.depthChart) return;
+            
             const starters = [];
             ['PG', 'SG', 'SF', 'PF', 'C'].forEach(pos => {
                 if (gameState.depthChart[pos] && gameState.depthChart[pos].length > 0) {
@@ -2253,6 +2277,8 @@
         }
 
         function distributeMinutes() {
+            if (!gameState.depthChart) return;
+            
             const starters = [];
             ['PG', 'SG', 'SF', 'PF', 'C'].forEach(pos => {
                 if (gameState.depthChart[pos] && gameState.depthChart[pos].length > 0) {
@@ -2261,6 +2287,8 @@
                     if (player) starters.push(player);
                 }
             });
+            
+            if (starters.length === 0) return;
             
             // Distribute 240 minutes among starters
             const baseMinutes = 30;
@@ -2273,12 +2301,14 @@
             
             // Balance to exactly 240
             let currentTotal = starters.reduce((sum, p) => sum + p.minutes, 0);
-            if (currentTotal !== 240) {
+            if (currentTotal !== 240 && starters.length > 0) {
                 const diff = 240 - currentTotal;
                 starters[0].minutes += diff;
             }
             
-            updateMinutesDisplay();
+            if (document.getElementById('minutes-distribution')) {
+                updateMinutesDisplay();
+            }
             saveLeague();
         }
 
