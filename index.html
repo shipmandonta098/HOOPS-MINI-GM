@@ -6,6 +6,7 @@
     <title>Basketball GM Simulator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+    <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
@@ -24,14 +25,100 @@
         .player-row:hover {
             background-color: rgb(30, 41, 59);
         }
+        .team-card {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .team-card:hover {
+            transform: translateY(-2px);
+        }
+        .team-card.selected {
+            border-color: rgb(29, 78, 216);
+            background-color: rgba(29, 78, 216, 0.1);
+        }
+        .screen {
+            display: none;
+        }
+        .screen.active {
+            display: block;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
+    
+    <!-- Home Screen -->
+    <div id="home-screen" class="screen active">
+        <div class="min-h-screen flex items-center justify-center px-4">
+            <div class="text-center fade-in">
+                <div class="text-6xl mb-4">🏀</div>
+                <h1 class="text-5xl font-light mb-4">Basketball GM</h1>
+                <p class="text-gray-400 mb-8 text-lg">Build your dynasty. Manage your team. Win championships.</p>
+                <button onclick="showScreen('team-selection')" class="btn-primary bg-blue-700 text-white px-8 py-3 text-lg">
+                    Start New Game
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team Selection Screen -->
+    <div id="team-selection-screen" class="screen">
+        <div class="min-h-screen py-12 px-4 fade-in">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-light mb-3">Choose Your Team</h2>
+                    <p class="text-gray-400">Select a franchise to lead to championship glory</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" id="teams-grid">
+                    <!-- Teams will be inserted here -->
+                </div>
+
+                <div class="text-center">
+                    <button id="continue-btn" onclick="continueToGame()" 
+                            class="btn-primary bg-blue-700 text-white px-8 py-3 text-lg opacity-50 cursor-not-allowed" 
+                            disabled>
+                        Continue
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div id="dashboard-screen" class="screen">
+        <div class="min-h-screen fade-in">
+            <div class="bg-gray-800 border-b border-gray-700 py-12">
+                <div class="max-w-4xl mx-auto text-center px-4">
+                    <div class="text-8xl mb-4" id="dashboard-logo">🏀</div>
+                    <h1 class="text-5xl font-light mb-2" id="dashboard-team-name">Team Name</h1>
+                    <p class="text-gray-400 text-lg" id="dashboard-team-city">City, Team</p>
+                    <div class="mt-8">
+                        <button onclick="showScreen('game')" class="btn-primary bg-blue-700 text-white px-8 py-3 text-lg">
+                            Enter Management
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen (Original Content) -->
+    <div id="game-screen" class="screen">
     <!-- Header -->
     <header class="bg-gray-800 border-b border-gray-700">
         <div class="max-w-7xl mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-light">Basketball GM</h1>
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl" id="header-logo">🏀</span>
+                    <h1 class="text-2xl font-light" id="header-team-name">Basketball GM</h1>
+                </div>
                 <div class="flex items-center gap-6">
                     <div class="text-sm">
                         <span class="text-gray-400">Season:</span>
@@ -176,6 +263,8 @@
         </div>
 
     </main>
+    </div>
+    <!-- End Game Screen -->
 
     <script>
         // Game State
@@ -188,14 +277,84 @@
             schedule: [],
             standings: [],
             recentGames: [],
-            gameNumber: 0
+            gameNumber: 0,
+            selectedTeam: null,
+            isTeamSelected: false
         };
 
         // Team Names
         const teamNames = [
-            'Your Team', 'Lakers', 'Celtics', 'Warriors', 'Heat', 'Bucks', 
+            'Lakers', 'Celtics', 'Warriors', 'Heat', 'Bucks', 
             'Nets', 'Nuggets', 'Suns', '76ers', 'Mavericks', 'Clippers',
             'Grizzlies', 'Timberwolves', 'Pelicans', 'Hawks'
+        ];
+
+        // Available Teams for Selection
+        const availableTeams = [
+            {
+                id: 'dragons',
+                city: 'Metro City',
+                mascot: 'Dragons',
+                colors: ['#DC2626', '#991B1B'],
+                logo: '🐉',
+                description: 'Fierce competitors with a storied history'
+            },
+            {
+                id: 'thunder',
+                city: 'Steel Valley',
+                mascot: 'Thunder',
+                colors: ['#7C3AED', '#5B21B6'],
+                logo: '⚡',
+                description: 'Electric offense and lightning-fast defense'
+            },
+            {
+                id: 'wolves',
+                city: 'Timber Bay',
+                mascot: 'Wolves',
+                colors: ['#059669', '#047857'],
+                logo: '🐺',
+                description: 'Pack mentality and relentless pursuit'
+            },
+            {
+                id: 'phoenix',
+                city: 'Sun City',
+                mascot: 'Phoenix',
+                colors: ['#EA580C', '#C2410C'],
+                logo: '🔥',
+                description: 'Rising from the ashes to championship glory'
+            },
+            {
+                id: 'knights',
+                city: 'Castle Rock',
+                mascot: 'Knights',
+                colors: ['#0891B2', '#0E7490'],
+                logo: '⚔️',
+                description: 'Defending the court with honor and skill'
+            },
+            {
+                id: 'comets',
+                city: 'Star Harbor',
+                mascot: 'Comets',
+                colors: ['#2563EB', '#1D4ED8'],
+                logo: '☄️',
+                description: 'Fast-paced and out of this world'
+            },
+            {
+                id: 'panthers',
+                city: 'Wild Coast',
+                mascot: 'Panthers',
+                colors: ['#000000', '#374151'],
+                logo: '🐆',
+                description: 'Stealth, speed, and precision on the court'
+            },
+            {
+                id: 'hawks',
+                city: 'Sky Point',
+                mascot: 'Hawks',
+                colors: ['#F59E0B', '#D97706'],
+                logo: '🦅',
+                description: 'Soaring above the competition'
+            }
         ];
 
         // Player Names
@@ -204,10 +363,86 @@
 
         // Initialize
         function init() {
-            initializeStandings();
-            generateSchedule();
-            showTab('team');
-            updateDisplay();
+            renderTeamSelection();
+            showScreen('home');
+        }
+
+        // Screen Navigation
+        function showScreen(screenName) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            const screenId = screenName === 'home' ? 'home-screen' : 
+                            screenName === 'team-selection' ? 'team-selection-screen' :
+                            screenName === 'dashboard' ? 'dashboard-screen' :
+                            'game-screen';
+            
+            document.getElementById(screenId).classList.add('active');
+            
+            if (screenName === 'game') {
+                initializeStandings();
+                generateSchedule();
+                updateDisplay();
+            }
+        }
+
+        // Render Team Selection
+        function renderTeamSelection() {
+            const grid = document.getElementById('teams-grid');
+            grid.innerHTML = availableTeams.map(team => `
+                <div class="team-card bg-gray-800 border-2 border-gray-700 p-6 ${gameState.selectedTeam?.id === team.id ? 'selected' : ''}"
+                     onclick="selectTeam('${team.id}')"
+                     id="team-${team.id}">
+                    <div class="text-center">
+                        <div class="text-5xl mb-3">${team.logo}</div>
+                        <h3 class="text-xl font-medium mb-1">${team.city}</h3>
+                        <p class="text-2xl font-light mb-3" style="color: ${team.colors[0]}">${team.mascot}</p>
+                        <p class="text-sm text-gray-400 mb-4 min-h-[40px]">${team.description}</p>
+                        <div class="flex gap-2 justify-center mb-4">
+                            <div class="w-8 h-8 rounded-full" style="background-color: ${team.colors[0]}"></div>
+                            <div class="w-8 h-8 rounded-full" style="background-color: ${team.colors[1]}"></div>
+                        </div>
+                        <button class="w-full py-2 text-sm border border-blue-700 text-blue-400 hover:bg-blue-700 hover:text-white transition-colors">
+                            Select
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Select Team
+        function selectTeam(teamId) {
+            gameState.selectedTeam = availableTeams.find(t => t.id === teamId);
+            gameState.isTeamSelected = true;
+            
+            // Update visual selection
+            document.querySelectorAll('.team-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById(`team-${teamId}`).classList.add('selected');
+            
+            // Enable continue button
+            const continueBtn = document.getElementById('continue-btn');
+            continueBtn.disabled = false;
+            continueBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+
+        // Continue to Game
+        function continueToGame() {
+            if (!gameState.isTeamSelected) return;
+            
+            // Update dashboard with selected team
+            document.getElementById('dashboard-logo').textContent = gameState.selectedTeam.logo;
+            document.getElementById('dashboard-team-name').textContent = gameState.selectedTeam.mascot;
+            document.getElementById('dashboard-team-city').textContent = gameState.selectedTeam.city;
+            
+            showScreen('dashboard');
+            
+            // Initialize game after a brief moment
+            setTimeout(() => {
+                showTab('team');
+            }, 100);
         }
 
         // Tab Navigation
@@ -220,6 +455,12 @@
             
             document.getElementById(`tab-${tabName}`).classList.remove('hidden');
             document.getElementById(`nav-${tabName}`).classList.add('border-blue-700', 'text-gray-100');
+            
+            // Update header when entering game screen
+            if (gameState.selectedTeam) {
+                document.getElementById('header-logo').textContent = gameState.selectedTeam.logo;
+                document.getElementById('header-team-name').textContent = gameState.selectedTeam.mascot;
+            }
         }
 
         // Generate Random Player
@@ -286,12 +527,16 @@
 
         // Initialize Standings
         function initializeStandings() {
-            gameState.standings = teamNames.map(team => ({
+            const yourTeamName = gameState.selectedTeam ? 
+                `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}` : 
+                'Your Team';
+            
+            gameState.standings = [yourTeamName, ...teamNames].map(team => ({
                 team: team,
                 wins: 0,
                 losses: 0,
                 pct: 0,
-                rating: team === 'Your Team' ? 75 : 60 + Math.floor(Math.random() * 30)
+                rating: team === yourTeamName ? 75 : 60 + Math.floor(Math.random() * 30)
             }));
             updateStandingsDisplay();
         }
@@ -318,8 +563,12 @@
                 return;
             }
 
+            const yourTeamName = gameState.selectedTeam ? 
+                `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}` : 
+                'Your Team';
+
             const game = gameState.schedule[gameState.gameNumber];
-            const yourTeam = gameState.standings.find(t => t.team === 'Your Team');
+            const yourTeam = gameState.standings.find(t => t.team === yourTeamName);
             const opponent = gameState.standings.find(t => t.team === game.opponent);
             
             // Simple simulation based on team ratings
@@ -375,7 +624,11 @@
 
         // Update Display
         function updateDisplay() {
-            const yourTeam = gameState.standings.find(t => t.team === 'Your Team');
+            const yourTeamName = gameState.selectedTeam ? 
+                `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}` : 
+                'Your Team';
+            
+            const yourTeam = gameState.standings.find(t => t.team === yourTeamName);
             
             document.getElementById('team-record').textContent = `${yourTeam.wins}-${yourTeam.losses}`;
             document.getElementById('budget').textContent = `$${(gameState.budget / 1000000).toFixed(1)}M`;
@@ -386,7 +639,7 @@
                 if (b.wins !== a.wins) return b.wins - a.wins;
                 return a.losses - b.losses;
             });
-            const rank = sortedStandings.findIndex(t => t.team === 'Your Team') + 1;
+            const rank = sortedStandings.findIndex(t => t.team === yourTeamName) + 1;
             document.getElementById('conf-rank').textContent = rank;
             
             updateRecentGames();
@@ -415,6 +668,10 @@
 
         // Update Standings
         function updateStandingsDisplay() {
+            const yourTeamName = gameState.selectedTeam ? 
+                `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}` : 
+                'Your Team';
+            
             const sortedStandings = [...gameState.standings].sort((a, b) => {
                 if (b.wins !== a.wins) return b.wins - a.wins;
                 return a.losses - b.losses;
@@ -425,7 +682,7 @@
             
             tbody.innerHTML = sortedStandings.map((team, index) => {
                 const gb = ((leader.wins - team.wins) + (team.losses - leader.losses)) / 2;
-                const isYourTeam = team.team === 'Your Team';
+                const isYourTeam = team.team === yourTeamName;
                 
                 return `
                     <tr class="border-b border-gray-700 ${isYourTeam ? 'bg-blue-900 bg-opacity-20' : ''}">
