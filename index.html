@@ -2337,16 +2337,28 @@
             const player = gameState.roster[playerIndex];
             if (!player) return;
             
-            // Update modal header
-            document.getElementById('modal-player-name').textContent = player.name;
-            document.getElementById('modal-player-position').textContent = player.position;
-            document.getElementById('modal-player-overall').textContent = player.overall;
+            // Update modal header with null checks
+            const modalName = document.getElementById('modal-player-name');
+            const modalPosition = document.getElementById('modal-player-position');
+            const modalOverall = document.getElementById('modal-player-overall');
+            
+            if (!modalName || !modalPosition || !modalOverall) {
+                console.warn('Player modal elements not found');
+                return;
+            }
+            
+            modalName.textContent = player.name;
+            modalPosition.textContent = player.position;
+            modalOverall.textContent = player.overall;
             
             // Show Overview tab by default
             showPlayerTab('overview');
             
             // Populate Overview tab
-            document.getElementById('modal-overview').innerHTML = `
+            const modalOverview = document.getElementById('modal-overview');
+            if (!modalOverview) return;
+            
+            modalOverview.innerHTML = `
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <div class="text-xs text-gray-400 mb-1">Age</div>
@@ -2397,72 +2409,78 @@
                 return 'bg-gray-600';
             };
             
-            document.getElementById('modal-ratings').innerHTML = `
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="flex justify-between items-center">
-                        <span>Inside Scoring</span>
-                        <span class="rating-badge ${getRatingColor(player.ratings.inside)}">${player.ratings.inside}</span>
+            const modalRatings = document.getElementById('modal-ratings');
+            if (modalRatings) {
+                modalRatings.innerHTML = `
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="flex justify-between items-center">
+                            <span>Inside Scoring</span>
+                            <span class="rating-badge ${getRatingColor(player.ratings.inside)}">${player.ratings.inside}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Mid-Range</span>
+                            <span class="rating-badge ${getRatingColor(player.ratings.mid)}">${player.ratings.mid}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Three-Point</span>
+                            <span class="rating-badge ${getRatingColor(player.ratings.three)}">${player.ratings.three}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Playmaking</span>
+                            <span class="rating-badge ${getRatingColor(player.ratings.playmaking)}">${player.ratings.playmaking}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Perimeter Defense</span>
+                            <span class="rating-badge ${getRatingColor(player.ratings.perimD)}">${player.ratings.perimD}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Interior Defense</span>
+                            <span class="rating-badge ${getRatingColor(player.ratings.intD)}">${player.ratings.intD}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Rebounding</span>
+                            <span class="rating-badge ${getRatingColor(player.ratings.rebounding)}">${player.ratings.rebounding}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Athleticism</span>
+                            <span class="rating-badge ${getRatingColor(player.ratings.athleticism)}">${player.ratings.athleticism}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>Basketball IQ</span>
+                            <span class="rating-badge ${getRatingColor(player.ratings.iq)}">${player.ratings.iq}</span>
+                        </div>
                     </div>
-                    <div class="flex justify-between items-center">
-                        <span>Mid-Range</span>
-                        <span class="rating-badge ${getRatingColor(player.ratings.mid)}">${player.ratings.mid}</span>
+                    <div class="mt-4 pt-4 border-t border-gray-700">
+                        <div class="flex justify-between">
+                            <span>Potential</span>
+                            <span class="text-yellow-400">${player.potential}</span>
+                        </div>
                     </div>
-                    <div class="flex justify-between items-center">
-                        <span>Three-Point</span>
-                        <span class="rating-badge ${getRatingColor(player.ratings.three)}">${player.ratings.three}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span>Playmaking</span>
-                        <span class="rating-badge ${getRatingColor(player.ratings.playmaking)}">${player.ratings.playmaking}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span>Perimeter Defense</span>
-                        <span class="rating-badge ${getRatingColor(player.ratings.perimD)}">${player.ratings.perimD}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span>Interior Defense</span>
-                        <span class="rating-badge ${getRatingColor(player.ratings.intD)}">${player.ratings.intD}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span>Rebounding</span>
-                        <span class="rating-badge ${getRatingColor(player.ratings.rebounding)}">${player.ratings.rebounding}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span>Athleticism</span>
-                        <span class="rating-badge ${getRatingColor(player.ratings.athleticism)}">${player.ratings.athleticism}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span>Basketball IQ</span>
-                        <span class="rating-badge ${getRatingColor(player.ratings.iq)}">${player.ratings.iq}</span>
-                    </div>
-                </div>
-                <div class="mt-4 pt-4 border-t border-gray-700">
-                    <div class="flex justify-between">
-                        <span>Potential</span>
-                        <span class="text-yellow-400">${player.potential}</span>
-                    </div>
-                </div>
-            `;
+                `;
+            }
             
             // Populate Contract tab
-            document.getElementById('modal-contract').innerHTML = `
-                <div class="mb-4">
-                    <div class="text-xs text-gray-400 mb-1">Annual Salary</div>
-                    <div class="text-2xl text-green-400">$${(player.salary/1000000).toFixed(2)}M</div>
-                </div>
-                <div class="mb-4">
-                    <div class="text-xs text-gray-400 mb-1">Contract Length</div>
-                    <div class="text-lg">${player.contractYears} ${player.contractYears === 1 ? 'year' : 'years'} remaining</div>
-                </div>
-                <div class="mb-4">
-                    <div class="text-xs text-gray-400 mb-1">Total Value</div>
-                    <div class="text-lg">$${(player.salary * player.contractYears / 1000000).toFixed(2)}M</div>
-                </div>
-                ${player.contractYears === 1 ? 
-                    '<div class="bg-yellow-900 bg-opacity-30 border border-yellow-600 rounded p-3 text-sm"><span class="text-yellow-400">⚠️</span> Expiring Contract</div>' : 
-                    ''
-                }
-            `;
+            const modalContract = document.getElementById('modal-contract');
+            if (modalContract) {
+                modalContract.innerHTML = `
+                    <div class="mb-4">
+                        <div class="text-xs text-gray-400 mb-1">Annual Salary</div>
+                        <div class="text-2xl text-green-400">$${(player.salary/1000000).toFixed(2)}M</div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="text-xs text-gray-400 mb-1">Contract Length</div>
+                        <div class="text-lg">${player.contractYears} ${player.contractYears === 1 ? 'year' : 'years'} remaining</div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="text-xs text-gray-400 mb-1">Total Value</div>
+                        <div class="text-lg">$${(player.salary * player.contractYears / 1000000).toFixed(2)}M</div>
+                    </div>
+                    ${player.contractYears === 1 ? 
+                        '<div class="bg-yellow-900 bg-opacity-30 border border-yellow-600 rounded p-3 text-sm"><span class="text-yellow-400">⚠️</span> Expiring Contract</div>' : 
+                        ''
+                    }
+                `;
+            }
             
             // Populate Health & Form tab
             const getMoraleColor = (morale) => {
@@ -2477,75 +2495,88 @@
                 return 'text-green-400';
             };
             
-            document.getElementById('modal-health').innerHTML = `
-                <div class="mb-4">
-                    <div class="text-xs text-gray-400 mb-1">Health Status</div>
-                    <div class="text-lg ${player.status === 'Healthy' ? 'text-green-400' : 'text-red-400'}">
-                        ${player.status}
-                    </div>
-                </div>
-                ${player.status === 'Injured' ? `
+            const modalHealth = document.getElementById('modal-health');
+            if (modalHealth) {
+                modalHealth.innerHTML = `
                     <div class="mb-4">
-                        <div class="text-xs text-gray-400 mb-1">Injury Details</div>
-                        <div>${player.injuryType}</div>
-                        <div class="text-sm text-gray-400 mt-1">${player.injuryDuration} games remaining</div>
-                    </div>
-                ` : ''}
-                <div class="mb-4">
-                    <div class="text-xs text-gray-400 mb-1">Morale</div>
-                    <div class="flex items-center gap-2">
-                        <div class="flex-1 bg-gray-700 rounded-full h-2">
-                            <div class="${getMoraleColor(player.morale).replace('text-', 'bg-')} h-2 rounded-full" 
-                                 style="width: ${player.morale}%"></div>
+                        <div class="text-xs text-gray-400 mb-1">Health Status</div>
+                        <div class="text-lg ${player.status === 'Healthy' ? 'text-green-400' : 'text-red-400'}">
+                            ${player.status}
                         </div>
-                        <span class="${getMoraleColor(player.morale)}">${player.morale}</span>
                     </div>
-                </div>
-                <div class="mb-4">
-                    <div class="text-xs text-gray-400 mb-1">Fatigue</div>
-                    <div class="flex items-center gap-2">
-                        <div class="flex-1 bg-gray-700 rounded-full h-2">
-                            <div class="${getFatigueColor(player.fatigue).replace('text-', 'bg-')} h-2 rounded-full" 
-                                 style="width: ${player.fatigue}%"></div>
+                    ${player.status === 'Injured' ? `
+                        <div class="mb-4">
+                            <div class="text-xs text-gray-400 mb-1">Injury Details</div>
+                            <div>${player.injuryType}</div>
+                            <div class="text-sm text-gray-400 mt-1">${player.injuryDuration} games remaining</div>
                         </div>
-                        <span class="${getFatigueColor(player.fatigue)}">${player.fatigue}</span>
+                    ` : ''}
+                    <div class="mb-4">
+                        <div class="text-xs text-gray-400 mb-1">Morale</div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 bg-gray-700 rounded-full h-2">
+                                <div class="${getMoraleColor(player.morale).replace('text-', 'bg-')} h-2 rounded-full" 
+                                     style="width: ${player.morale}%"></div>
+                            </div>
+                            <span class="${getMoraleColor(player.morale)}">${player.morale}</span>
+                        </div>
                     </div>
-                </div>
-            `;
+                    <div class="mb-4">
+                        <div class="text-xs text-gray-400 mb-1">Fatigue</div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 bg-gray-700 rounded-full h-2">
+                                <div class="${getFatigueColor(player.fatigue).replace('text-', 'bg-')} h-2 rounded-full" 
+                                     style="width: ${player.fatigue}%"></div>
+                            </div>
+                            <span class="${getFatigueColor(player.fatigue)}">${player.fatigue}</span>
+                        </div>
+                    </div>
+                `;
+            }
             
             // Populate Actions tab
             const isStarter = ['PG', 'SG', 'SF', 'PF', 'C'].some(pos => 
                 gameState.depthChart[pos] && gameState.depthChart[pos][0] === player.id
             );
             
-            document.getElementById('modal-actions').innerHTML = `
-                <div class="space-y-3">
-                    ${!isStarter ? `
-                        <button onclick="setAsStarter(${playerIndex})" 
-                                class="w-full bg-blue-700 hover:bg-blue-600 p-3 rounded">
-                            Set as Starter
+            const modalActions = document.getElementById('modal-actions');
+            if (modalActions) {
+                modalActions.innerHTML = `
+                    <div class="space-y-3">
+                        ${!isStarter ? `
+                            <button onclick="setAsStarter(${playerIndex})" 
+                                    class="w-full bg-blue-700 hover:bg-blue-600 p-3 rounded">
+                                Set as Starter
+                            </button>
+                        ` : '<div class="text-green-400 text-center p-3">✓ Starting Lineup</div>'}
+                        <button onclick="closePlayerModal()" 
+                                class="w-full bg-gray-700 hover:bg-gray-600 p-3 rounded">
+                            Close
                         </button>
-                    ` : '<div class="text-green-400 text-center p-3">✓ Starting Lineup</div>'}
-                    <button onclick="closePlayerModal()" 
-                            class="w-full bg-gray-700 hover:bg-gray-600 p-3 rounded">
-                        Close
-                    </button>
-                </div>
-            `;
+                    </div>
+                `;
+            }
             
             // Show modal
-            document.getElementById('player-modal').classList.remove('hidden');
+            const playerModal = document.getElementById('player-modal');
+            if (playerModal) {
+                playerModal.classList.remove('hidden');
+            }
         }
 
         function closePlayerModal() {
-            document.getElementById('player-modal').classList.add('hidden');
+            const playerModal = document.getElementById('player-modal');
+            if (playerModal) {
+                playerModal.classList.add('hidden');
+            }
             currentPlayerIndex = null;
         }
 
         function showPlayerTab(tabName) {
             // Hide all tabs
             ['overview', 'ratings', 'contract', 'health', 'actions'].forEach(tab => {
-                document.getElementById(`modal-${tab}`).classList.add('hidden');
+                const tabEl = document.getElementById(`modal-${tab}`);
+                if (tabEl) tabEl.classList.add('hidden');
             });
             
             // Remove active class from all buttons
@@ -2555,7 +2586,10 @@
             });
             
             // Show selected tab
-            document.getElementById(`modal-${tabName}`).classList.remove('hidden');
+            const selectedTab = document.getElementById(`modal-${tabName}`);
+            if (selectedTab) {
+                selectedTab.classList.remove('hidden');
+            }
             
             // Highlight active button
             const activeBtn = Array.from(document.querySelectorAll('.modal-tab-btn'))
@@ -2716,17 +2750,27 @@
                 'Your Team';
             
             const yourTeam = gameState.standings.find(t => t.team === yourTeamName);
+            if (!yourTeam) return;
             
-            // Basic stats
-            document.getElementById('team-record').textContent = `${yourTeam.wins}-${yourTeam.losses}`;
-            document.getElementById('budget').textContent = `$${(gameState.budget / 1000000).toFixed(1)}M`;
-            document.getElementById('team-rating').textContent = yourTeam.rating;
+            // Basic stats with null checks
+            const teamRecord = document.getElementById('team-record');
+            const budget = document.getElementById('budget');
+            const teamRating = document.getElementById('team-rating');
+            
+            if (teamRecord) teamRecord.textContent = `${yourTeam.wins}-${yourTeam.losses}`;
+            if (budget) budget.textContent = `$${(gameState.budget / 1000000).toFixed(1)}M`;
+            if (teamRating) teamRating.textContent = yourTeam.rating;
             
             // Dashboard specific updates
-            document.getElementById('record-wins').textContent = yourTeam.wins;
-            document.getElementById('record-losses').textContent = yourTeam.losses;
-            document.getElementById('record-pct').textContent = yourTeam.pct || '.000';
-            document.getElementById('team-ovr').textContent = yourTeam.rating;
+            const recordWins = document.getElementById('record-wins');
+            const recordLosses = document.getElementById('record-losses');
+            const recordPct = document.getElementById('record-pct');
+            const teamOvr = document.getElementById('team-ovr');
+            
+            if (recordWins) recordWins.textContent = yourTeam.wins;
+            if (recordLosses) recordLosses.textContent = yourTeam.losses;
+            if (recordPct) recordPct.textContent = yourTeam.pct || '.000';
+            if (teamOvr) teamOvr.textContent = yourTeam.rating;
             
             // Update conference rank
             const sortedStandings = [...gameState.standings].sort((a, b) => {
@@ -2735,8 +2779,11 @@
             });
             const rank = sortedStandings.findIndex(t => t.team === yourTeamName) + 1;
             const rankSuffix = rank === 1 ? 'st' : rank === 2 ? 'nd' : rank === 3 ? 'rd' : 'th';
-            document.getElementById('conf-rank').textContent = rank;
-            document.getElementById('quick-conf-rank').textContent = `${rank}${rankSuffix}`;
+            
+            const confRank = document.getElementById('conf-rank');
+            const quickConfRank = document.getElementById('quick-conf-rank');
+            if (confRank) confRank.textContent = rank;
+            if (quickConfRank) quickConfRank.textContent = `${rank}${rankSuffix}`;
             
             // Update streak
             updateStreak();
