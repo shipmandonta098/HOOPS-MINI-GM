@@ -69,18 +69,19 @@
 
     <!-- Team Selection Screen -->
     <div id="team-selection-screen" class="screen">
-        <div class="min-h-screen py-12 px-4 fade-in">
-            <div class="max-w-6xl mx-auto">
-                <div class="text-center mb-12">
+        <div class="min-h-screen py-8 px-4 fade-in">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-8">
                     <h2 class="text-4xl font-light mb-3">Choose Your Team</h2>
                     <p class="text-gray-400">Select a franchise to lead to championship glory</p>
+                    <p class="text-sm text-gray-500 mt-2">30 Teams Available</p>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" id="teams-grid">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mb-6" id="teams-grid">
                     <!-- Teams will be inserted here -->
                 </div>
 
-                <div class="text-center">
+                <div class="text-center sticky bottom-0 bg-gray-900 py-4 border-t border-gray-700">
                     <button id="continue-btn" onclick="continueToGame()" 
                             class="btn-primary bg-blue-700 text-white px-8 py-3 text-lg opacity-50 cursor-not-allowed" 
                             disabled>
@@ -94,14 +95,28 @@
     <!-- Dashboard Screen -->
     <div id="dashboard-screen" class="screen">
         <div class="min-h-screen fade-in">
-            <div class="bg-gray-800 border-b border-gray-700 py-12">
+            <div class="bg-gray-800 border-b border-gray-700 py-16">
                 <div class="max-w-4xl mx-auto text-center px-4">
-                    <div class="text-8xl mb-4" id="dashboard-logo">🏀</div>
-                    <h1 class="text-5xl font-light mb-2" id="dashboard-team-name">Team Name</h1>
-                    <p class="text-gray-400 text-lg" id="dashboard-team-city">City, Team</p>
+                    <div class="text-8xl mb-6" id="dashboard-logo">🏀</div>
+                    <h1 class="text-5xl font-light mb-3" id="dashboard-team-name">Team Name</h1>
+                    <p class="text-gray-400 text-xl mb-2" id="dashboard-team-city">City, Team</p>
+                    
+                    <!-- Team Colors Display -->
+                    <div class="flex gap-3 justify-center mb-8">
+                        <div class="w-16 h-16 rounded-full border-2 border-gray-600" id="dashboard-color-1"></div>
+                        <div class="w-16 h-16 rounded-full border-2 border-gray-600" id="dashboard-color-2"></div>
+                    </div>
+                    
+                    <div class="text-3xl font-light text-blue-400 mb-8">Welcome, GM</div>
+                    
+                    <p class="text-gray-400 mb-8 max-w-2xl mx-auto">
+                        You are now the General Manager of the <span id="dashboard-full-name" class="text-gray-200">Team</span>. 
+                        Build your roster, manage your budget, and lead your team to championship glory.
+                    </p>
+                    
                     <div class="mt-8">
                         <button onclick="showScreen('game')" class="btn-primary bg-blue-700 text-white px-8 py-3 text-lg">
-                            Enter Management
+                            Enter Management Dashboard
                         </button>
                     </div>
                 </div>
@@ -316,12 +331,12 @@
                 description: 'Pack mentality and relentless pursuit'
             },
             {
-                id: 'phoenix',
+                id: 'aces',
                 city: 'Las Vegas',
                 mascot: 'Aces',
                 colors: ['#EA580C', '#C2410C'],
                 logo: '🔥',
-                description: 'Rising from the ashes to championship glory'
+                description: 'Rising champions with hot hands'
             },
             {
                 id: 'knights',
@@ -354,6 +369,182 @@
                 colors: ['#F59E0B', '#D97706'],
                 logo: '🦅',
                 description: 'Soaring above the competition'
+            },
+            {
+                id: 'pioneers',
+                city: 'Denver',
+                mascot: 'Pioneers',
+                colors: ['#8B4513', '#654321'],
+                logo: '⛰️',
+                description: 'Trailblazers of the modern game'
+            },
+            {
+                id: 'storm',
+                city: 'Kansas City',
+                mascot: 'Storm',
+                colors: ['#4B5563', '#1F2937'],
+                logo: '🌪️',
+                description: 'Unleashing chaos on opponents'
+            },
+            {
+                id: 'vipers',
+                city: 'Phoenix',
+                mascot: 'Vipers',
+                colors: ['#10B981', '#059669'],
+                logo: '🐍',
+                description: 'Strike fast, strike hard'
+            },
+            {
+                id: 'bulls',
+                city: 'Louisville',
+                mascot: 'Bulls',
+                colors: ['#B91C1C', '#7F1D1D'],
+                logo: '🐂',
+                description: 'Charging to victory with raw power'
+            },
+            {
+                id: 'raptors',
+                city: 'Vancouver',
+                mascot: 'Raptors',
+                colors: ['#7C2D12', '#581C0F'],
+                logo: '🦖',
+                description: 'Prehistoric dominance in the paint'
+            },
+            {
+                id: 'titans',
+                city: 'San Diego',
+                mascot: 'Titans',
+                colors: ['#1E40AF', '#1E3A8A'],
+                logo: '⚡',
+                description: 'Towering over the competition'
+            },
+            {
+                id: 'sharks',
+                city: 'San Jose',
+                mascot: 'Sharks',
+                colors: ['#0E7490', '#155E75'],
+                logo: '🦈',
+                description: 'Aggressive and always hunting'
+            },
+            {
+                id: 'eagles',
+                city: 'Philadelphia',
+                mascot: 'Eagles',
+                colors: ['#064E3B', '#065F46'],
+                logo: '🦅',
+                description: 'Philadelphia pride on display'
+            },
+            {
+                id: 'monarchs',
+                city: 'Sacramento',
+                mascot: 'Monarchs',
+                colors: ['#6B21A8', '#581C87'],
+                logo: '👑',
+                description: 'Royalty on the hardwood'
+            },
+            {
+                id: 'blaze',
+                city: 'Atlanta',
+                mascot: 'Blaze',
+                colors: ['#DC2626', '#F97316'],
+                logo: '🔥',
+                description: 'Setting the league on fire'
+            },
+            {
+                id: 'lynx',
+                city: 'Minneapolis',
+                mascot: 'Lynx',
+                colors: ['#6366F1', '#4F46E5'],
+                logo: '🐱',
+                description: 'Cunning and calculated'
+            },
+            {
+                id: 'bison',
+                city: 'Buffalo',
+                mascot: 'Bison',
+                colors: ['#92400E', '#78350F'],
+                logo: '🦬',
+                description: 'Unstoppable force of nature'
+            },
+            {
+                id: 'bears',
+                city: 'Memphis',
+                mascot: 'Bears',
+                colors: ['#1C1917', '#78716C'],
+                logo: '🐻',
+                description: 'Grit and grind mentality'
+            },
+            {
+                id: 'stallions',
+                city: 'Indianapolis',
+                mascot: 'Stallions',
+                colors: ['#1E3A8A', '#FBBF24'],
+                logo: '🐎',
+                description: 'Racing to championship glory'
+            },
+            {
+                id: 'cobras',
+                city: 'Charlotte',
+                mascot: 'Cobras',
+                colors: ['#14532D', '#166534'],
+                logo: '🐍',
+                description: 'Venomous on both ends of the floor'
+            },
+            {
+                id: 'scorpions',
+                city: 'Tucson',
+                mascot: 'Scorpions',
+                colors: ['#B45309', '#92400E'],
+                logo: '🦂',
+                description: 'Desert warriors with a deadly sting'
+            },
+            {
+                id: 'cyclones',
+                city: 'Oklahoma City',
+                mascot: 'Cyclones',
+                colors: ['#0369A1', '#0C4A6E'],
+                logo: '🌀',
+                description: 'Spinning opponents into confusion'
+            },
+            {
+                id: 'ravens',
+                city: 'Seattle',
+                mascot: 'Ravens',
+                colors: ['#18181B', '#27272A'],
+                logo: '🦅',
+                description: 'Dark and mysterious excellence'
+            },
+            {
+                id: 'flames',
+                city: 'Calgary',
+                mascot: 'Flames',
+                colors: ['#DC2626', '#FACC15'],
+                logo: '🔥',
+                description: 'Burning bright in the north'
+            },
+            {
+                id: 'spartans',
+                city: 'Columbus',
+                mascot: 'Spartans',
+                colors: ['#991B1B', '#713F12'],
+                logo: '🛡️',
+                description: 'Warriors built for battle'
+            },
+            {
+                id: 'hornets',
+                city: 'New Orleans',
+                mascot: 'Hornets',
+                colors: ['#7C3AED', '#FBBF24'],
+                logo: '🐝',
+                description: 'Small but mighty with a powerful sting'
+            },
+            {
+                id: 'mavericks',
+                city: 'Omaha',
+                mascot: 'Mavericks',
+                colors: ['#0F766E', '#134E4A'],
+                logo: '🤠',
+                description: 'Independent spirits chasing glory'
             }
         ];
 
@@ -391,22 +582,23 @@
         function renderTeamSelection() {
             const grid = document.getElementById('teams-grid');
             grid.innerHTML = availableTeams.map(team => `
-                <div class="team-card bg-gray-800 border-2 border-gray-700 p-6 ${gameState.selectedTeam?.id === team.id ? 'selected' : ''}"
+                <div class="team-card bg-gray-800 border-2 border-gray-700 p-4 ${gameState.selectedTeam?.id === team.id ? 'selected' : ''}"
                      onclick="selectTeam('${team.id}')"
                      id="team-${team.id}">
-                    <div class="text-center">
-                        <div class="text-5xl mb-3">${team.logo}</div>
-                        <h3 class="text-xl font-medium mb-1">${team.city}</h3>
-                        <p class="text-2xl font-light mb-3" style="color: ${team.colors[0]}">${team.mascot}</p>
-                        <p class="text-sm text-gray-400 mb-4 min-h-[40px]">${team.description}</p>
-                        <div class="flex gap-2 justify-center mb-4">
-                            <div class="w-8 h-8 rounded-full" style="background-color: ${team.colors[0]}"></div>
-                            <div class="w-8 h-8 rounded-full" style="background-color: ${team.colors[1]}"></div>
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="text-3xl flex-shrink-0">${team.logo}</div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-sm font-medium text-gray-400 truncate">${team.city}</h3>
+                            <p class="text-lg font-light truncate" style="color: ${team.colors[0]}">${team.mascot}</p>
                         </div>
-                        <button class="w-full py-2 text-sm border border-blue-700 text-blue-400 hover:bg-blue-700 hover:text-white transition-colors">
-                            Select
-                        </button>
                     </div>
+                    <div class="flex gap-2 mb-3">
+                        <div class="w-6 h-6 rounded-full flex-shrink-0" style="background-color: ${team.colors[0]}"></div>
+                        <div class="w-6 h-6 rounded-full flex-shrink-0" style="background-color: ${team.colors[1]}"></div>
+                    </div>
+                    <button class="w-full py-1.5 text-xs border border-blue-700 text-blue-400 hover:bg-blue-700 hover:text-white transition-colors">
+                        Select
+                    </button>
                 </div>
             `).join('');
         }
@@ -436,6 +628,12 @@
             document.getElementById('dashboard-logo').textContent = gameState.selectedTeam.logo;
             document.getElementById('dashboard-team-name').textContent = gameState.selectedTeam.mascot;
             document.getElementById('dashboard-team-city').textContent = gameState.selectedTeam.city;
+            document.getElementById('dashboard-full-name').textContent = 
+                `${gameState.selectedTeam.city} ${gameState.selectedTeam.mascot}`;
+            
+            // Set team colors
+            document.getElementById('dashboard-color-1').style.backgroundColor = gameState.selectedTeam.colors[0];
+            document.getElementById('dashboard-color-2').style.backgroundColor = gameState.selectedTeam.colors[1];
             
             showScreen('dashboard');
             
