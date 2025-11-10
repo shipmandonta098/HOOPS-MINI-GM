@@ -1901,6 +1901,52 @@
             const heights = { 'PG': '6\'1"', 'SG': '6\'5"', 'SF': '6\'8"', 'PF': '6\'10"', 'C': '7\'0"' };
             const weights = { 'PG': '185', 'SG': '205', 'SF': '220', 'PF': '240', 'C': '260' };
             
+            // Bio data
+            const cities = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego', 'Dallas', 'San Jose', 'Austin', 'Jacksonville', 'Fort Worth', 'Columbus', 'Charlotte', 'Seattle', 'Denver', 'Boston', 'Detroit', 'Memphis'];
+            const states = ['NY', 'CA', 'IL', 'TX', 'AZ', 'PA', 'TX', 'CA', 'TX', 'CA', 'TX', 'FL', 'TX', 'OH', 'NC', 'WA', 'CO', 'MA', 'MI', 'TN'];
+            const countries = [
+                { name: 'USA', flag: '🇺🇸' },
+                { name: 'Canada', flag: '🇨🇦' },
+                { name: 'Spain', flag: '🇪🇸' },
+                { name: 'France', flag: '🇫🇷' },
+                { name: 'Germany', flag: '🇩🇪' },
+                { name: 'Australia', flag: '🇦🇺' },
+                { name: 'Serbia', flag: '🇷🇸' },
+                { name: 'Greece', flag: '🇬🇷' }
+            ];
+            const colleges = ['Duke', 'Kentucky', 'North Carolina', 'Kansas', 'UCLA', 'Arizona', 'Michigan State', 'Syracuse', 'Villanova', 'Gonzaga', 'None', 'Overseas'];
+            const draftTeams = ['Hawks', 'Celtics', 'Nets', 'Hornets', 'Bulls', 'Cavaliers', 'Mavericks', 'Nuggets', 'Pistons', 'Warriors', 'Rockets', 'Pacers', 'Clippers', 'Lakers', 'Grizzlies', 'Heat'];
+            const awards = ['All-Star', 'All-Rookie', 'Sixth Man', 'Most Improved', 'Defensive POY', 'Champion', 'Finals MVP', 'All-Defense', 'All-NBA'];
+            
+            const birthYear = 2025 - age;
+            const birthMonth = Math.floor(Math.random() * 12) + 1;
+            const birthDay = Math.floor(Math.random() * 28) + 1;
+            const cityIndex = Math.floor(Math.random() * cities.length);
+            const country = countries[Math.floor(Math.random() * countries.length)];
+            const experience = Math.max(0, age - 19);
+            
+            // Generate awards based on overall rating and age
+            const playerAwards = [];
+            if (overall >= 85 && age >= 25) {
+                const allStarCount = Math.floor(Math.random() * 5) + 1;
+                if (allStarCount > 1) playerAwards.push(`${allStarCount}× All-Star`);
+                else playerAwards.push('All-Star');
+            }
+            if (overall >= 80 && Math.random() > 0.7) {
+                playerAwards.push('All-NBA');
+            }
+            if (age <= 23 && Math.random() > 0.6) {
+                playerAwards.push('All-Rookie');
+            }
+            if (Math.random() > 0.9) {
+                playerAwards.push('Champion');
+            }
+            
+            // Height in metric
+            const heightInches = { 'PG': 73, 'SG': 77, 'SF': 80, 'PF': 82, 'C': 84 }[position] || 78;
+            const heightCm = Math.round(heightInches * 2.54);
+            const weightKg = Math.round(parseInt(weights[position] || '210') * 0.453592);
+            
             return {
                 id: Date.now() + Math.random(),
                 jersey: jerseyNum,
@@ -1911,7 +1957,9 @@
                 potential: potential,
                 archetype: archetypes[Math.floor(Math.random() * archetypes.length)],
                 height: heights[position] || '6\'6"',
+                heightCm: heightCm,
                 weight: weights[position] || '210',
+                weightKg: weightKg,
                 handedness: Math.random() > 0.1 ? 'Right' : 'Left',
                 ppg: (overall * 0.2 + Math.random() * 5).toFixed(1),
                 rpg: (overall * 0.1 + Math.random() * 3).toFixed(1),
@@ -1924,6 +1972,18 @@
                 morale: 60 + Math.floor(Math.random() * 40),
                 fatigue: Math.floor(Math.random() * 30),
                 minutes: 0,
+                // Bio data
+                birthDate: `${birthMonth}/${birthDay}/${birthYear}`,
+                birthplace: `${cities[cityIndex]}, ${states[cityIndex]}`,
+                country: country.name,
+                countryFlag: country.flag,
+                college: colleges[Math.floor(Math.random() * colleges.length)],
+                draftYear: birthYear + 19,
+                draftRound: Math.random() > 0.7 ? 1 : 2,
+                draftPick: Math.floor(Math.random() * 30) + 1,
+                draftTeam: draftTeams[Math.floor(Math.random() * draftTeams.length)],
+                experience: experience,
+                awards: playerAwards,
                 // Ratings object
                 ratings: {
                     inside: 50 + Math.floor(Math.random() * 50),
@@ -2354,49 +2414,108 @@
             // Show Overview tab by default
             showPlayerTab('overview');
             
-            // Populate Overview tab
+            // Populate Overview tab with Bio Panel
             const modalOverview = document.getElementById('modal-overview');
             if (!modalOverview) return;
             
+            // Generate award chips
+            const awardsHTML = player.awards && player.awards.length > 0 
+                ? player.awards.map(award => `<span class="inline-block bg-blue-900 bg-opacity-50 border border-blue-600 text-blue-400 text-xs px-2 py-1 rounded-full mr-1 mb-1">${award}</span>`).join('')
+                : '<span class="text-gray-500 text-sm">None</span>';
+            
             modalOverview.innerHTML = `
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <div class="text-xs text-gray-400 mb-1">Age</div>
-                        <div class="text-lg">${player.age} years old</div>
+                <!-- Player Portrait and Quick Stats -->
+                <div class="flex gap-4 mb-6">
+                    <div class="flex-shrink-0 w-20 h-20 bg-gray-700 rounded-lg flex items-center justify-center text-4xl">
+                        ${player.countryFlag || '👤'}
                     </div>
-                    <div>
-                        <div class="text-xs text-gray-400 mb-1">Jersey</div>
-                        <div class="text-lg">#${player.jersey}</div>
-                    </div>
-                    <div>
-                        <div class="text-xs text-gray-400 mb-1">Height</div>
-                        <div class="text-lg">${player.height}</div>
-                    </div>
-                    <div>
-                        <div class="text-xs text-gray-400 mb-1">Weight</div>
-                        <div class="text-lg">${player.weight} lbs</div>
+                    <div class="flex-1">
+                        <div class="grid grid-cols-3 gap-4 mb-2">
+                            <div class="text-center">
+                                <div class="text-2xl text-blue-400 font-bold">${player.ppg}</div>
+                                <div class="text-xs text-gray-400">PPG</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl text-blue-400 font-bold">${player.rpg}</div>
+                                <div class="text-xs text-gray-400">RPG</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl text-blue-400 font-bold">${player.apg}</div>
+                                <div class="text-xs text-gray-400">APG</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="mb-4">
-                    <div class="text-xs text-gray-400 mb-1">Archetype</div>
-                    <div class="text-blue-400">${player.archetype}</div>
-                </div>
-                <div class="mb-4">
-                    <div class="text-xs text-gray-400 mb-1">Handedness</div>
-                    <div>${player.handedness}</div>
-                </div>
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="text-center">
-                        <div class="text-2xl text-blue-400">${player.ppg}</div>
-                        <div class="text-xs text-gray-400">PPG</div>
+
+                <!-- Player Bio Panel -->
+                <div class="border-t border-gray-700 pt-4">
+                    <h3 class="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Player Bio</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                        <!-- Left Column -->
+                        <div class="flex justify-between py-1.5 border-b border-gray-800">
+                            <span class="text-gray-400">Position</span>
+                            <span class="text-gray-100 font-medium">${player.position}</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-gray-800">
+                            <span class="text-gray-400">Shoots</span>
+                            <span class="text-gray-100">${player.handedness}</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-gray-800">
+                            <span class="text-gray-400">Height</span>
+                            <span class="text-gray-100">${player.height} <span class="text-gray-500">(${player.heightCm} cm)</span></span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-gray-800">
+                            <span class="text-gray-400">Weight</span>
+                            <span class="text-gray-100">${player.weight} lbs <span class="text-gray-500">(${player.weightKg} kg)</span></span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-gray-800">
+                            <span class="text-gray-400">Born</span>
+                            <span class="text-gray-100">${player.birthDate} <span class="text-gray-500">(${player.age} yrs)</span></span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-gray-800">
+                            <span class="text-gray-400">Birthplace</span>
+                            <span class="text-gray-100">${player.birthplace}</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-gray-800">
+                            <span class="text-gray-400">Country</span>
+                            <span class="text-gray-100">${player.countryFlag} ${player.country}</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-gray-800">
+                            <span class="text-gray-400">College</span>
+                            <span class="text-gray-100">${player.college}</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-gray-800">
+                            <span class="text-gray-400">Draft</span>
+                            <span class="text-gray-100">${player.draftYear}, Rd ${player.draftRound}, Pk ${player.draftPick}</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-gray-800">
+                            <span class="text-gray-400">Draft Team</span>
+                            <span class="text-gray-100">${player.draftTeam}</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-gray-800">
+                            <span class="text-gray-400">Experience</span>
+                            <span class="text-gray-100">${player.experience} ${player.experience === 1 ? 'season' : 'seasons'}</span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-gray-800">
+                            <span class="text-gray-400">Jersey</span>
+                            <span class="text-gray-100">#${player.jersey}</span>
+                        </div>
                     </div>
-                    <div class="text-center">
-                        <div class="text-2xl text-blue-400">${player.rpg}</div>
-                        <div class="text-xs text-gray-400">RPG</div>
+                </div>
+
+                <!-- Awards Section -->
+                <div class="border-t border-gray-700 pt-4 mt-4">
+                    <h3 class="text-sm font-semibold text-gray-300 mb-2 uppercase tracking-wide">Career Awards</h3>
+                    <div class="flex flex-wrap">
+                        ${awardsHTML}
                     </div>
-                    <div class="text-center">
-                        <div class="text-2xl text-blue-400">${player.apg}</div>
-                        <div class="text-xs text-gray-400">APG</div>
+                </div>
+
+                <!-- Archetype Badge -->
+                <div class="border-t border-gray-700 pt-4 mt-4">
+                    <h3 class="text-sm font-semibold text-gray-300 mb-2 uppercase tracking-wide">Player Type</h3>
+                    <div class="inline-block bg-gradient-to-r from-blue-900 to-blue-800 border border-blue-600 text-blue-300 px-4 py-2 rounded-lg font-medium">
+                        ${player.archetype}
                     </div>
                 </div>
             `;
