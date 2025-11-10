@@ -49,13 +49,139 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            animation: fadeIn 0.2s ease-in;
+        }
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: rgb(31, 41, 55);
+            border: 1px solid rgb(55, 65, 81);
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .settings-btn {
+            transition: transform 0.2s ease;
+        }
+        .settings-btn:hover {
+            transform: rotate(45deg);
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen">
     
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal" onclick="closeSettingsIfClickedOutside(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="bg-gray-800 border-b border-gray-700 p-4 flex justify-between items-center">
+                <h2 class="text-2xl font-light">Settings</h2>
+                <button onclick="closeSettings()" class="text-gray-400 hover:text-gray-100 text-2xl leading-none">×</button>
+            </div>
+            
+            <div class="p-6 space-y-6">
+                <!-- Game Difficulty -->
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">Game Difficulty</label>
+                    <div class="flex gap-2">
+                        <button onclick="setSetting('difficulty', 'easy')" 
+                                class="difficulty-btn flex-1 py-2 px-4 border border-gray-600 text-sm hover:border-blue-700 hover:text-blue-400"
+                                data-value="easy">Easy</button>
+                        <button onclick="setSetting('difficulty', 'normal')" 
+                                class="difficulty-btn flex-1 py-2 px-4 border-2 border-blue-700 text-blue-400 text-sm hover:border-blue-700"
+                                data-value="normal">Normal</button>
+                        <button onclick="setSetting('difficulty', 'hard')" 
+                                class="difficulty-btn flex-1 py-2 px-4 border border-gray-600 text-sm hover:border-blue-700 hover:text-blue-400"
+                                data-value="hard">Hard</button>
+                    </div>
+                </div>
+
+                <!-- Salary Cap -->
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">Salary Cap</label>
+                    <div class="flex gap-2">
+                        <button onclick="setSetting('salaryCap', true)" 
+                                class="salaryCap-btn flex-1 py-2 px-4 border-2 border-blue-700 text-blue-400 text-sm hover:border-blue-700"
+                                data-value="true">On</button>
+                        <button onclick="setSetting('salaryCap', false)" 
+                                class="salaryCap-btn flex-1 py-2 px-4 border border-gray-600 text-sm hover:border-blue-700 hover:text-blue-400"
+                                data-value="false">Off</button>
+                    </div>
+                </div>
+
+                <!-- Injuries -->
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">Injuries</label>
+                    <div class="flex gap-2">
+                        <button onclick="setSetting('injuries', true)" 
+                                class="injuries-btn flex-1 py-2 px-4 border-2 border-blue-700 text-blue-400 text-sm hover:border-blue-700"
+                                data-value="true">On</button>
+                        <button onclick="setSetting('injuries', false)" 
+                                class="injuries-btn flex-1 py-2 px-4 border border-gray-600 text-sm hover:border-blue-700 hover:text-blue-400"
+                                data-value="false">Off</button>
+                    </div>
+                </div>
+
+                <!-- Season Length -->
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">Season Length</label>
+                    <div class="flex gap-2">
+                        <button onclick="setSetting('seasonLength', 29)" 
+                                class="seasonLength-btn flex-1 py-2 px-4 border border-gray-600 text-sm hover:border-blue-700 hover:text-blue-400"
+                                data-value="29">29 Games</button>
+                        <button onclick="setSetting('seasonLength', 58)" 
+                                class="seasonLength-btn flex-1 py-2 px-4 border border-gray-600 text-sm hover:border-blue-700 hover:text-blue-400"
+                                data-value="58">58 Games</button>
+                        <button onclick="setSetting('seasonLength', 82)" 
+                                class="seasonLength-btn flex-1 py-2 px-4 border-2 border-blue-700 text-blue-400 text-sm hover:border-blue-700"
+                                data-value="82">82 Games</button>
+                    </div>
+                </div>
+
+                <!-- Expansion Mode -->
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">Expansion Mode</label>
+                    <div class="flex gap-2">
+                        <button onclick="setSetting('expansionMode', true)" 
+                                class="expansionMode-btn flex-1 py-2 px-4 border border-gray-600 text-sm hover:border-blue-700 hover:text-blue-400"
+                                data-value="true">Enabled</button>
+                        <button onclick="setSetting('expansionMode', false)" 
+                                class="expansionMode-btn flex-1 py-2 px-4 border-2 border-blue-700 text-blue-400 text-sm hover:border-blue-700"
+                                data-value="false">Disabled</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-800 border-t border-gray-700 p-4">
+                <button onclick="closeSettings()" class="w-full btn-primary bg-blue-700 text-white py-2 text-sm">
+                    Save Settings
+                </button>
+            </div>
+        </div>
+    </div>
+    
     <!-- Home Screen -->
     <div id="home-screen" class="screen active">
         <div class="min-h-screen flex items-center justify-center px-4">
+            <!-- Settings Button -->
+            <button onclick="openSettings()" 
+                    class="settings-btn fixed top-4 right-4 text-gray-400 hover:text-blue-400 text-3xl z-50"
+                    title="Settings">
+                ⚙️
+            </button>
+            
             <div class="text-center fade-in">
                 <div class="text-6xl mb-4">🏀</div>
                 <h1 class="text-5xl font-light mb-4">Basketball GM</h1>
@@ -70,6 +196,13 @@
     <!-- Team Selection Screen -->
     <div id="team-selection-screen" class="screen">
         <div class="min-h-screen py-8 px-4 fade-in">
+            <!-- Settings Button -->
+            <button onclick="openSettings()" 
+                    class="settings-btn fixed top-4 right-4 text-gray-400 hover:text-blue-400 text-3xl z-50"
+                    title="Settings">
+                ⚙️
+            </button>
+            
             <div class="max-w-7xl mx-auto">
                 <div class="text-center mb-8">
                     <h2 class="text-4xl font-light mb-3">Choose Your Team</h2>
@@ -95,6 +228,13 @@
     <!-- Dashboard Screen -->
     <div id="dashboard-screen" class="screen">
         <div class="min-h-screen fade-in">
+            <!-- Settings Button -->
+            <button onclick="openSettings()" 
+                    class="settings-btn fixed top-4 right-4 text-gray-400 hover:text-blue-400 text-3xl z-50"
+                    title="Settings">
+                ⚙️
+            </button>
+            
             <div class="bg-gray-800 border-b border-gray-700 py-16">
                 <div class="max-w-4xl mx-auto text-center px-4">
                     <div class="text-8xl mb-6" id="dashboard-logo">🏀</div>
@@ -135,6 +275,11 @@
                     <h1 class="text-2xl font-light" id="header-team-name">Basketball GM</h1>
                 </div>
                 <div class="flex items-center gap-6">
+                    <button onclick="openSettings()" 
+                            class="settings-btn text-gray-400 hover:text-blue-400 text-2xl"
+                            title="Settings">
+                        ⚙️
+                    </button>
                     <div class="text-sm">
                         <span class="text-gray-400">Season:</span>
                         <span id="season" class="text-gray-100 ml-2">2024-25</span>
@@ -294,7 +439,14 @@
             recentGames: [],
             gameNumber: 0,
             selectedTeam: null,
-            isTeamSelected: false
+            isTeamSelected: false,
+            settings: {
+                difficulty: 'normal',
+                salaryCap: true,
+                injuries: true,
+                seasonLength: 82,
+                expansionMode: false
+            }
         };
 
         // Team Names
@@ -556,6 +708,103 @@
         function init() {
             renderTeamSelection();
             showScreen('home');
+            loadSettings();
+        }
+
+        // Settings Functions
+        function openSettings() {
+            document.getElementById('settings-modal').classList.add('active');
+            updateSettingsUI();
+        }
+
+        function closeSettings() {
+            saveSettings();
+            document.getElementById('settings-modal').classList.remove('active');
+        }
+
+        function closeSettingsIfClickedOutside(event) {
+            if (event.target.id === 'settings-modal') {
+                closeSettings();
+            }
+        }
+
+        function setSetting(key, value) {
+            gameState.settings[key] = value;
+            updateSettingsUI();
+            
+            // Apply setting changes
+            if (key === 'seasonLength') {
+                generateSchedule();
+            }
+        }
+
+        function updateSettingsUI() {
+            // Update difficulty buttons
+            document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                if (btn.dataset.value === gameState.settings.difficulty) {
+                    btn.classList.remove('border-gray-600');
+                    btn.classList.add('border-2', 'border-blue-700', 'text-blue-400');
+                } else {
+                    btn.classList.remove('border-2', 'border-blue-700', 'text-blue-400');
+                    btn.classList.add('border', 'border-gray-600');
+                }
+            });
+
+            // Update salary cap buttons
+            document.querySelectorAll('.salaryCap-btn').forEach(btn => {
+                if (btn.dataset.value === String(gameState.settings.salaryCap)) {
+                    btn.classList.remove('border-gray-600');
+                    btn.classList.add('border-2', 'border-blue-700', 'text-blue-400');
+                } else {
+                    btn.classList.remove('border-2', 'border-blue-700', 'text-blue-400');
+                    btn.classList.add('border', 'border-gray-600');
+                }
+            });
+
+            // Update injuries buttons
+            document.querySelectorAll('.injuries-btn').forEach(btn => {
+                if (btn.dataset.value === String(gameState.settings.injuries)) {
+                    btn.classList.remove('border-gray-600');
+                    btn.classList.add('border-2', 'border-blue-700', 'text-blue-400');
+                } else {
+                    btn.classList.remove('border-2', 'border-blue-700', 'text-blue-400');
+                    btn.classList.add('border', 'border-gray-600');
+                }
+            });
+
+            // Update season length buttons
+            document.querySelectorAll('.seasonLength-btn').forEach(btn => {
+                if (btn.dataset.value === String(gameState.settings.seasonLength)) {
+                    btn.classList.remove('border-gray-600');
+                    btn.classList.add('border-2', 'border-blue-700', 'text-blue-400');
+                } else {
+                    btn.classList.remove('border-2', 'border-blue-700', 'text-blue-400');
+                    btn.classList.add('border', 'border-gray-600');
+                }
+            });
+
+            // Update expansion mode buttons
+            document.querySelectorAll('.expansionMode-btn').forEach(btn => {
+                if (btn.dataset.value === String(gameState.settings.expansionMode)) {
+                    btn.classList.remove('border-gray-600');
+                    btn.classList.add('border-2', 'border-blue-700', 'text-blue-400');
+                } else {
+                    btn.classList.remove('border-2', 'border-blue-700', 'text-blue-400');
+                    btn.classList.add('border', 'border-gray-600');
+                }
+            });
+        }
+
+        function loadSettings() {
+            // Load settings from localStorage if available
+            const savedSettings = localStorage.getItem('hoopsGMSettings');
+            if (savedSettings) {
+                gameState.settings = { ...gameState.settings, ...JSON.parse(savedSettings) };
+            }
+        }
+
+        function saveSettings() {
+            localStorage.setItem('hoopsGMSettings', JSON.stringify(gameState.settings));
         }
 
         // Screen Navigation
@@ -742,8 +991,10 @@
         // Generate Schedule
         function generateSchedule() {
             gameState.schedule = [];
-            for (let i = 0; i < 82; i++) {
-                const opponent = teamNames[1 + Math.floor(Math.random() * (teamNames.length - 1))];
+            const totalGames = gameState.settings.seasonLength;
+            
+            for (let i = 0; i < totalGames; i++) {
+                const opponent = teamNames[Math.floor(Math.random() * teamNames.length)];
                 gameState.schedule.push({
                     game: i + 1,
                     opponent: opponent,
