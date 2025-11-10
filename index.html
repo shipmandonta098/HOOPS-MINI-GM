@@ -1454,9 +1454,9 @@
             }
         ];
 
-        // Player Names
-        const firstNames = ['James', 'Michael', 'Kobe', 'LeBron', 'Stephen', 'Kevin', 'Chris', 'Damian', 'Anthony', 'Giannis', 'Luka', 'Jayson', 'Devin', 'Joel', 'Nikola', 'Kawhi'];
-        const lastNames = ['Johnson', 'Williams', 'Brown', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin', 'Thompson', 'Garcia'];
+        // Player Names - Fictional
+        const firstNames = ['Marcus', 'Devon', 'Tyler', 'Brandon', 'Jordan', 'Ryan', 'Alex', 'Cameron', 'Derek', 'Justin', 'Kyle', 'Travis', 'Ethan', 'Mason', 'Lucas', 'Isaiah', 'Caleb', 'Aaron', 'Dominic', 'Victor', 'Adrian', 'Elijah', 'Nathan', 'Oscar', 'Quincy'];
+        const lastNames = ['Anderson', 'Bennett', 'Carter', 'Davis', 'Edwards', 'Foster', 'Griffin', 'Harrison', 'Irving', 'Jackson', 'Kennedy', 'Lopez', 'Mitchell', 'Nelson', 'Parker', 'Reynolds', 'Stevens', 'Turner', 'Walker', 'Young', 'Brooks', 'Coleman', 'Hayes', 'Morgan', 'Price'];
 
         // Initialize
         function init() {
@@ -1919,39 +1919,46 @@
                 salary: Math.floor((overall * 100000) + Math.random() * 5000000),
                 contractYears: 1 + Math.floor(Math.random() * 4),
                 status: Math.random() > 0.9 ? 'Injured' : 'Healthy',
-                injury: Math.random() > 0.9 ? 'Minor Ankle' : null,
-                daysOut: Math.random() > 0.9 ? Math.floor(Math.random() * 14) : 0,
+                injuryType: Math.random() > 0.9 ? 'Minor Ankle Sprain' : null,
+                injuryDuration: Math.random() > 0.9 ? Math.floor(Math.random() * 14) + 1 : 0,
                 morale: 60 + Math.floor(Math.random() * 40),
                 fatigue: Math.floor(Math.random() * 30),
                 minutes: 0,
-                // Ratings
-                inside: 50 + Math.floor(Math.random() * 50),
-                mid: 50 + Math.floor(Math.random() * 50),
-                three: 50 + Math.floor(Math.random() * 50),
-                playmaking: 50 + Math.floor(Math.random() * 50),
-                perimD: 50 + Math.floor(Math.random() * 50),
-                intD: 50 + Math.floor(Math.random() * 50),
-                rebounding: 50 + Math.floor(Math.random() * 50),
-                athleticism: 50 + Math.floor(Math.random() * 50),
-                iq: 50 + Math.floor(Math.random() * 50)
+                // Ratings object
+                ratings: {
+                    inside: 50 + Math.floor(Math.random() * 50),
+                    mid: 50 + Math.floor(Math.random() * 50),
+                    three: 50 + Math.floor(Math.random() * 50),
+                    playmaking: 50 + Math.floor(Math.random() * 50),
+                    perimD: 50 + Math.floor(Math.random() * 50),
+                    intD: 50 + Math.floor(Math.random() * 50),
+                    rebounding: 50 + Math.floor(Math.random() * 50),
+                    athleticism: 50 + Math.floor(Math.random() * 50),
+                    iq: 50 + Math.floor(Math.random() * 50)
+                }
             };
         }
 
         // Generate Roster
         function generateRoster() {
             gameState.roster = [
+                // Starters (5 players)
                 generatePlayer('PG', true, 1),
                 generatePlayer('SG', true, 2),
                 generatePlayer('SF', true, 3),
                 generatePlayer('PF', true, 4),
                 generatePlayer('C', true, 5),
+                // Bench (10 players)
                 generatePlayer('PG', false, 10),
                 generatePlayer('SG', false, 11),
                 generatePlayer('SF', false, 12),
                 generatePlayer('PF', false, 13),
                 generatePlayer('C', false, 14),
-                generatePlayer('SG', false, 20),
-                generatePlayer('SF', false, 21)
+                generatePlayer('PG', false, 20),
+                generatePlayer('SG', false, 21),
+                generatePlayer('SF', false, 22),
+                generatePlayer('PF', false, 23),
+                generatePlayer('C', false, 24)
             ];
             
             updateRosterDisplay();
