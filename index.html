@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basketball GM Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        .stat-card {
+            transition: all 0.2s ease;
+        }
+        .stat-card:hover {
+            background-color: rgb(30, 41, 59);
+        }
+        .btn-primary {
+            transition: background-color 0.2s ease;
+        }
+        .btn-primary:hover {
+            background-color: rgb(29, 78, 216);
+        }
+        .player-row:hover {
+            background-color: rgb(30, 41, 59);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-gray-800 border-b border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-light">Basketball GM</h1>
+                <div class="flex items-center gap-6">
+                    <div class="text-sm">
+                        <span class="text-gray-400">Season:</span>
+                        <span id="season" class="text-gray-100 ml-2">2024-25</span>
+                    </div>
+                    <div class="text-sm">
+                        <span class="text-gray-400">Budget:</span>
+                        <span id="budget" class="text-green-400 ml-2">$85.2M</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-gray-800 border-b border-gray-700">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex gap-1">
+                <button onclick="showTab('team')" class="nav-btn px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="nav-team">Team</button>
+                <button onclick="showTab('roster')" class="nav-btn px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="nav-roster">Roster</button>
+                <button onclick="showTab('schedule')" class="nav-btn px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="nav-schedule">Schedule</button>
+                <button onclick="showTab('standings')" class="nav-btn px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="nav-standings">Standings</button>
+                <button onclick="showTab('draft')" class="nav-btn px-4 py-2 text-sm text-gray-300 hover:text-gray-100 border-b-2 border-transparent hover:border-blue-700" id="nav-draft">Draft</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        
+        <!-- Team Overview Tab -->
+        <div id="tab-team" class="tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="stat-card bg-gray-800 p-4 border border-gray-700">
+                    <div class="text-gray-400 text-sm mb-1">Record</div>
+                    <div class="text-3xl font-light" id="team-record">0-0</div>
+                </div>
+                <div class="stat-card bg-gray-800 p-4 border border-gray-700">
+                    <div class="text-gray-400 text-sm mb-1">Conference Rank</div>
+                    <div class="text-3xl font-light" id="conf-rank">-</div>
+                </div>
+                <div class="stat-card bg-gray-800 p-4 border border-gray-700">
+                    <div class="text-gray-400 text-sm mb-1">Team Rating</div>
+                    <div class="text-3xl font-light" id="team-rating">75</div>
+                </div>
+            </div>
+
+            <div class="bg-gray-800 p-6 border border-gray-700 mb-6">
+                <h2 class="text-xl font-light mb-4">Quick Actions</h2>
+                <div class="flex gap-3">
+                    <button onclick="simulateGame()" class="btn-primary bg-blue-700 text-white px-6 py-2 text-sm">Simulate Game</button>
+                    <button onclick="simulateWeek()" class="btn-primary bg-blue-700 text-white px-6 py-2 text-sm">Simulate Week</button>
+                    <button onclick="simulateSeason()" class="btn-primary bg-blue-700 text-white px-6 py-2 text-sm">Simulate Season</button>
+                </div>
+            </div>
+
+            <div class="bg-gray-800 p-6 border border-gray-700">
+                <h2 class="text-xl font-light mb-4">Recent Games</h2>
+                <div id="recent-games" class="space-y-2">
+                    <div class="text-gray-500 text-sm">No games played yet</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Roster Tab -->
+        <div id="tab-roster" class="tab-content hidden">
+            <div class="bg-gray-800 border border-gray-700">
+                <div class="p-4 border-b border-gray-700 flex justify-between items-center">
+                    <h2 class="text-xl font-light">Current Roster</h2>
+                    <button onclick="generateRoster()" class="btn-primary bg-blue-700 text-white px-4 py-2 text-sm">Generate Roster</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-900 text-gray-400 text-sm">
+                            <tr>
+                                <th class="text-left p-3 font-normal">Name</th>
+                                <th class="text-left p-3 font-normal">Pos</th>
+                                <th class="text-center p-3 font-normal">Age</th>
+                                <th class="text-center p-3 font-normal">Ovr</th>
+                                <th class="text-center p-3 font-normal">PPG</th>
+                                <th class="text-center p-3 font-normal">RPG</th>
+                                <th class="text-center p-3 font-normal">APG</th>
+                                <th class="text-right p-3 font-normal">Salary</th>
+                            </tr>
+                        </thead>
+                        <tbody id="roster-table" class="text-sm">
+                            <tr>
+                                <td colspan="8" class="p-4 text-center text-gray-500">No players on roster</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Tab -->
+        <div id="tab-schedule" class="tab-content hidden">
+            <div class="bg-gray-800 p-6 border border-gray-700">
+                <h2 class="text-xl font-light mb-4">Season Schedule</h2>
+                <div id="schedule-list" class="space-y-2">
+                    <div class="text-gray-500 text-sm">Schedule will be generated when season starts</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Standings Tab -->
+        <div id="tab-standings" class="tab-content hidden">
+            <div class="bg-gray-800 border border-gray-700">
+                <div class="p-4 border-b border-gray-700">
+                    <h2 class="text-xl font-light">League Standings</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-900 text-gray-400 text-sm">
+                            <tr>
+                                <th class="text-left p-3 font-normal">Rank</th>
+                                <th class="text-left p-3 font-normal">Team</th>
+                                <th class="text-center p-3 font-normal">W</th>
+                                <th class="text-center p-3 font-normal">L</th>
+                                <th class="text-center p-3 font-normal">PCT</th>
+                                <th class="text-center p-3 font-normal">GB</th>
+                            </tr>
+                        </thead>
+                        <tbody id="standings-table" class="text-sm">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Draft Tab -->
+        <div id="tab-draft" class="tab-content hidden">
+            <div class="bg-gray-800 p-6 border border-gray-700">
+                <h2 class="text-xl font-light mb-4">Draft Prospects</h2>
+                <div class="mb-4">
+                    <button onclick="generateDraftClass()" class="btn-primary bg-blue-700 text-white px-4 py-2 text-sm">Generate Draft Class</button>
+                </div>
+                <div id="draft-prospects" class="space-y-2">
+                    <div class="text-gray-500 text-sm">No draft prospects available</div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Game State
+        const gameState = {
+            season: '2024-25',
+            budget: 85200000,
+            wins: 0,
+            losses: 0,
+            roster: [],
+            schedule: [],
+            standings: [],
+            recentGames: [],
+            gameNumber: 0
+        };
+
+        // Team Names
+        const teamNames = [
+            'Your Team', 'Lakers', 'Celtics', 'Warriors', 'Heat', 'Bucks', 
+            'Nets', 'Nuggets', 'Suns', '76ers', 'Mavericks', 'Clippers',
+            'Grizzlies', 'Timberwolves', 'Pelicans', 'Hawks'
+        ];
+
+        // Player Names
+        const firstNames = ['James', 'Michael', 'Kobe', 'LeBron', 'Stephen', 'Kevin', 'Chris', 'Damian', 'Anthony', 'Giannis', 'Luka', 'Jayson', 'Devin', 'Joel', 'Nikola', 'Kawhi'];
+        const lastNames = ['Johnson', 'Williams', 'Brown', 'Davis', 'Miller', 'Wilson', 'Moore', 'Taylor', 'Anderson', 'Thomas', 'Jackson', 'White', 'Harris', 'Martin', 'Thompson', 'Garcia'];
+
+        // Initialize
+        function init() {
+            initializeStandings();
+            generateSchedule();
+            showTab('team');
+            updateDisplay();
+        }
+
+        // Tab Navigation
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('border-blue-700', 'text-gray-100');
+                btn.classList.add('border-transparent', 'text-gray-300');
+            });
+            
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            document.getElementById(`nav-${tabName}`).classList.add('border-blue-700', 'text-gray-100');
+        }
+
+        // Generate Random Player
+        function generatePlayer(position, isStarter = false) {
+            const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+            const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+            const age = 19 + Math.floor(Math.random() * 15);
+            
+            let overall;
+            if (isStarter) {
+                overall = 70 + Math.floor(Math.random() * 20); // 70-89
+            } else {
+                overall = 55 + Math.floor(Math.random() * 25); // 55-79
+            }
+            
+            return {
+                name: `${firstName} ${lastName}`,
+                position: position,
+                age: age,
+                overall: overall,
+                ppg: (overall * 0.2 + Math.random() * 5).toFixed(1),
+                rpg: (overall * 0.1 + Math.random() * 3).toFixed(1),
+                apg: (overall * 0.08 + Math.random() * 2).toFixed(1),
+                salary: Math.floor((overall * 100000) + Math.random() * 5000000)
+            };
+        }
+
+        // Generate Roster
+        function generateRoster() {
+            gameState.roster = [
+                generatePlayer('PG', true),
+                generatePlayer('SG', true),
+                generatePlayer('SF', true),
+                generatePlayer('PF', true),
+                generatePlayer('C', true),
+                generatePlayer('PG', false),
+                generatePlayer('SG', false),
+                generatePlayer('SF', false),
+                generatePlayer('PF', false),
+                generatePlayer('C', false),
+                generatePlayer('SG', false),
+                generatePlayer('SF', false)
+            ];
+            
+            updateRosterDisplay();
+        }
+
+        // Update Roster Display
+        function updateRosterDisplay() {
+            const tbody = document.getElementById('roster-table');
+            tbody.innerHTML = gameState.roster.map(player => `
+                <tr class="player-row border-b border-gray-700">
+                    <td class="p-3">${player.name}</td>
+                    <td class="p-3">${player.position}</td>
+                    <td class="p-3 text-center">${player.age}</td>
+                    <td class="p-3 text-center"><span class="text-blue-400">${player.overall}</span></td>
+                    <td class="p-3 text-center">${player.ppg}</td>
+                    <td class="p-3 text-center">${player.rpg}</td>
+                    <td class="p-3 text-center">${player.apg}</td>
+                    <td class="p-3 text-right">$${(player.salary / 1000000).toFixed(1)}M</td>
+                </tr>
+            `).join('');
+        }
+
+        // Initialize Standings
+        function initializeStandings() {
+            gameState.standings = teamNames.map(team => ({
+                team: team,
+                wins: 0,
+                losses: 0,
+                pct: 0,
+                rating: team === 'Your Team' ? 75 : 60 + Math.floor(Math.random() * 30)
+            }));
+            updateStandingsDisplay();
+        }
+
+        // Generate Schedule
+        function generateSchedule() {
+            gameState.schedule = [];
+            for (let i = 0; i < 82; i++) {
+                const opponent = teamNames[1 + Math.floor(Math.random() * (teamNames.length - 1))];
+                gameState.schedule.push({
+                    game: i + 1,
+                    opponent: opponent,
+                    played: false,
+                    result: null
+                });
+            }
+            updateScheduleDisplay();
+        }
+
+        // Simulate Game
+        function simulateGame() {
+            if (gameState.gameNumber >= gameState.schedule.length) {
+                alert('Season complete!');
+                return;
+            }
+
+            const game = gameState.schedule[gameState.gameNumber];
+            const yourTeam = gameState.standings.find(t => t.team === 'Your Team');
+            const opponent = gameState.standings.find(t => t.team === game.opponent);
+            
+            // Simple simulation based on team ratings
+            const yourScore = 90 + Math.floor(Math.random() * 30) + (yourTeam.rating - 75) * 0.3;
+            const oppScore = 90 + Math.floor(Math.random() * 30) + (opponent.rating - 75) * 0.3;
+            
+            const won = yourScore > oppScore;
+            
+            game.played = true;
+            game.result = won ? 'W' : 'L';
+            game.score = `${Math.round(yourScore)}-${Math.round(oppScore)}`;
+            
+            if (won) {
+                yourTeam.wins++;
+                opponent.losses++;
+            } else {
+                yourTeam.losses++;
+                opponent.wins++;
+            }
+            
+            yourTeam.pct = (yourTeam.wins / (yourTeam.wins + yourTeam.losses)).toFixed(3);
+            opponent.pct = (opponent.wins / (opponent.wins + opponent.losses)).toFixed(3);
+            
+            gameState.recentGames.unshift({
+                opponent: game.opponent,
+                result: game.result,
+                score: game.score
+            });
+            
+            if (gameState.recentGames.length > 5) {
+                gameState.recentGames.pop();
+            }
+            
+            gameState.gameNumber++;
+            updateDisplay();
+        }
+
+        // Simulate Week
+        function simulateWeek() {
+            for (let i = 0; i < 3; i++) {
+                if (gameState.gameNumber < gameState.schedule.length) {
+                    simulateGame();
+                }
+            }
+        }
+
+        // Simulate Season
+        function simulateSeason() {
+            while (gameState.gameNumber < gameState.schedule.length) {
+                simulateGame();
+            }
+        }
+
+        // Update Display
+        function updateDisplay() {
+            const yourTeam = gameState.standings.find(t => t.team === 'Your Team');
+            
+            document.getElementById('team-record').textContent = `${yourTeam.wins}-${yourTeam.losses}`;
+            document.getElementById('budget').textContent = `$${(gameState.budget / 1000000).toFixed(1)}M`;
+            document.getElementById('team-rating').textContent = yourTeam.rating;
+            
+            // Update conference rank
+            const sortedStandings = [...gameState.standings].sort((a, b) => {
+                if (b.wins !== a.wins) return b.wins - a.wins;
+                return a.losses - b.losses;
+            });
+            const rank = sortedStandings.findIndex(t => t.team === 'Your Team') + 1;
+            document.getElementById('conf-rank').textContent = rank;
+            
+            updateRecentGames();
+            updateStandingsDisplay();
+            updateScheduleDisplay();
+        }
+
+        // Update Recent Games
+        function updateRecentGames() {
+            const container = document.getElementById('recent-games');
+            if (gameState.recentGames.length === 0) {
+                container.innerHTML = '<div class="text-gray-500 text-sm">No games played yet</div>';
+                return;
+            }
+            
+            container.innerHTML = gameState.recentGames.map(game => `
+                <div class="flex justify-between items-center p-3 bg-gray-900 border border-gray-700">
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm font-medium ${game.result === 'W' ? 'text-green-400' : 'text-red-400'}">${game.result}</span>
+                        <span class="text-sm">vs ${game.opponent}</span>
+                    </div>
+                    <span class="text-sm text-gray-400">${game.score}</span>
+                </div>
+            `).join('');
+        }
+
+        // Update Standings
+        function updateStandingsDisplay() {
+            const sortedStandings = [...gameState.standings].sort((a, b) => {
+                if (b.wins !== a.wins) return b.wins - a.wins;
+                return a.losses - b.losses;
+            });
+            
+            const leader = sortedStandings[0];
+            const tbody = document.getElementById('standings-table');
+            
+            tbody.innerHTML = sortedStandings.map((team, index) => {
+                const gb = ((leader.wins - team.wins) + (team.losses - leader.losses)) / 2;
+                const isYourTeam = team.team === 'Your Team';
+                
+                return `
+                    <tr class="border-b border-gray-700 ${isYourTeam ? 'bg-blue-900 bg-opacity-20' : ''}">
+                        <td class="p-3">${index + 1}</td>
+                        <td class="p-3 ${isYourTeam ? 'text-blue-400 font-medium' : ''}">${team.team}</td>
+                        <td class="p-3 text-center">${team.wins}</td>
+                        <td class="p-3 text-center">${team.losses}</td>
+                        <td class="p-3 text-center">${team.pct || '0.000'}</td>
+                        <td class="p-3 text-center">${gb === 0 ? '-' : gb.toFixed(1)}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Update Schedule Display
+        function updateScheduleDisplay() {
+            const container = document.getElementById('schedule-list');
+            const displayGames = gameState.schedule.slice(0, 20);
+            
+            container.innerHTML = displayGames.map(game => `
+                <div class="flex justify-between items-center p-3 bg-gray-900 border border-gray-700">
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-gray-400">Game ${game.game}</span>
+                        <span class="text-sm">vs ${game.opponent}</span>
+                    </div>
+                    <div class="text-sm">
+                        ${game.played ? 
+                            `<span class="${game.result === 'W' ? 'text-green-400' : 'text-red-400'}">${game.result} ${game.score}</span>` : 
+                            '<span class="text-gray-500">Not played</span>'
+                        }
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Generate Draft Class
+        function generateDraftClass() {
+            const draftClass = [];
+            for (let i = 0; i < 30; i++) {
+                const player = generatePlayer(['PG', 'SG', 'SF', 'PF', 'C'][Math.floor(Math.random() * 5)], i < 5);
+                player.pick = i + 1;
+                player.potential = player.overall + Math.floor(Math.random() * 15);
+                draftClass.push(player);
+            }
+            
+            const container = document.getElementById('draft-prospects');
+            container.innerHTML = draftClass.map(player => `
+                <div class="flex justify-between items-center p-3 bg-gray-900 border border-gray-700">
+                    <div class="flex items-center gap-4">
+                        <span class="text-gray-400 text-sm w-8">#${player.pick}</span>
+                        <div>
+                            <div class="text-sm font-medium">${player.name}</div>
+                            <div class="text-xs text-gray-400">${player.position} • Age ${player.age}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-right">
+                            <div class="text-sm">Overall: <span class="text-blue-400">${player.overall}</span></div>
+                            <div class="text-xs text-gray-400">Potential: ${player.potential}</div>
+                        </div>
+                        <button onclick="draftPlayer(${player.pick})" class="btn-primary bg-blue-700 text-white px-3 py-1 text-xs">Draft</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Draft Player
+        function draftPlayer(pick) {
+            alert(`Drafted player #${pick}! (Feature in development)`);
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
