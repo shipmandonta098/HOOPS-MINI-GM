@@ -1162,6 +1162,649 @@
     .meeting-actions{
       display:flex; gap:12px; justify-content:center;
     }
+    
+    /* Finance Styles */
+    .finance-container{
+      display:flex; flex-direction:column; gap:24px; max-width:1400px; margin:0 auto;
+    }
+    .finance-panel{
+      background:var(--bg-1); border:1px solid var(--border); border-radius:12px;
+      padding:24px;
+    }
+    .finance-panel h3{
+      margin:0 0 20px 0; font-size:20px; color:var(--text-0);
+      border-bottom:2px solid var(--border); padding-bottom:12px;
+    }
+    .finance-kpis{
+      display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+      gap:16px; margin-bottom:24px;
+    }
+    .finance-kpi{
+      background:var(--bg-2); border:1px solid var(--border); border-radius:8px;
+      padding:16px; text-align:center;
+    }
+    .kpi-label{
+      font-size:11px; color:var(--muted); text-transform:uppercase;
+      margin-bottom:8px; letter-spacing:0.5px;
+    }
+    .kpi-value{
+      font-size:24px; font-weight:700; color:var(--text-0);
+      font-family:var(--mono);
+    }
+    .kpi-value.good{color:var(--good)}
+    .kpi-value.bad{color:var(--bad)}
+    .kpi-badge{
+      display:inline-block; padding:6px 12px; border-radius:6px;
+      font-size:13px; font-weight:600; margin-top:4px;
+    }
+    .cap-visual{
+      margin-bottom:24px;
+    }
+    .cap-bar-container{
+      position:relative; height:40px; background:var(--bg-2);
+      border:1px solid var(--border); border-radius:8px; overflow:visible;
+      margin-bottom:32px;
+    }
+    .cap-bar-fill{
+      height:100%; background:linear-gradient(90deg, var(--good) 0%, var(--warn) 70%, var(--bad) 100%);
+      border-radius:7px; transition:width 0.3s ease;
+    }
+    .cap-marker{
+      position:absolute; top:-8px; bottom:-8px; width:2px;
+      background:rgba(255,255,255,0.5); transform:translateX(-1px);
+    }
+    .cap-marker-label{
+      position:absolute; top:-24px; left:50%; transform:translateX(-50%);
+      font-size:10px; color:var(--muted); text-transform:uppercase;
+      white-space:nowrap; font-weight:600;
+    }
+    .cap-line{background:rgba(106,162,255,0.6)}
+    .tax-line{background:rgba(255,193,7,0.7)}
+    .apron1-line{background:rgba(255,107,53,0.7)}
+    .apron2-line{background:rgba(220,53,69,0.8)}
+    .cap-legend{
+      display:flex; gap:20px; flex-wrap:wrap; justify-content:center;
+      font-size:12px; color:var(--text-1);
+    }
+    .legend-item{
+      display:flex; align-items:center; gap:6px;
+    }
+    .legend-dot{
+      width:12px; height:12px; border-radius:50%; display:inline-block;
+    }
+    .roster-breakdown{
+      background:var(--bg-2); border:1px solid var(--border); border-radius:8px;
+      padding:16px;
+    }
+    .section-label{
+      font-size:11px; color:var(--muted); text-transform:uppercase;
+      margin-bottom:12px; font-weight:600; letter-spacing:0.5px;
+    }
+    .top-salaries-list{
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .salary-row{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:8px; background:var(--bg-1); border-radius:6px;
+    }
+    .salary-player-name{
+      font-size:13px; color:var(--text-0); font-weight:600;
+    }
+    .salary-player-value{
+      font-size:13px; color:var(--text-1); font-family:var(--mono);
+    }
+    .finance-breakdown{
+      display:flex; flex-direction:column; gap:24px; margin-bottom:24px;
+    }
+    .breakdown-section{
+      background:var(--bg-2); border:1px solid var(--border); border-radius:8px;
+      padding:16px;
+    }
+    .breakdown-header{
+      font-size:13px; color:var(--text-0); font-weight:600;
+      margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid var(--border);
+    }
+    .breakdown-items{
+      display:flex; flex-direction:column; gap:12px;
+    }
+    .breakdown-item{
+      display:grid; grid-template-columns:140px 1fr 100px; gap:12px;
+      align-items:center; font-size:12px;
+    }
+    .breakdown-label{
+      color:var(--text-1); font-weight:500;
+    }
+    .breakdown-bar{
+      height:20px; background:var(--bg-1); border-radius:4px;
+      overflow:hidden; position:relative;
+    }
+    .breakdown-bar-fill{
+      height:100%; background:var(--good); transition:width 0.3s ease;
+      display:block;
+    }
+    .breakdown-bar-fill.bad{background:var(--bad)}
+    .breakdown-value{
+      text-align:right; color:var(--text-0); font-family:var(--mono);
+      font-weight:600;
+    }
+    .highlight-tax{
+      background:rgba(255,193,7,0.05); border:1px solid rgba(255,193,7,0.2);
+      border-radius:6px; padding:8px; margin-top:4px;
+    }
+    .finance-controls{
+      display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+      gap:20px; background:var(--bg-2); border:1px solid var(--border);
+      border-radius:8px; padding:20px;
+    }
+    .control-item{
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .control-item label{
+      font-size:12px; color:var(--text-1); font-weight:600;
+    }
+    .control-item input[type="range"]{
+      width:100%; height:6px; background:var(--bg-1); border-radius:3px;
+      outline:none; -webkit-appearance:none; appearance:none;
+    }
+    .control-item input[type="range"]::-webkit-slider-thumb{
+      -webkit-appearance:none; appearance:none;
+      width:16px; height:16px; background:var(--pri); border-radius:50%;
+      cursor:pointer;
+    }
+    .control-item input[type="range"]::-moz-range-thumb{
+      width:16px; height:16px; background:var(--pri); border-radius:50%;
+      cursor:pointer; border:none;
+    }
+    .control-item span{
+      font-size:13px; color:var(--text-0); font-family:var(--mono);
+      font-weight:600; text-align:center;
+    }
+    .outlook-table{
+      background:var(--bg-2); border:1px solid var(--border); border-radius:8px;
+      overflow:hidden; margin-bottom:16px;
+    }
+    .outlook-header{
+      display:grid; grid-template-columns:80px repeat(5, 1fr);
+      background:var(--bg-3); border-bottom:2px solid var(--border);
+      font-weight:600; font-size:11px; color:var(--muted);
+      text-transform:uppercase;
+    }
+    .outlook-row{
+      display:grid; grid-template-columns:80px repeat(5, 1fr);
+      border-bottom:1px solid var(--border); font-size:13px;
+    }
+    .outlook-row:last-child{border-bottom:none}
+    .outlook-cell{
+      padding:12px; text-align:center; color:var(--text-0);
+    }
+    .outlook-cell.year{
+      font-weight:700; background:var(--bg-1); color:var(--pri);
+    }
+    .outlook-cell.total{
+      font-weight:700; font-family:var(--mono);
+    }
+    .outlook-cell.status{
+      font-size:11px; font-weight:600; text-transform:uppercase;
+    }
+    .outlook-notes{
+      background:rgba(106,162,255,0.05); border:1px solid rgba(106,162,255,0.2);
+      border-radius:8px; padding:16px; font-size:12px; color:var(--text-1);
+      line-height:1.6;
+    }
+    .outlook-notes p{
+      margin:0 0 8px 0;
+    }
+    .outlook-notes p:last-child{margin:0}
+    .owner-budget-panel{
+      background:linear-gradient(135deg, var(--bg-1) 0%, rgba(255,215,0,0.03) 100%);
+      border:2px solid rgba(255,215,0,0.2);
+    }
+    .owner-budget-details{
+      display:flex; flex-direction:column; gap:12px;
+      background:var(--bg-2); border:1px solid var(--border); border-radius:8px;
+      padding:16px; margin-bottom:20px;
+    }
+    .budget-item{
+      display:flex; justify-content:space-between; align-items:center;
+      font-size:13px; padding:8px 0; border-bottom:1px solid var(--border);
+    }
+    .budget-item:last-child{border-bottom:none}
+    .budget-label{
+      color:var(--text-1); font-weight:500;
+    }
+    .budget-value{
+      color:var(--text-0); font-weight:700; font-family:var(--mono);
+    }
+    .risk-assessment{
+      background:var(--bg-2); border:1px solid var(--border); border-radius:8px;
+      padding:16px; margin-bottom:20px;
+    }
+    .risk-list{
+      display:flex; flex-direction:column; gap:10px; margin-top:12px;
+    }
+    .risk-item{
+      display:flex; align-items:flex-start; gap:10px; padding:10px;
+      background:var(--bg-1); border-left:3px solid; border-radius:6px;
+      font-size:12px; color:var(--text-0);
+    }
+    .risk-item.high{border-color:var(--bad); background:rgba(220,53,69,0.05)}
+    .risk-item.medium{border-color:var(--warn); background:rgba(255,193,7,0.05)}
+    .risk-item.low{border-color:var(--good); background:rgba(40,167,69,0.05)}
+    .risk-icon{
+      font-size:16px; flex-shrink:0; margin-top:2px;
+    }
+    .budget-recommendations{
+      background:var(--bg-2); border:1px solid var(--border); border-radius:8px;
+      padding:16px;
+    }
+    .recommendations-list{
+      display:flex; flex-direction:column; gap:10px; margin-top:12px;
+    }
+    .recommendation-item{
+      display:flex; align-items:flex-start; gap:10px; padding:12px;
+      background:rgba(106,162,255,0.05); border:1px solid rgba(106,162,255,0.2);
+      border-radius:6px; font-size:12px; color:var(--text-0); line-height:1.5;
+    }
+    .recommendation-icon{
+      font-size:16px; flex-shrink:0; margin-top:2px;
+    }
+    
+    /* Fan Hype Meter Styles */
+    .fan-hype-widget{
+      background:var(--bg-2); border:1px solid var(--border); border-radius:12px;
+      padding:20px; display:flex; flex-direction:column; align-items:center; gap:16px;
+    }
+    .fan-hype-label{
+      font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:1px;
+      font-weight:600;
+    }
+    .fan-hype-meter{
+      position:relative; width:140px; height:140px;
+    }
+    .fan-hype-circle{
+      width:100%; height:100%; border-radius:50%;
+      background:conic-gradient(
+        from 0deg,
+        var(--hype-color) 0deg,
+        var(--hype-color) calc(var(--hype-percent) * 3.6deg),
+        var(--bg-3) calc(var(--hype-percent) * 3.6deg),
+        var(--bg-3) 360deg
+      );
+      display:flex; align-items:center; justify-content:center;
+      position:relative;
+      transition:all 0.5s ease;
+    }
+    .fan-hype-circle.glow{
+      filter:drop-shadow(0 0 20px var(--hype-color));
+      animation:pulseGlow 2s ease-in-out infinite;
+    }
+    @keyframes pulseGlow{
+      0%, 100%{ filter:drop-shadow(0 0 15px var(--hype-color)); }
+      50%{ filter:drop-shadow(0 0 30px var(--hype-color)); }
+    }
+    .fan-hype-inner{
+      width:110px; height:110px; border-radius:50%;
+      background:var(--bg-1); display:flex; flex-direction:column;
+      align-items:center; justify-content:center; gap:4px;
+    }
+    .fan-hype-value{
+      font-size:36px; font-weight:700; color:var(--hype-color);
+      line-height:1;
+    }
+    .fan-hype-max{
+      font-size:14px; color:var(--muted); font-weight:500;
+    }
+    .fan-hype-sentiment{
+      font-size:14px; font-weight:600; color:var(--hype-color);
+      text-transform:uppercase; letter-spacing:1px;
+    }
+    .fan-hype-history{
+      width:100%; max-height:150px; overflow-y:auto;
+      font-size:11px; color:var(--muted);
+    }
+    .fan-hype-event{
+      padding:6px 0; border-bottom:1px solid var(--border);
+      display:flex; justify-content:space-between; gap:8px;
+    }
+    .fan-hype-event:last-child{ border-bottom:none; }
+    .fan-hype-delta{
+      font-weight:600; min-width:40px; text-align:right;
+    }
+    .fan-hype-delta.positive{ color:#4ade80; }
+    .fan-hype-delta.negative{ color:#f87171; }
+    
+    /* Draft Styles */
+    .draft-container{
+      display:flex; flex-direction:column; gap:20px;
+    }
+    .draft-header{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:16px; gap:20px; flex-wrap:wrap;
+    }
+    .draft-status{
+      display:flex; gap:24px; flex-wrap:wrap;
+    }
+    .status-item{
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .status-label{
+      font-size:11px; color:var(--muted); text-transform:uppercase;
+      letter-spacing:0.5px;
+    }
+    .status-value{
+      font-size:18px; font-weight:700; color:var(--text-0);
+      font-family:var(--mono);
+    }
+    .draft-actions{
+      display:flex; gap:12px; flex-wrap:wrap;
+    }
+    .draft-layout{
+      display:grid; grid-template-columns:450px 1fr; gap:20px;
+      min-height:600px;
+    }
+    @media (max-width: 1200px){
+      .draft-layout{grid-template-columns:1fr}
+    }
+    .draft-board{
+      display:flex; flex-direction:column; max-height:800px;
+    }
+    .board-header{
+      display:flex; justify-content:space-between; align-items:center;
+      padding-bottom:12px; border-bottom:2px solid var(--border);
+      margin-bottom:16px;
+    }
+    .board-header h3{
+      margin:0; font-size:18px; color:var(--text-0);
+    }
+    .board-controls{
+      display:flex; gap:8px;
+    }
+    .btn-sm{
+      padding:6px 10px; font-size:12px; background:var(--bg-2);
+      border:1px solid var(--border); border-radius:6px; color:var(--text-0);
+      cursor:pointer;
+    }
+    .btn-sm:hover{background:var(--bg-3)}
+    .input-sm{
+      padding:8px; font-size:13px; background:var(--bg-2);
+      border:1px solid var(--border); border-radius:6px; color:var(--text-0);
+      font-family:var(--mono); width:80px;
+    }
+    .board-tiers{
+      flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:12px;
+    }
+    .tier-group{
+      display:flex; flex-direction:column;
+    }
+    .tier-header{
+      font-size:11px; font-weight:700; text-transform:uppercase;
+      padding:8px 12px; background:var(--bg-3); border-radius:6px;
+      margin-bottom:8px; display:flex; align-items:center; gap:8px;
+    }
+    .tier-badge{
+      display:inline-block; padding:2px 8px; border-radius:4px;
+      font-size:10px; font-weight:600;
+    }
+    .tier-badge.Elite{background:rgba(138,43,226,0.2); color:#8a2be2}
+    .tier-badge.High{background:rgba(30,144,255,0.2); color:#1e90ff}
+    .tier-badge.Mid{background:rgba(50,205,50,0.2); color:#32cd32}
+    .tier-badge.Late{background:rgba(255,165,0,0.2); color:#ffa500}
+    .tier-badge.Flyer{background:rgba(128,128,128,0.2); color:#888}
+    .prospect-list{
+      display:flex; flex-direction:column; gap:6px;
+    }
+    .prospect-card{
+      background:var(--bg-2); border:1px solid var(--border);
+      border-radius:8px; padding:12px; cursor:pointer;
+      transition:all 0.2s; position:relative;
+    }
+    .prospect-card:hover{
+      background:var(--bg-3); border-color:var(--pri); transform:translateX(4px);
+    }
+    .prospect-card.selected{
+      border-color:var(--pri); background:rgba(106,162,255,0.1);
+    }
+    .prospect-card.drafted{
+      opacity:0.4; cursor:default; filter:grayscale(0.8);
+    }
+    .prospect-card.drafted:hover{
+      transform:none; border-color:var(--border);
+    }
+    .prospect-header{
+      display:flex; justify-content:space-between; align-items:flex-start;
+      margin-bottom:8px;
+    }
+    .prospect-name{
+      font-size:14px; font-weight:700; color:var(--text-0);
+    }
+    .prospect-rank{
+      font-size:20px; font-weight:700; color:var(--muted);
+      font-family:var(--mono); line-height:1;
+    }
+    .prospect-meta{
+      display:flex; gap:12px; font-size:12px; color:var(--text-1);
+      margin-bottom:8px;
+    }
+    .prospect-flags{
+      display:flex; gap:6px; flex-wrap:wrap;
+    }
+    .prospect-flag{
+      font-size:16px; line-height:1;
+    }
+    .confidence-bar-container{
+      height:4px; background:var(--bg-1); border-radius:2px;
+      overflow:hidden; margin-top:8px;
+    }
+    .confidence-bar{
+      height:100%; background:linear-gradient(90deg, var(--bad) 0%, var(--warn) 50%, var(--good) 100%);
+      transition:width 0.3s;
+    }
+    .draft-detail{
+      display:flex; flex-direction:column;
+    }
+    .detail-tabs{
+      display:flex; gap:8px; border-bottom:2px solid var(--border);
+      margin-bottom:16px;
+    }
+    .detail-tab{
+      padding:10px 16px; background:transparent; border:none;
+      color:var(--text-1); font-size:13px; font-weight:600;
+      cursor:pointer; border-bottom:3px solid transparent;
+      transition:all 0.2s; margin-bottom:-2px;
+    }
+    .detail-tab:hover{color:var(--text-0); border-bottom-color:var(--muted)}
+    .detail-tab.active{color:var(--pri); border-bottom-color:var(--pri)}
+    .detail-content{
+      flex:1; overflow-y:auto;
+    }
+    .prospect-detail-card{
+      background:var(--bg-2); border:1px solid var(--border);
+      border-radius:12px; padding:20px;
+    }
+    .prospect-detail-header{
+      display:flex; justify-content:space-between; align-items:flex-start;
+      margin-bottom:20px; padding-bottom:16px; border-bottom:2px solid var(--border);
+    }
+    .prospect-detail-name{
+      font-size:24px; font-weight:700; color:var(--text-0);
+      margin-bottom:4px;
+    }
+    .prospect-detail-archetype{
+      font-size:14px; color:var(--text-1); font-style:italic;
+    }
+    .prospect-measurables{
+      display:grid; grid-template-columns:repeat(3, 1fr); gap:16px;
+      margin-bottom:20px;
+    }
+    .measurable-item{
+      text-align:center;
+    }
+    .measurable-label{
+      font-size:11px; color:var(--muted); text-transform:uppercase;
+      margin-bottom:4px;
+    }
+    .measurable-value{
+      font-size:18px; font-weight:700; color:var(--text-0);
+      font-family:var(--mono);
+    }
+    .skills-grid{
+      display:grid; grid-template-columns:repeat(2, 1fr); gap:12px;
+      margin-bottom:20px;
+    }
+    .skill-item{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:10px; background:var(--bg-1); border-radius:6px;
+    }
+    .skill-label{
+      font-size:12px; color:var(--text-1); font-weight:600;
+    }
+    .skill-grade{
+      font-size:16px; font-weight:700; font-family:var(--mono);
+      padding:4px 10px; border-radius:4px;
+    }
+    .skill-grade.hidden{
+      color:var(--muted); opacity:0.3;
+    }
+    .skill-grade.A, .skill-grade.A-{color:#32cd32}
+    .skill-grade.B+, .skill-grade.B, .skill-grade.B-{color:#1e90ff}
+    .skill-grade.C+, .skill-grade.C, .skill-grade.C-{color:#ffa500}
+    .skill-grade.D+, .skill-grade.D, .skill-grade.F{color:var(--bad)}
+    .risk-dials{
+      display:grid; grid-template-columns:repeat(2, 1fr); gap:16px;
+      margin-bottom:20px;
+    }
+    .risk-dial{
+      text-align:center;
+    }
+    .risk-dial-label{
+      font-size:11px; color:var(--muted); text-transform:uppercase;
+      margin-bottom:8px;
+    }
+    .risk-dial-circle{
+      width:80px; height:80px; margin:0 auto;
+      border-radius:50%; position:relative;
+      background:conic-gradient(var(--bad) 0deg, var(--bad) var(--risk-deg, 0deg), var(--bg-1) var(--risk-deg, 0deg));
+      display:flex; align-items:center; justify-content:center;
+    }
+    .risk-dial-value{
+      width:60px; height:60px; border-radius:50%; background:var(--bg-2);
+      display:flex; align-items:center; justify-content:center;
+      font-size:18px; font-weight:700; font-family:var(--mono);
+      color:var(--text-0);
+    }
+    .traits-section{
+      margin-top:20px; padding-top:16px; border-top:1px solid var(--border);
+    }
+    .traits-section h4{
+      font-size:13px; color:var(--muted); text-transform:uppercase;
+      margin-bottom:12px;
+    }
+    .trait-badges{
+      display:flex; gap:8px; flex-wrap:wrap;
+    }
+    .trait-badge{
+      padding:6px 12px; border-radius:6px; font-size:12px;
+      font-weight:600; border:1px solid;
+    }
+    .trait-badge.positive{
+      background:rgba(40,167,69,0.1); border-color:var(--good); color:var(--good);
+    }
+    .trait-badge.negative{
+      background:rgba(220,53,69,0.1); border-color:var(--bad); color:var(--bad);
+    }
+    .trait-badge.neutral{
+      background:rgba(255,193,7,0.1); border-color:var(--warn); color:var(--warn);
+    }
+    .scouting-actions{
+      display:flex; flex-direction:column; gap:12px;
+    }
+    .scout-action{
+      background:var(--bg-2); border:1px solid var(--border);
+      border-radius:8px; padding:16px; display:flex;
+      justify-content:space-between; align-items:center;
+    }
+    .scout-action-info{
+      flex:1;
+    }
+    .scout-action-name{
+      font-size:14px; font-weight:700; color:var(--text-0);
+      margin-bottom:4px;
+    }
+    .scout-action-desc{
+      font-size:12px; color:var(--text-1);
+    }
+    .scout-action-cost{
+      font-size:12px; color:var(--muted); margin-top:4px;
+    }
+    .scout-action.completed{
+      opacity:0.5; border-color:var(--good);
+    }
+    .scout-action.completed .scout-action-name::after{
+      content:" ✓"; color:var(--good);
+    }
+    .trade-simulator{
+      display:flex; flex-direction:column; gap:16px;
+    }
+    .trade-row{
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .trade-row label{
+      font-size:12px; color:var(--text-1); font-weight:600;
+    }
+    .trade-value-display{
+      background:var(--bg-2); border:1px solid var(--border);
+      border-radius:8px; padding:16px; display:flex;
+      justify-content:space-around;
+    }
+    .value-item{
+      text-align:center;
+    }
+    .value-label{
+      font-size:11px; color:var(--muted); text-transform:uppercase;
+      display:block; margin-bottom:4px;
+    }
+    .value-item span:not(.value-label){
+      font-size:16px; font-weight:700; font-family:var(--mono);
+      color:var(--text-0);
+    }
+    .value-highlight{
+      color:var(--pri) !important;
+    }
+    .trade-result{
+      padding:12px; border-radius:8px; font-size:13px;
+      font-weight:600; text-align:center; margin-top:8px;
+    }
+    .trade-result.success{
+      background:rgba(40,167,69,0.1); color:var(--good);
+      border:1px solid var(--good);
+    }
+    .trade-result.failure{
+      background:rgba(220,53,69,0.1); color:var(--bad);
+      border:1px solid var(--bad);
+    }
+    .needs-grid{
+      display:grid; grid-template-columns:repeat(5, 1fr); gap:12px;
+    }
+    .need-item{
+      background:var(--bg-2); border:1px solid var(--border);
+      border-radius:8px; padding:16px; text-align:center;
+    }
+    .need-pos{
+      font-size:16px; font-weight:700; color:var(--text-0);
+      margin-bottom:12px;
+    }
+    .need-bar-container{
+      height:60px; background:var(--bg-1); border-radius:4px;
+      overflow:hidden; display:flex; flex-direction:column-reverse;
+    }
+    .need-bar{
+      background:linear-gradient(0deg, var(--bad) 0%, var(--warn) 50%, var(--good) 100%);
+      transition:height 0.3s;
+    }
+    .need-label{
+      font-size:11px; color:var(--muted); margin-top:8px;
+      text-transform:uppercase;
+    }
   </style>
 </head>
 <body>
@@ -1347,6 +1990,7 @@
         <button class="nav-btn" data-view="freeagency">💸 Free Agency</button>
         <button class="nav-btn" data-view="coaching">🧠 Coaching</button>
         <button class="nav-btn" data-view="owner">👑 Owner</button>
+        <button class="nav-btn" data-view="finance">🏦 Finance</button>
         <button class="nav-btn" data-view="trades">🔁 Trades</button>
         <button class="nav-btn" data-view="draft">🧢 Draft</button>
       </nav>
@@ -1460,6 +2104,20 @@
                 <span class="finance-label">Next Season Projection</span>
                 <span class="finance-value" id="nextSeasonProj">$0 <span style="color:var(--muted); font-size:11px">↑</span></span>
               </div>
+            </div>
+            
+            <!-- Fan Hype Meter -->
+            <div class="fan-hype-widget">
+              <div class="fan-hype-label">Fan Sentiment</div>
+              <div class="fan-hype-meter">
+                <div class="fan-hype-circle" id="fanHypeCircle">
+                  <div class="fan-hype-inner">
+                    <div class="fan-hype-value" id="fanHypeValue">50</div>
+                    <div class="fan-hype-max">/100</div>
+                  </div>
+                </div>
+              </div>
+              <div class="fan-hype-sentiment" id="fanHypeSentiment">Restless</div>
             </div>
           </div>
 
@@ -1638,13 +2296,131 @@
       </section>
 
       <!-- DRAFT -->
-      <section class="panel" data-view="draft" hidden>
-        <h2>Draft Room</h2>
-        <div class="toolbar">
-          <button class="btn" id="genProspects">Generate Prospects</button>
-          <span class="tag">Big Board v0.1</span>
+      <!-- DRAFT -->
+      <section data-view="draft" hidden>
+        <div class="draft-container">
+          <h2>Draft Room</h2>
+          
+          <!-- Draft Controls & Info -->
+          <div class="draft-header panel">
+            <div class="draft-status">
+              <div class="status-item">
+                <span class="status-label">Your Pick:</span>
+                <span class="status-value" id="draftYourPick">#15</span>
+              </div>
+              <div class="status-item">
+                <span class="status-label">Scouting Points:</span>
+                <span class="status-value" id="draftScoutPoints">100</span>
+              </div>
+              <div class="status-item">
+                <span class="status-label">Current Pick:</span>
+                <span class="status-value" id="draftCurrentPick">#1</span>
+              </div>
+              <div class="status-item">
+                <span class="status-label">Time:</span>
+                <span class="status-value" id="draftClock">5:00</span>
+              </div>
+            </div>
+            <div class="draft-actions">
+              <button class="btn" id="generateProspectsBtn">🔄 Generate Draft Class</button>
+              <button class="btn good" id="startDraftBtn" disabled>▶️ Start Draft</button>
+              <button class="btn" id="autoDraftBtn" disabled>⚡ Auto-Pick</button>
+            </div>
+          </div>
+          
+          <!-- Two-Column Layout -->
+          <div class="draft-layout">
+            <!-- Left: Big Board -->
+            <div class="draft-board panel">
+              <div class="board-header">
+                <h3>Big Board</h3>
+                <div class="board-controls">
+                  <select id="boardFilterPos" class="btn-sm">
+                    <option value="all">All Positions</option>
+                    <option value="PG">PG</option>
+                    <option value="SG">SG</option>
+                    <option value="SF">SF</option>
+                    <option value="PF">PF</option>
+                    <option value="C">C</option>
+                  </select>
+                  <select id="boardFilterTier" class="btn-sm">
+                    <option value="all">All Tiers</option>
+                    <option value="Elite">Elite</option>
+                    <option value="High">High</option>
+                    <option value="Mid">Mid</option>
+                    <option value="Late">Late</option>
+                    <option value="Flyer">Flyer</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="board-tiers" id="draftBoardList">
+                <div class="empty-state">Generate draft class to begin scouting</div>
+              </div>
+            </div>
+            
+            <!-- Right: Detail Panel -->
+            <div class="draft-detail panel">
+              <div class="detail-tabs">
+                <button class="detail-tab active" data-tab="prospect">📋 Prospect</button>
+                <button class="detail-tab" data-tab="scout">🔍 Scout</button>
+                <button class="detail-tab" data-tab="trade">📊 Trade</button>
+                <button class="detail-tab" data-tab="needs">📈 Needs</button>
+              </div>
+              
+              <!-- Prospect Tab -->
+              <div class="detail-content" id="detailProspect">
+                <div class="empty-state">Select a prospect to view details</div>
+              </div>
+              
+              <!-- Scout Tab -->
+              <div class="detail-content" id="detailScout" hidden>
+                <div id="scoutingActions">
+                  <div class="empty-state">Select a prospect to scout</div>
+                </div>
+              </div>
+              
+              <!-- Trade Tab -->
+              <div class="detail-content" id="detailTrade" hidden>
+                <h3>Trade Draft Picks</h3>
+                <div class="trade-simulator">
+                  <div class="trade-row">
+                    <label>Trade Away Pick #</label>
+                    <input type="number" id="tradeGivePick" min="1" max="60" value="15" class="input-sm">
+                  </div>
+                  <div class="trade-row">
+                    <label>Receive Pick #</label>
+                    <input type="number" id="tradeGetPick" min="1" max="60" value="10" class="input-sm">
+                  </div>
+                  <div class="trade-value-display">
+                    <div class="value-item">
+                      <span class="value-label">Give Value:</span>
+                      <span id="tradeGiveValue">0</span>
+                    </div>
+                    <div class="value-item">
+                      <span class="value-label">Get Value:</span>
+                      <span id="tradeGetValue">0</span>
+                    </div>
+                    <div class="value-item">
+                      <span class="value-label">Surplus:</span>
+                      <span id="tradeSurplus" class="value-highlight">0</span>
+                    </div>
+                  </div>
+                  <button class="btn good" id="proposeDraftTradeBtn">Propose Trade</button>
+                  <div id="tradeResult" class="trade-result"></div>
+                </div>
+              </div>
+              
+              <!-- Needs Tab -->
+              <div class="detail-content" id="detailNeeds" hidden>
+                <h3>Team Needs Analysis</h3>
+                <div id="teamNeedsDisplay">
+                  <!-- Populated by JS -->
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div id="draftArea" class="empty">Prospects will appear here with fog-of-war scouting grades.</div>
       </section>
 
       <!-- FREE AGENCY -->
@@ -1784,6 +2560,23 @@
                 Evaluating team direction and management decisions.
               </div>
             </div>
+            
+            <!-- Fan Sentiment in Owner View -->
+            <div style="margin-top:20px;">
+              <div class="section-label">Fan Base Sentiment</div>
+              <div class="fan-hype-meter" style="margin:16px auto 0; width:120px; height:120px;">
+                <div class="fan-hype-circle" id="ownerFanHypeCircle">
+                  <div class="fan-hype-inner" style="width:90px; height:90px;">
+                    <div class="fan-hype-value" id="ownerFanHypeValue" style="font-size:28px;">50</div>
+                    <div class="fan-hype-max" style="font-size:12px;">/100</div>
+                  </div>
+                </div>
+              </div>
+              <div class="fan-hype-sentiment" id="ownerFanHypeSentiment" style="text-align:center; margin-top:12px;">Restless</div>
+              <div style="text-align:center; margin-top:8px; font-size:11px; color:var(--muted);">
+                Fan sentiment affects attendance and revenue
+              </div>
+            </div>
           </div>
           
           <!-- Season Expectations -->
@@ -1841,6 +2634,251 @@
         </div>
       </section>
 
+      <!-- FINANCE -->
+      <section data-view="finance" hidden>
+        <div class="finance-container">
+          <h2>Financial Management</h2>
+          
+          <!-- Panel 1: Payroll & Cap Status -->
+          <div class="finance-panel panel">
+            <h3>💰 Payroll & Salary Cap</h3>
+            
+            <div class="finance-kpis">
+              <div class="finance-kpi">
+                <div class="kpi-label">Current Payroll</div>
+                <div class="kpi-value" id="finPayroll">$0</div>
+              </div>
+              <div class="finance-kpi">
+                <div class="kpi-label">Cap Space</div>
+                <div class="kpi-value" id="finCapSpace">$0</div>
+              </div>
+              <div class="finance-kpi">
+                <div class="kpi-label">Status</div>
+                <div class="kpi-badge" id="finCapStatus">Under Cap</div>
+              </div>
+            </div>
+            
+            <div class="cap-visual">
+              <div class="cap-bar-container">
+                <div class="cap-bar-fill" id="finCapBar"></div>
+                <div class="cap-marker cap-line" style="left: 50%">
+                  <span class="cap-marker-label">Cap</span>
+                </div>
+                <div class="cap-marker tax-line" id="finTaxMarker">
+                  <span class="cap-marker-label">Tax</span>
+                </div>
+                <div class="cap-marker apron1-line" id="finApron1Marker">
+                  <span class="cap-marker-label">Apron 1</span>
+                </div>
+                <div class="cap-marker apron2-line" id="finApron2Marker">
+                  <span class="cap-marker-label">Apron 2</span>
+                </div>
+              </div>
+              <div class="cap-legend">
+                <div class="legend-item">
+                  <span class="legend-dot" style="background: var(--good)"></span>
+                  <span>Under Cap: $<span id="finCapAmount">0</span></span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-dot" style="background: var(--warn)"></span>
+                  <span>Tax Line: $<span id="finTaxAmount">0</span></span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-dot" style="background: var(--bad)"></span>
+                  <span>Aprons: $<span id="finApron1Amount">0</span> / $<span id="finApron2Amount">0</span></span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="roster-breakdown">
+              <div class="section-label">Top Salaries</div>
+              <div id="finTopSalaries" class="top-salaries-list">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+          
+          <!-- Panel 2: Profit & Loss -->
+          <div class="finance-panel panel">
+            <h3>📊 Profit & Loss Statement</h3>
+            
+            <div class="finance-kpis">
+              <div class="finance-kpi">
+                <div class="kpi-label">Total Revenue</div>
+                <div class="kpi-value good" id="finRevenue">$0</div>
+              </div>
+              <div class="finance-kpi">
+                <div class="kpi-label">Total Expenses</div>
+                <div class="kpi-value bad" id="finExpenses">$0</div>
+              </div>
+              <div class="finance-kpi">
+                <div class="kpi-label">Net Profit</div>
+                <div class="kpi-value" id="finProfit">$0</div>
+              </div>
+            </div>
+            
+            <div class="finance-breakdown">
+              <div class="breakdown-section">
+                <div class="breakdown-header">Revenue Sources</div>
+                <div class="breakdown-items">
+                  <div class="breakdown-item">
+                    <span class="breakdown-label">Ticket Sales</span>
+                    <span class="breakdown-bar">
+                      <span class="breakdown-bar-fill" id="finRevenueTicketsBar"></span>
+                    </span>
+                    <span class="breakdown-value" id="finRevenueTickets">$0</span>
+                  </div>
+                  <div class="breakdown-item">
+                    <span class="breakdown-label">Merchandise</span>
+                    <span class="breakdown-bar">
+                      <span class="breakdown-bar-fill" id="finRevenueMerchBar"></span>
+                    </span>
+                    <span class="breakdown-value" id="finRevenueMerch">$0</span>
+                  </div>
+                  <div class="breakdown-item">
+                    <span class="breakdown-label">Playoffs</span>
+                    <span class="breakdown-bar">
+                      <span class="breakdown-bar-fill" id="finRevenuePlayoffsBar"></span>
+                    </span>
+                    <span class="breakdown-value" id="finRevenuePlayoffs">$0</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="breakdown-section">
+                <div class="breakdown-header">Operating Expenses</div>
+                <div class="breakdown-items">
+                  <div class="breakdown-item">
+                    <span class="breakdown-label">Player Payroll</span>
+                    <span class="breakdown-bar">
+                      <span class="breakdown-bar-fill bad" id="finExpensePlayersBar"></span>
+                    </span>
+                    <span class="breakdown-value" id="finExpensePlayers">$0</span>
+                  </div>
+                  <div class="breakdown-item">
+                    <span class="breakdown-label">Coaching Staff</span>
+                    <span class="breakdown-bar">
+                      <span class="breakdown-bar-fill bad" id="finExpenseStaffBar"></span>
+                    </span>
+                    <span class="breakdown-value" id="finExpenseStaff">$0</span>
+                  </div>
+                  <div class="breakdown-item">
+                    <span class="breakdown-label">Facilities & Ops</span>
+                    <span class="breakdown-bar">
+                      <span class="breakdown-bar-fill bad" id="finExpenseFacilitiesBar"></span>
+                    </span>
+                    <span class="breakdown-value" id="finExpenseFacilities">$0</span>
+                  </div>
+                  <div class="breakdown-item">
+                    <span class="breakdown-label">Marketing/Promo</span>
+                    <span class="breakdown-bar">
+                      <span class="breakdown-bar-fill bad" id="finExpensePromoBar"></span>
+                    </span>
+                    <span class="breakdown-value" id="finExpensePromo">$0</span>
+                  </div>
+                  <div class="breakdown-item highlight-tax">
+                    <span class="breakdown-label">⚠ Luxury Tax</span>
+                    <span class="breakdown-bar">
+                      <span class="breakdown-bar-fill bad" id="finExpenseTaxBar"></span>
+                    </span>
+                    <span class="breakdown-value" id="finExpenseTax">$0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="finance-controls">
+              <div class="control-item">
+                <label>Ticket Price Multiplier</label>
+                <input type="range" id="finTicketPrice" min="0.7" max="1.5" step="0.1" value="1.0">
+                <span id="finTicketPriceValue">1.0x</span>
+              </div>
+              <div class="control-item">
+                <label>Marketing Spend (millions)</label>
+                <input type="range" id="finPromoSpend" min="0" max="10" step="1" value="0">
+                <span id="finPromoSpendValue">$0M</span>
+              </div>
+              <div class="control-item">
+                <label>Facility Level</label>
+                <input type="range" id="finFacilityLvl" min="0" max="5" step="1" value="0">
+                <span id="finFacilityLvlValue">Level 0</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Panel 3: Multi-Year Outlook -->
+          <div class="finance-panel panel">
+            <h3>📅 Multi-Year Cap Outlook</h3>
+            
+            <div class="outlook-table" id="finOutlookTable">
+              <div class="outlook-header">
+                <div class="outlook-cell">Year</div>
+                <div class="outlook-cell">Guaranteed</div>
+                <div class="outlook-cell">Options</div>
+                <div class="outlook-cell">Dead Money</div>
+                <div class="outlook-cell">Total</div>
+                <div class="outlook-cell">vs Cap</div>
+              </div>
+              <!-- Rows populated by JS -->
+            </div>
+            
+            <div class="outlook-notes">
+              <p><strong>Note:</strong> Projections assume flat salaries and do not include draft picks or free agent signings.</p>
+              <p>Use this to plan for future cap space and contract decisions.</p>
+            </div>
+          </div>
+          
+          <!-- Panel 4: Owner Budget & Risk -->
+          <div class="finance-panel panel owner-budget-panel">
+            <h3>👑 Owner Budget & Risk Assessment</h3>
+            
+            <div class="finance-kpis">
+              <div class="finance-kpi">
+                <div class="kpi-label">Owner Budget Target</div>
+                <div class="kpi-value" id="finOwnerBudget">$0</div>
+              </div>
+              <div class="finance-kpi">
+                <div class="kpi-label">Current vs Target</div>
+                <div class="kpi-badge" id="finBudgetStatus">On Track</div>
+              </div>
+              <div class="finance-kpi">
+                <div class="kpi-label">Financial Trust Impact</div>
+                <div class="kpi-value" id="finTrustImpact">0</div>
+              </div>
+            </div>
+            
+            <div class="owner-budget-details">
+              <div class="budget-item">
+                <span class="budget-label">Owner Archetype:</span>
+                <span class="budget-value" id="finOwnerArchetype">-</span>
+              </div>
+              <div class="budget-item">
+                <span class="budget-label">Spending Philosophy:</span>
+                <span class="budget-value" id="finOwnerPhilosophy">-</span>
+              </div>
+              <div class="budget-item">
+                <span class="budget-label">Market Size:</span>
+                <span class="budget-value" id="finMarketSize">-</span>
+              </div>
+            </div>
+            
+            <div class="risk-assessment">
+              <div class="section-label">Risk Factors</div>
+              <div id="finRiskFactors" class="risk-list">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+            
+            <div class="budget-recommendations">
+              <div class="section-label">Recommendations</div>
+              <div id="finRecommendations" class="recommendations-list">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- SETTINGS -->
       <section class="panel" data-view="settings" hidden>
         <h2>Settings</h2>
@@ -1854,6 +2892,22 @@
             <input id="seasonInput" type="number" value="2026" />
           </div>
         </div>
+        
+        <div class="settings-section" style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
+          <h3 style="font-size: 16px; margin-bottom: 12px; color: var(--text-0);">Gameplay Options</h3>
+          <div class="settings-option">
+            <label class="checkbox-label" style="font-size: 14px; color: var(--text-0); display: flex; align-items: center; gap: 10px;">
+              <input type="checkbox" id="ownerInterventionToggle" checked />
+              <div>
+                <div style="font-weight: 600;">Owner Intervention</div>
+                <div style="font-size: 12px; color: var(--text-1); margin-top: 4px;">
+                  Owner can overrule major GM decisions (coach firings, star trades, tax spending). Higher trust = less interference.
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+        
         <div class="toolbar" style="margin-top:12px">
           <button class="btn good" id="applySettings">Apply</button>
         </div>
@@ -3669,7 +4723,78 @@
         }
       }
       
-      return goals.slice(0, 3); // Max 3 goals
+      return goals;
+    }
+    
+    // -------------------------------
+    // Fan Hype System
+    // -------------------------------
+    function updateFanHype(delta, reason) {
+      if (!STATE.fans) {
+        STATE.fans = { hype: 50, history: [] };
+      }
+      
+      const oldHype = STATE.fans.hype;
+      STATE.fans.hype = Math.max(0, Math.min(100, STATE.fans.hype + delta));
+      
+      // Record history
+      STATE.fans.history.push({
+        timestamp: Date.now(),
+        delta,
+        reason,
+        hype: STATE.fans.hype
+      });
+      
+      // Keep last 20 events
+      if (STATE.fans.history.length > 20) {
+        STATE.fans.history = STATE.fans.history.slice(-20);
+      }
+      
+      // Add feed entry for significant changes
+      if (Math.abs(delta) >= 10) {
+        const sentiment = getFanSentiment(STATE.fans.hype);
+        let feedText = "";
+        
+        if (delta > 0) {
+          if (STATE.fans.hype >= 80) {
+            feedText = `🔥 Fans euphoric! ${reason}`;
+          } else if (STATE.fans.hype >= 60) {
+            feedText = `📈 Fanbase optimistic after ${reason.toLowerCase()}`;
+          } else {
+            feedText = `✅ Fans approve: ${reason}`;
+          }
+        } else {
+          if (STATE.fans.hype <= 20) {
+            feedText = `🚨 MUTINY! Fans demand change after ${reason.toLowerCase()}`;
+          } else if (STATE.fans.hype <= 40) {
+            feedText = `😡 Fans furious following ${reason.toLowerCase()}`;
+          } else {
+            feedText = `👎 Fanbase restless: ${reason}`;
+          }
+        }
+        
+        STATE.events.unshift({
+          ts: Date.now(),
+          text: feedText,
+          type: "fan"
+        });
+      }
+      
+      save(STATE);
+      return STATE.fans.hype;
+    }
+    
+    function getFanSentiment(hype) {
+      if (hype >= 80) return { label: "Euphoria", color: "#4ade80", glow: true };
+      if (hype >= 60) return { label: "Optimistic", color: "#60a5fa", glow: false };
+      if (hype >= 40) return { label: "Restless", color: "#fbbf24", glow: false };
+      if (hype >= 20) return { label: "Angry", color: "#fb923c", glow: false };
+      return { label: "Mutiny", color: "#f87171", glow: true };
+    }
+    
+    function calculateFanHypeMultiplier(hype) {
+      // Revenue multiplier: 0.8 to 1.3 based on hype (0-100)
+      return 0.8 + (hype / 200);
     }
     
     function calculateOwnerTrust(owner, teamState) {
@@ -3690,6 +4815,18 @@
         trustChange -= Math.round(8 * ambitionFactor);
       } else if (winPct < 0.45) {
         trustChange -= Math.round(3 * ambitionFactor);
+      }
+      
+      // Fan hype impact on owner trust
+      const fanHype = teamState.fans?.hype || 50;
+      if (fanHype >= 80) {
+        trustChange += 3; // Owner happy when fans are ecstatic
+      } else if (fanHype >= 60) {
+        trustChange += 1; // Minor boost for optimistic fans
+      } else if (fanHype <= 20) {
+        trustChange -= 5; // Owner very concerned when fans are mutinous
+      } else if (fanHype <= 40) {
+        trustChange -= 2; // Minor penalty for restless fans
       }
       
       // Streak impact (Impulsive Tycoon more affected)
@@ -3797,6 +4934,788 @@
       }
       
       return events.length > 0 ? events[Math.floor(Math.random() * events.length)] : null;
+    }
+    
+    // -------------------------------
+    // Owner Intervention System
+    // -------------------------------
+    
+    function calculateInterventionRisk(owner, actionType, actionContext = {}) {
+      // Action sensitivity levels
+      const actionSensitivity = {
+        coachFiring: 1.0,
+        coachHiring: 0.7,
+        starTrade: 0.9,
+        luxuryTax: 0.8,
+        draftPick: 0.6
+      };
+      
+      const sensitivity = actionSensitivity[actionType] || 0.5;
+      const trustFactor = 1 - (owner.trust / 100); // Lower trust = higher risk
+      const involvementFactor = owner.traits.involvement / 100;
+      
+      // Base risk calculation
+      let risk = involvementFactor * trustFactor * sensitivity;
+      
+      // Modifiers based on context
+      if (actionType === "luxuryTax" && owner.traits.greed > 70) {
+        risk *= 1.5; // Greedy owners more likely to intervene on tax
+      }
+      if (actionType === "coachFiring" && owner.traits.loyalty > 75) {
+        risk *= 1.3; // Loyal owners protective of staff
+      }
+      if (actionType === "starTrade" && owner.traits.ambition > 80 && actionContext.playerOvr > 85) {
+        risk *= 1.4; // Ambitious owners don't want to lose stars
+      }
+      
+      // Trust thresholds
+      if (owner.trust < 25) risk *= 1.8; // Very low trust = frequent intervention
+      else if (owner.trust > 80) risk *= 0.4; // High trust = rare intervention
+      
+      return Math.min(0.95, risk); // Cap at 95% to allow some agency
+    }
+    
+    function checkOwnerIntervention(actionType, actionContext = {}) {
+      // Check if intervention is enabled
+      if (!STATE.settings || STATE.settings.ownerIntervention === false) {
+        return { intervene: false };
+      }
+      
+      if (!STATE.owner) return { intervene: false };
+      
+      const risk = calculateInterventionRisk(STATE.owner, actionType, actionContext);
+      const roll = Math.random();
+      
+      if (roll < risk) {
+        // Owner intervenes
+        const outcome = generateInterventionOutcome(STATE.owner, actionType, actionContext);
+        return { intervene: true, outcome };
+      }
+      
+      return { intervene: false };
+    }
+    
+    function generateInterventionOutcome(owner, actionType, context) {
+      const outcomes = [];
+      const trustLevel = owner.trust;
+      
+      // Determine outcome type based on owner traits and trust
+      const approveChance = (trustLevel / 100) * 0.6; // Max 60% approval even at 100 trust
+      const rejectChance = 0.5 - (trustLevel / 200); // 50% at 0 trust, 0% at 100 trust
+      const demandChance = (owner.traits.involvement / 100) * 0.3;
+      const overrideChance = (owner.trust < 20 && owner.traits.temper > 70) ? 0.15 : 0.02;
+      
+      const roll = Math.random();
+      let outcomeType = "approve";
+      
+      if (roll < overrideChance) outcomeType = "override";
+      else if (roll < overrideChance + rejectChance) outcomeType = "reject";
+      else if (roll < overrideChance + rejectChance + demandChance) outcomeType = "demand";
+      else outcomeType = "approve";
+      
+      // Generate context-specific dialogue
+      let dialogue = "";
+      let trustChange = 0;
+      let allowAction = true;
+      
+      if (actionType === "coachFiring") {
+        if (outcomeType === "approve") {
+          dialogue = `"I trust your judgment, but ${context.coachName} was loyal. Make this count."`;
+          trustChange = 2;
+        } else if (outcomeType === "reject") {
+          dialogue = `"Absolutely not. ${context.coachName} stays. This team's problems aren't on the sideline."`;
+          trustChange = -5;
+          allowAction = false;
+        } else if (outcomeType === "demand") {
+          dialogue = `"If you fire ${context.coachName}, you'd better have a championship-caliber replacement lined up."`;
+          trustChange = 0;
+        } else if (outcomeType === "override") {
+          dialogue = `"I'm overruling you. ${context.coachName} is my hire and stays until *I* say otherwise."`;
+          trustChange = -10;
+          allowAction = false;
+        }
+      } else if (actionType === "coachHiring") {
+        if (outcomeType === "approve") {
+          dialogue = `"${context.coachName} is an interesting choice. Let's see what they can do."`;
+          trustChange = 1;
+        } else if (outcomeType === "reject") {
+          dialogue = `"I've vetoed bigger contracts than this. ${context.coachName} isn't worth the investment."`;
+          trustChange = -3;
+          allowAction = false;
+        } else if (outcomeType === "demand") {
+          dialogue = `"Find someone cheaper. We don't need a celebrity coach, we need wins."`;
+          trustChange = -2;
+          allowAction = false;
+        }
+      } else if (actionType === "starTrade") {
+        if (outcomeType === "approve") {
+          dialogue = `"Trading ${context.playerName} is risky, but I'll back your vision. Don't make me regret this."`;
+          trustChange = 3;
+        } else if (outcomeType === "reject") {
+          dialogue = `"Are you insane? ${context.playerName} is untouchable. This franchise doesn't trade stars."`;
+          trustChange = -8;
+          allowAction = false;
+        } else if (outcomeType === "override") {
+          dialogue = `"I'm canceling this trade immediately. ${context.playerName} is the face of this team."`;
+          trustChange = -12;
+          allowAction = false;
+        }
+      } else if (actionType === "luxuryTax") {
+        if (outcomeType === "approve") {
+          dialogue = `"Fine. Pay the tax. But we better be championship-bound."`;
+          trustChange = 0;
+        } else if (outcomeType === "demand") {
+          dialogue = `"Cut salary NOW. I won't bankroll mediocrity."`;
+          trustChange = -6;
+        } else if (outcomeType === "reject") {
+          dialogue = `"No more spending. Make moves to get under the tax by next month."`;
+          trustChange = -4;
+        }
+      }
+      
+      return {
+        type: outcomeType,
+        dialogue,
+        trustChange,
+        allowAction,
+        actionType,
+        timestamp: Date.now()
+      };
+    }
+    
+    function applyInterventionOutcome(outcome) {
+      const owner = STATE.owner;
+      
+      // Apply trust change
+      owner.trust = Math.max(0, Math.min(100, owner.trust + outcome.trustChange));
+      
+      // Add to owner events history
+      if (!STATE.ownerEvents) STATE.ownerEvents = [];
+      STATE.ownerEvents.push(outcome);
+      
+      // Post to event feed
+      const trustEmoji = outcome.trustChange > 0 ? "📈" : outcome.trustChange < 0 ? "📉" : "➡️";
+      const actionDesc = {
+        coachFiring: "Coach Firing",
+        coachHiring: "Coach Hiring",
+        starTrade: "Star Trade",
+        luxuryTax: "Luxury Tax",
+        draftPick: "Draft Pick"
+      }[outcome.actionType] || "GM Decision";
+      
+      addEvent(`${trustEmoji} Owner ${outcome.type === "override" ? "OVERRULED" : outcome.type === "reject" ? "VETOED" : outcome.type === "demand" ? "DEMANDS ACTION on" : "weighs in on"} ${actionDesc}. ${outcome.dialogue} (Trust ${outcome.trustChange >= 0 ? "+" : ""}${outcome.trustChange})`, "league");
+      
+      // Update owner notes
+      owner.notes = outcome.dialogue;
+      
+      // Save state
+      save(STATE);
+      
+      return outcome.allowAction;
+    }
+    
+    function showInterventionModal(outcome, onComplete) {
+      const modal = document.createElement("div");
+      modal.className = "modal-backdrop";
+      modal.style.zIndex = "10000";
+      
+      const severityColor = outcome.type === "override" ? "var(--bad)" : 
+                           outcome.type === "reject" ? "var(--warn)" :
+                           outcome.type === "demand" ? "var(--warn)" : "var(--good)";
+      
+      modal.innerHTML = `
+        <div class="modal intervention-modal" style="max-width: 600px; border: 3px solid ${severityColor}; animation: slideIn 0.3s ease;">
+          <header style="background: linear-gradient(135deg, rgba(255,215,0,0.1) 0%, transparent 100%); border-bottom: 2px solid ${severityColor};">
+            <div class="title" style="font-size: 20px;">👑 Owner Intervention</div>
+            <div class="spacer"></div>
+          </header>
+          <div class="content">
+            <div class="owner-intervention-content">
+              <div class="owner-portrait-large" style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 80px; margin-bottom: 16px; filter: drop-shadow(0 4px 12px rgba(255,215,0,0.4));">👑</div>
+                <div style="font-size: 18px; font-weight: 700; color: var(--text-0); margin-bottom: 4px;">${STATE.owner.name}</div>
+                <div style="font-size: 13px; color: var(--text-1);">${STATE.owner.archetype}</div>
+              </div>
+              
+              <div class="intervention-dialogue" style="background: rgba(255,215,0,0.05); border: 1px solid rgba(255,215,0,0.3); border-radius: 12px; padding: 24px; margin-bottom: 24px; position: relative;">
+                <div style="position: absolute; top: -12px; left: 24px; background: var(--bg-1); padding: 0 12px; font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 600;">
+                  ${outcome.type === "override" ? "🚫 OVERRULED" : outcome.type === "reject" ? "⛔ VETOED" : outcome.type === "demand" ? "⚠️ DEMANDS" : "✅ APPROVED (RELUCTANTLY)"}
+                </div>
+                <div style="font-size: 16px; color: var(--text-0); line-height: 1.7; font-style: italic; text-align: center;">
+                  ${outcome.dialogue}
+                </div>
+              </div>
+              
+              <div class="intervention-impact" style="background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+                  <div style="text-align: center;">
+                    <div style="font-size: 11px; color: var(--muted); text-transform: uppercase; margin-bottom: 8px;">Trust Impact</div>
+                    <div style="font-size: 24px; font-weight: 700; color: ${outcome.trustChange >= 0 ? "var(--good)" : "var(--bad)"};">
+                      ${outcome.trustChange >= 0 ? "+" : ""}${outcome.trustChange}
+                    </div>
+                  </div>
+                  <div style="text-align: center;">
+                    <div style="font-size: 11px; color: var(--muted); text-transform: uppercase; margin-bottom: 8px;">Action Status</div>
+                    <div style="font-size: 14px; font-weight: 700; color: ${outcome.allowAction ? "var(--good)" : "var(--bad)"};">
+                      ${outcome.allowAction ? "ALLOWED" : "BLOCKED"}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="intervention-actions" style="display: flex; gap: 12px; justify-content: center;">
+                ${!outcome.allowAction && outcome.type !== "override" ? `
+                  <button class="btn" id="interventionAppeal" style="background: var(--warn); color: white;">
+                    🎲 Appeal Decision (Risky)
+                  </button>
+                ` : ""}
+                <button class="btn good" id="interventionAccept">
+                  ${outcome.allowAction ? "Proceed" : "Acknowledge"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      
+      // Accept button
+      modal.querySelector("#interventionAccept").addEventListener("click", () => {
+        applyInterventionOutcome(outcome);
+        modal.remove();
+        if (onComplete) onComplete(outcome.allowAction);
+      });
+      
+      // Appeal button (if available)
+      const appealBtn = modal.querySelector("#interventionAppeal");
+      if (appealBtn) {
+        appealBtn.addEventListener("click", () => {
+          // Risk: 50% success, but costs trust either way
+          const appealSuccess = Math.random() < 0.3; // 30% success rate
+          const temper = STATE.owner.traits.temper || 50;
+          const temperPenalty = Math.floor(temper / 10); // Higher temper = bigger penalty
+          
+          if (appealSuccess) {
+            STATE.owner.trust = Math.max(0, STATE.owner.trust - 3);
+            addEvent(`🎯 Appeal successful! Owner grudgingly allows the decision. Trust -3`, "league");
+            outcome.allowAction = true;
+            outcome.trustChange -= 3;
+          } else {
+            STATE.owner.trust = Math.max(0, STATE.owner.trust - temperPenalty);
+            addEvent(`❌ Appeal backfired! Owner furious at being challenged. Trust -${temperPenalty}`, "league");
+            outcome.trustChange -= temperPenalty;
+          }
+          
+          applyInterventionOutcome(outcome);
+          modal.remove();
+          if (onComplete) onComplete(outcome.allowAction);
+        });
+      }
+    }
+    
+    // -------------------------------
+    // Draft System
+    // -------------------------------
+    
+    function generateDraftProspects(year = 2026, count = 60) {
+      const firstNames = ["Zion","Luka","Trae","Ja","RJ","Coby","Tyler","Cameron","Keldon","Brandon","Jaxson","PJ","Nickeil","Kevin","Matisse","Grant","Bol","Goga","Carsen","Admiral"];
+      const lastNames = ["Williams","Robinson","Barrett","Morant","Hunter","White","Herro","Johnson","Reddish","Clarke","Hayes","Washington","Alexander-Walker","Porter","Thybulle","Williams","Bol","Bitadze","Edwards","Schofield"];
+      
+      const archetypes = {
+        PG: ["Floor General", "Scoring Guard", "Playmaker", "Combo Guard", "Point God"],
+        SG: ["3&D Wing", "Shot Creator", "Scorer", "Athletic Slasher", "Sharpshooter"],
+        SF: ["Two-Way Wing", "Point Forward", "3PT Specialist", "Versatile Wing", "Lockdown Defender"],
+        PF: ["Stretch Four", "Modern Big", "Rim Runner", "Face-Up Big", "Energy Big"],
+        C: ["Paint Beast", "Stretch Five", "Defensive Anchor", "Traditional Center", "Mobile Big"]
+      };
+      
+      const prospects = [];
+      const positions = ["PG","SG","SF","PF","C"];
+      
+      for (let i = 0; i < count; i++) {
+        const pos = positions[Math.floor(Math.random() * positions.length)];
+        const age = 19 + Math.floor(Math.random() * 3); // 19-21
+        const archetype = archetypes[pos][Math.floor(Math.random() * archetypes[pos].length)];
+        
+        // Generate ceiling and floor (determines potential)
+        const baseCeiling = 55 + Math.floor(Math.random() * 40); // 55-94
+        const floor = Math.max(40, baseCeiling - 15 - Math.floor(Math.random() * 20)); // Floor 15-35 below ceiling
+        const projectedOvr = Math.floor((baseCeiling + floor) / 2); // Average
+        
+        // Risk factors
+        const injuryRisk = Math.floor(Math.random() * 100); // 0-100
+        const characterRisk = Math.floor(Math.random() * 100);
+        const bustProbability = Math.min(80, injuryRisk * 0.3 + characterRisk * 0.2 + (100 - baseCeiling) * 0.5);
+        const starProbability = Math.max(5, baseCeiling - 70 + Math.floor(Math.random() * 20));
+        
+        // Measurables
+        const heightInches = pos === "PG" ? 72 + Math.floor(Math.random() * 6) :
+                            pos === "SG" ? 75 + Math.floor(Math.random() * 6) :
+                            pos === "SF" ? 78 + Math.floor(Math.random() * 6) :
+                            pos === "PF" ? 80 + Math.floor(Math.random() * 6) :
+                            82 + Math.floor(Math.random() * 8);
+        const height = `${Math.floor(heightInches / 12)}'${heightInches % 12}"`;
+        const weight = pos === "C" ? 230 + Math.floor(Math.random() * 40) :
+                      pos === "PF" ? 210 + Math.floor(Math.random() * 35) :
+                      190 + Math.floor(Math.random() * 30);
+        const wingspan = heightInches + Math.floor(Math.random() * 8) - 2;
+        const wingspanFmt = `${Math.floor(wingspan / 12)}'${wingspan % 12}"`;
+        
+        // Skills (letter grades, initially hidden)
+        const skillBase = Math.floor(projectedOvr / 10); // 4-9 range
+        const skills = {
+          shooting: ["F","D","D+","C-","C","C+","B-","B","B+","A-","A"][Math.min(10, Math.max(0, skillBase + Math.floor(Math.random() * 3) - 1))],
+          finishing: ["F","D","D+","C-","C","C+","B-","B","B+","A-","A"][Math.min(10, Math.max(0, skillBase + Math.floor(Math.random() * 3) - 1))],
+          passing: ["F","D","D+","C-","C","C+","B-","B","B+","A-","A"][Math.min(10, Math.max(0, skillBase + Math.floor(Math.random() * 3) - 1))],
+          defense: ["F","D","D+","C-","C","C+","B-","B","B+","A-","A"][Math.min(10, Math.max(0, skillBase + Math.floor(Math.random() * 3) - 1))],
+          athleticism: ["F","D","D+","C-","C","C+","B-","B","B+","A-","A"][Math.min(10, Math.max(0, skillBase + Math.floor(Math.random() * 3) - 1))],
+          bbiq: ["F","D","D+","C-","C","C+","B-","B","B+","A-","A"][Math.min(10, Math.max(0, skillBase + Math.floor(Math.random() * 3) - 1))]
+        };
+        
+        // Scouting confidence (0-100, starts low)
+        const baseConfidence = i < 15 ? 40 + Math.floor(Math.random() * 20) : // Top 15 get more initial scouting
+                              i < 30 ? 20 + Math.floor(Math.random() * 20) :
+                              10 + Math.floor(Math.random() * 15);
+        
+        // Hidden traits (revealed through scouting)
+        const hiddenTraits = [];
+        if (Math.random() < 0.15) hiddenTraits.push("Injury History");
+        if (Math.random() < 0.10) hiddenTraits.push("Character Concerns");
+        if (Math.random() < 0.20) hiddenTraits.push("High Motor");
+        if (Math.random() < 0.15) hiddenTraits.push("Elite Work Ethic");
+        if (Math.random() < 0.12) hiddenTraits.push("Low Basketball IQ");
+        if (Math.random() < 0.18) hiddenTraits.push("Team Leader");
+        
+        // Generate full mental attributes (affects personality)
+        const mental = {
+          focus: 50 + Math.floor(Math.random() * 50),
+          workEthic: 50 + Math.floor(Math.random() * 50),
+          composure: 50 + Math.floor(Math.random() * 50),
+          leadership: 50 + Math.floor(Math.random() * 50)
+        };
+        
+        // Generate personality traits
+        const personality = generatePersonalityTraits(projectedOvr, age, mental);
+        
+        // Generate bio data
+        const draftInfo = {
+          year: year - 1,
+          round: i < 30 ? 1 : 2,
+          pick: i < 30 ? i + 1 : i - 29,
+          team: "Undrafted"
+        };
+        
+        const shoots = Math.random() > 0.12 ? "Right" : "Left";
+        const birthDate = `${Math.floor(Math.random() * 12) + 1}/${Math.floor(Math.random() * 28) + 1}/${year - age}`;
+        
+        const bio = {
+          fullName: `${firstNames[Math.floor(Math.random() * firstNames.length)]} ${lastNames[Math.floor(Math.random() * lastNames.length)]}`,
+          nickname: "",
+          shoots,
+          birthDate,
+          birthplace: generateBirthplace(),
+          college: generateCollege(),
+          draftTeam: "Undrafted",
+          draftYear: year,
+          draftRound: 0,
+          draftPick: 0,
+          yearsInLeague: 0,
+          careerStats: {
+            gamesPlayed: 0,
+            ppg: 0,
+            rpg: 0,
+            apg: 0,
+            fg: 0,
+            ft: 0,
+            three: 0
+          },
+          bioText: generateBioText(
+            `${firstNames[Math.floor(Math.random() * firstNames.length)]} ${lastNames[Math.floor(Math.random() * lastNames.length)]}`,
+            archetype,
+            mental,
+            projectedOvr
+          )
+        };
+        
+        prospects.push({
+          id: `prospect_${i}_${Date.now()}`,
+          name: bio.fullName,
+          pos,
+          age,
+          archetype,
+          height,
+          weight,
+          wingspan: wingspanFmt,
+          ceiling: baseCeiling,
+          floor,
+          projectedOvr,
+          skills,
+          mental,
+          personality,
+          bio,
+          injuryRisk,
+          characterRisk,
+          bustProbability: Math.round(bustProbability),
+          starProbability: Math.round(starProbability),
+          scoutingConfidence: baseConfidence,
+          scoutingReports: {
+            combine: false,
+            workout: false,
+            interview: false,
+            film: false
+          },
+          hiddenTraits,
+          revealedTraits: [],
+          tier: i < 5 ? "Elite" : i < 15 ? "High" : i < 30 ? "Mid" : i < 45 ? "Late" : "Flyer",
+          userFlags: [], // ⭐ favorite, 🚫 avoid
+          userNotes: "",
+          draftPosition: null, // Gets filled when drafted
+          userRank: i + 1 // Initial big board position
+        });
+      }
+      
+      return prospects;
+    }
+    
+    function calculateDraftPickValue(pickNumber) {
+      // Simplified pick value chart (similar to NBA trade value)
+      if (pickNumber === 1) return 3000;
+      if (pickNumber <= 3) return 2200 - (pickNumber - 1) * 400;
+      if (pickNumber <= 5) return 1600 - (pickNumber - 3) * 200;
+      if (pickNumber <= 10) return 1200 - (pickNumber - 5) * 100;
+      if (pickNumber <= 20) return 700 - (pickNumber - 10) * 40;
+      if (pickNumber <= 30) return 300 - (pickNumber - 20) * 15;
+      return Math.max(10, 150 - (pickNumber - 30) * 4);
+    }
+    
+    function scoutProspect(prospect, scoutType) {
+      if (prospect.scoutingReports[scoutType]) {
+        return { success: false, message: "Already scouted this way" };
+      }
+      
+      prospect.scoutingReports[scoutType] = true;
+      
+      const confidenceGain = {
+        combine: 15,
+        workout: 20,
+        interview: 12,
+        film: 18
+      }[scoutType] || 10;
+      
+      prospect.scoutingConfidence = Math.min(100, prospect.scoutingConfidence + confidenceGain);
+      
+      // Reveal hidden traits
+      if (scoutType === "interview" && prospect.hiddenTraits.includes("Character Concerns")) prospect.revealedTraits.push("Character Concerns");
+      if (scoutType === "interview" && prospect.hiddenTraits.includes("Team Leader")) prospect.revealedTraits.push("Team Leader");
+      if (scoutType === "combine" && prospect.hiddenTraits.includes("Injury History")) prospect.revealedTraits.push("Injury History");
+      if (scoutType === "film" && prospect.hiddenTraits.includes("Low Basketball IQ")) prospect.revealedTraits.push("Low Basketball IQ");
+      if (scoutType === "workout" && prospect.hiddenTraits.includes("Elite Work Ethic")) prospect.revealedTraits.push("Elite Work Ethic");
+      if (scoutType === "workout" && prospect.hiddenTraits.includes("High Motor")) prospect.revealedTraits.push("High Motor");
+      
+      return {
+        success: true,
+        confidenceGain,
+        traitsRevealed: prospect.revealedTraits.length,
+        newConfidence: prospect.scoutingConfidence
+      };
+    }
+    
+    function draftPlayer(prospect, contractType = "rookie") {
+      const draftedPlayer = {
+        id: uid(),
+        name: prospect.name,
+        pos: prospect.pos,
+        age: prospect.age,
+        ovr: prospect.projectedOvr,
+        pot: prospect.ceiling,
+        skills: {
+          shooting: {F:40,D:50,"D+":55,"C-":60,C:65,"C+":70,"B-":75,B:80,"B+":85,"A-":90,A:95}[prospect.skills.shooting] || 65,
+          finishing: {F:40,D:50,"D+":55,"C-":60,C:65,"C+":70,"B-":75,B:80,"B+":85,"A-":90,A:95}[prospect.skills.finishing] || 65,
+          passing: {F:40,D:50,"D+":55,"C-":60,C:65,"C+":70,"B-":75,B:80,"B+":85,"A-":90,A:95}[prospect.skills.passing] || 65,
+          defense: {F:40,D:50,"D+":55,"C-":60,C:65,"C+":70,"B-":75,B:80,"B+":85,"A-":90,A:95}[prospect.skills.defense] || 65,
+          athleticism: {F:40,D:50,"D+":55,"C-":60,C:65,"C+":70,"B-":75,B:80,"B+":85,"A-":90,A:95}[prospect.skills.athleticism] || 65,
+          rebounding: {F:40,D:50,"D+":55,"C-":60,C:65,"C+":70,"B-":75,B:80,"B+":85,"A-":90,A:95}[prospect.skills.defense] || 65,
+          stamina: 75
+        },
+        years: contractType === "two-way" ? 1 : 4,
+        salary: contractType === "two-way" ? 500_000 : (prospect.userRank === 1 ? 10_000_000 : Math.max(1_000_000, 8_000_000 - (prospect.userRank * 200_000))),
+        notes: `${prospect.archetype} | ${prospect.tier} Tier | Drafted ${STATE.meta.season}`,
+        personality: generatePersonalityTraits(),
+        morale: 75
+      };
+      
+      if (contractType === "stash") {
+        draftedPlayer.contract = "Stashed Overseas";
+        draftedPlayer.salary = 0;
+        draftedPlayer.notes += " | Stashed";
+      }
+      
+      return draftedPlayer;
+    }
+    
+    // -------------------------------
+    // Finance System
+    // -------------------------------
+    
+    function getMarketSize(teamName) {
+      const largeMarkets = ["Los Angeles", "LA", "New York", "Brooklyn", "Chicago", "Golden State", "Miami", "Boston"];
+      const smallMarkets = ["Memphis", "New Orleans", "Indiana", "Milwaukee", "Utah", "Oklahoma", "Sacramento"];
+      
+      for (const city of largeMarkets) {
+        if (teamName.includes(city)) return "large";
+      }
+      for (const city of smallMarkets) {
+        if (teamName.includes(city)) return "small";
+      }
+      return "medium";
+    }
+    
+    function getMarketModifier(marketSize) {
+      if (marketSize === "large") return 1.4;
+      if (marketSize === "small") return 0.75;
+      return 1.0;
+    }
+    
+    function calculateRevenue(teamState, finance) {
+      const d = teamState.dashboard;
+      const marketSize = getMarketSize(teamState.meta.teamName);
+      const marketMod = getMarketModifier(marketSize);
+      
+      // Fan hype multiplier (0.8 to 1.3 based on 0-100 hype)
+      const fanHype = teamState.fans?.hype || 50;
+      const hypeMultiplier = calculateFanHypeMultiplier(fanHype);
+      
+      // Base ticket revenue (scales with wins and attendance)
+      const winPct = d.wins / (d.wins + d.losses || 1);
+      const baseTicketRevenue = 80_000_000; // $80M baseline
+      const ticketPriceMultiplier = finance.settings?.ticketPrice || 1.0;
+      const attendanceBoost = Math.max(0.5, Math.min(1.5, 0.5 + (winPct * 1.5))); // 50%-150% based on wins
+      
+      const ticketRevenue = baseTicketRevenue * ticketPriceMultiplier * attendanceBoost * marketMod * hypeMultiplier;
+      
+      // Merchandise (scales with wins and market)
+      const baseMerch = 25_000_000; // $25M baseline
+      const merchBoost = Math.max(0.6, Math.min(2.0, 0.6 + (winPct * 2) + ((d.wins >= 50) ? 0.4 : 0)));
+      const facilityBonus = (finance.settings?.facilityLvl || 0) * 0.1; // 10% per level
+      
+      const merchRevenue = baseMerch * merchBoost * marketMod * (1 + facilityBonus) * hypeMultiplier;
+      
+      // Playoffs (bonus revenue)
+      let playoffRevenue = 0;
+      if (d.wins >= 50) playoffRevenue = 15_000_000; // Made playoffs
+      if (d.wins >= 55) playoffRevenue = 25_000_000; // Strong seed
+      if (d.wins >= 60) playoffRevenue = 40_000_000; // Championship contender
+      
+      // Promo spend impact (negative expense but boosts other revenue)
+      const promoSpend = finance.settings?.promoSpend || 0;
+      const promoBoost = promoSpend * 0.02; // 2% boost per million spent
+      
+      const totalRevenue = (ticketRevenue + merchRevenue + playoffRevenue) * (1 + promoBoost);
+      
+      return {
+        tickets: Math.round(ticketRevenue),
+        merch: Math.round(merchRevenue),
+        playoffs: playoffRevenue,
+        promoBoost,
+        total: Math.round(totalRevenue)
+      };
+    }
+    
+    function calculateExpenses(teamState, finance) {
+      // Player payroll
+      const playerPayroll = sum(teamState.roster, p => p.salary);
+      
+      // Coaching staff
+      let coachingStaff = 0;
+      if (teamState.coaches?.head) {
+        coachingStaff += teamState.coaches.head.contract.salary;
+      }
+      if (teamState.coaches?.assistants) {
+        teamState.coaches.assistants.forEach(c => {
+          coachingStaff += c.contract.salary;
+        });
+      }
+      
+      // Facilities & operations
+      const baseFacilities = 15_000_000; // $15M baseline
+      const facilityUpgrades = (finance.settings?.facilityLvl || 0) * 3_000_000; // $3M per level
+      const facilitiesTotal = baseFacilities + facilityUpgrades;
+      
+      // Promo spend
+      const promoSpend = (finance.settings?.promoSpend || 0) * 1_000_000;
+      
+      // Luxury tax
+      let luxuryTax = 0;
+      const taxLine = teamState.meta.rules.tax;
+      if (playerPayroll > taxLine) {
+        const overTax = playerPayroll - taxLine;
+        // Progressive tax: $1.50 per $1 over for first $5M, $1.75 for next $5M, etc.
+        if (overTax <= 5_000_000) {
+          luxuryTax = overTax * 1.5;
+        } else if (overTax <= 10_000_000) {
+          luxuryTax = (5_000_000 * 1.5) + ((overTax - 5_000_000) * 1.75);
+        } else if (overTax <= 15_000_000) {
+          luxuryTax = (5_000_000 * 1.5) + (5_000_000 * 1.75) + ((overTax - 10_000_000) * 2.5);
+        } else {
+          luxuryTax = (5_000_000 * 1.5) + (5_000_000 * 1.75) + (5_000_000 * 2.5) + ((overTax - 15_000_000) * 3.25);
+        }
+      }
+      
+      const totalExpenses = playerPayroll + coachingStaff + facilitiesTotal + promoSpend + luxuryTax;
+      
+      return {
+        players: playerPayroll,
+        staff: coachingStaff,
+        facilities: facilitiesTotal,
+        promo: promoSpend,
+        tax: Math.round(luxuryTax),
+        total: Math.round(totalExpenses)
+      };
+    }
+    
+    function calculateProfit(revenue, expenses) {
+      return revenue.total - expenses.total;
+    }
+    
+    function getCapStatus(payroll, rules) {
+      const { cap, tax, apron1, apron2 } = rules;
+      
+      if (payroll >= apron2) return { status: "apron2", text: "Second Apron", color: "var(--bad)", severity: 4 };
+      if (payroll >= apron1) return { status: "apron1", text: "First Apron", color: "var(--bad)", severity: 3 };
+      if (payroll >= tax) return { status: "luxuryTax", text: "Luxury Tax", color: "var(--warn)", severity: 2 };
+      if (payroll >= cap) return { status: "overCap", text: "Over Cap", color: "var(--warn)", severity: 1 };
+      return { status: "underCap", text: "Under Cap", color: "var(--good)", severity: 0 };
+    }
+    
+    function calculateMultiYearOutlook(teamState) {
+      const currentYear = teamState.meta.season;
+      const projections = [];
+      
+      for (let yearOffset = 1; yearOffset <= 4; yearOffset++) {
+        const year = currentYear + yearOffset;
+        let guaranteed = 0;
+        let teamOptions = 0;
+        let playerOptions = 0;
+        
+        teamState.roster.forEach(p => {
+          const yearsLeft = p.years - yearOffset;
+          if (yearsLeft > 0) {
+            guaranteed += p.salary; // Simplified: assume flat salary
+          } else if (yearsLeft === 0) {
+            // Last year could be option or expiring
+            teamOptions += p.salary * 0.3; // Estimate 30% have team options
+          }
+        });
+        
+        projections.push({
+          year,
+          guaranteed: Math.round(guaranteed),
+          options: Math.round(teamOptions),
+          dead: 0, // Future: track dead money
+          total: Math.round(guaranteed + teamOptions)
+        });
+      }
+      
+      return projections;
+    }
+    
+    function calculateOwnerBudgetTarget(owner, rules) {
+      // Owner sets budget based on archetype
+      if (owner.archetype === "Business Mogul") {
+        return rules.cap; // Stay under cap
+      } else if (owner.archetype === "Legacy Builder" || owner.archetype === "Billionaire Fan") {
+        return rules.apron2; // Willing to pay up to second apron
+      } else if (owner.traits.greed >= 70) {
+        return rules.tax; // Stay under tax
+      } else if (owner.traits.ambition >= 80) {
+        return rules.apron1; // Willing to hit first apron
+      } else {
+        return rules.tax; // Default: avoid tax
+      }
+    }
+    
+    function applyFinancialTrustModifiers(teamState) {
+      if (!teamState.owner || !teamState.finance) return;
+      
+      const owner = teamState.owner;
+      const expenses = teamState.finance.expenses;
+      const revenue = teamState.finance.revenue;
+      const profit = calculateProfit(revenue, expenses);
+      const d = teamState.dashboard;
+      const winPct = d.wins / (d.wins + d.losses || 1);
+      
+      const budgetTarget = calculateOwnerBudgetTarget(owner, teamState.meta.rules);
+      const taxLine = teamState.meta.rules.tax;
+      
+      let trustDelta = 0;
+      const events = [];
+      
+      // Over tax penalties
+      if (expenses.players > taxLine) {
+        if (winPct < 0.550) {
+          // Losing and paying tax = bad
+          trustDelta -= 8;
+          events.push(`Owner furious about luxury tax payments while team struggles. Trust -8`);
+        } else if (winPct >= 0.600) {
+          // Winning justifies tax
+          if (owner.archetype === "Legacy Builder" || owner.archetype === "Billionaire Fan") {
+            trustDelta -= 2;
+            events.push(`Owner accepts luxury tax for winning team. Trust -2`);
+          } else if (owner.archetype === "Business Mogul") {
+            trustDelta -= 6;
+            events.push(`Business-minded owner unhappy with tax bill despite wins. Trust -6`);
+          } else {
+            trustDelta -= 4;
+            events.push(`Owner reluctantly pays luxury tax. Trust -4`);
+          }
+        } else {
+          // Mediocre and paying tax
+          trustDelta -= 5;
+          events.push(`Owner questions luxury tax spending for mediocre results. Trust -5`);
+        }
+      }
+      
+      // Profit bonuses
+      if (profit > 0 && expenses.players < budgetTarget) {
+        trustDelta += 4;
+        events.push(`Owner pleased with profitable season and fiscal responsibility. Trust +4`);
+      } else if (profit < -20_000_000) {
+        trustDelta -= 3;
+        events.push(`Owner concerned about significant financial losses. Trust -3`);
+      }
+      
+      // Apron violations
+      if (expenses.players >= teamState.meta.rules.apron2) {
+        trustDelta -= 3;
+        events.push(`⚠ Second apron violation limits roster flexibility. Owner concerned. Trust -3`);
+      }
+      
+      // Apply trust changes
+      if (trustDelta !== 0) {
+        owner.trust = Math.max(0, Math.min(100, owner.trust + trustDelta));
+        events.forEach(event => addEvent(event, "league"));
+      }
+      
+      // Owner intervention on severe luxury tax overspending (random chance when losing badly)
+      if (expenses.tax > 10_000_000 && winPct < 0.400 && Math.random() < 0.15) {
+        const interventionCheck = checkOwnerIntervention("luxuryTax", {
+          taxAmount: expenses.tax,
+          winPct: winPct,
+          payroll: expenses.players
+        });
+        
+        if (interventionCheck.intervene && interventionCheck.outcome.type === "demand") {
+          // Auto-apply demand outcome without modal (background intervention)
+          owner.trust = Math.max(0, Math.min(100, owner.trust + interventionCheck.outcome.trustChange));
+          addEvent(`💰 ${owner.name} DEMANDS salary reduction! ${interventionCheck.outcome.dialogue} Trust ${interventionCheck.outcome.trustChange}`, "league");
+          
+          if (!teamState.ownerEvents) teamState.ownerEvents = [];
+          teamState.ownerEvents.push(interventionCheck.outcome);
+        }
+      }
+      
+      return trustDelta;
     }
     
     function generateRoster() {
@@ -4619,11 +6538,35 @@
         ],
         candidates: generateCoachCandidates(12)
       },
+      finance: {
+        revenue: { tickets: 0, merch: 0, playoffs: 0, total: 0 },
+        expenses: { players: 0, staff: 0, facilities: 0, promo: 0, tax: 0, total: 0 },
+        settings: { ticketPrice: 1.0, promoSpend: 0, facilityLvl: 0 },
+        projections: []
+      },
+      settings: {
+        ownerIntervention: true
+      },
+      fans: {
+        hype: 50, // 0-100, starts neutral
+        history: []
+      },
+      ownerEvents: [], // Track intervention history
       events: [
         {ts: Date.now(), text:"Hired analytics intern who speaks exclusively in effective field goal percentage.", type:"league"}
       ],
       prospects: [],
       freeAgents: [], // Will be generated on first load
+      draft: {
+        prospects: [],
+        yourPick: 15,
+        currentPick: 0,
+        scoutingPoints: 100,
+        maxScoutingPoints: 100,
+        draftStarted: false,
+        selectedProspect: null,
+        draftedPlayers: []
+      },
       dashboard: {
         wins: 0,
         losses: 0,
@@ -4676,6 +6619,10 @@
           saved.owner = generateOwner();
           saved.owner.goals = generateSeasonGoals(saved, saved.owner);
         }
+        // Ensure fans object exists
+        if (!saved.fans) {
+          saved.fans = { hype: 50, history: [] };
+        }
         return saved;
       }
       catch { return initialState }
@@ -4720,6 +6667,8 @@
         if(view === "freeagency") renderFreeAgency();
         if(view === "coaching") renderCoaching();
         if(view === "owner") renderOwner();
+        if(view === "finance") renderFinance();
+        if(view === "draft") renderDraft();
       });
     });
     $$("[data-view-jump]").forEach(btn=>{
@@ -4776,6 +6725,15 @@
         }
         addEvent(`Victory! Won by ${Math.abs(scoreDiff)} points.`, "league");
         
+        // Fan hype updates based on streaks
+        if (d.streak.count === 3) {
+          updateFanHype(5, "Team on 3-game win streak");
+        } else if (d.streak.count === 5) {
+          updateFanHype(7, "Impressive 5-game win streak!");
+        } else if (d.streak.count >= 8) {
+          updateFanHype(10, "Dominant win streak electrifies fanbase");
+        }
+        
         // Update coach record
         if (STATE.coaches && STATE.coaches.head) {
           STATE.coaches.head.record.wins++;
@@ -4788,6 +6746,15 @@
           d.streak = { type: "l", count: 1 };
         }
         addEvent(`Tough loss. Lost by ${Math.abs(scoreDiff)} points.`, "league");
+        
+        // Fan hype updates for losing streaks
+        if (d.streak.count === 3) {
+          updateFanHype(-5, "Team struggles with 3-game losing streak");
+        } else if (d.streak.count === 5) {
+          updateFanHype(-10, "Fans frustrated by 5-game skid");
+        } else if (d.streak.count >= 8) {
+          updateFanHype(-15, "Losing streak triggers fan outrage");
+        }
         
         // Update coach record
         if (STATE.coaches && STATE.coaches.head) {
@@ -4913,6 +6880,9 @@
         if (STATE.owner.trust < 20 && Math.random() < 0.2) {
           addEvent(`🚨 WARNING: Owner losing faith. Job security in jeopardy.`, "league");
         }
+        
+        // Update financial trust modifiers
+        applyFinancialTrustModifiers(STATE);
       }
       
       save(STATE);
@@ -4924,14 +6894,61 @@
     $("#applySettings").addEventListener("click", ()=>{
       STATE.meta.teamName = $("#teamName").value.trim() || "My Team";
       STATE.meta.season = Number($("#seasonInput").value) || STATE.meta.season;
+      
+      // Update settings
+      if (!STATE.settings) STATE.settings = {};
+      STATE.settings.ownerIntervention = $("#ownerInterventionToggle").checked;
+      
       $(".title").textContent = STATE.meta.teamName;
       $("#seasonTag").textContent = `Season: ${STATE.meta.season}`;
+      save(STATE);
       toast("Settings applied.");
     });
 
     // -------------------------------
     // Dashboard
     // -------------------------------
+    function renderFanHype() {
+      if (!STATE.fans) {
+        STATE.fans = { hype: 50, history: [] };
+      }
+      
+      const hype = STATE.fans.hype;
+      const sentiment = getFanSentiment(hype);
+      
+      // Update dashboard hype meter
+      const circle = $("#fanHypeCircle");
+      const value = $("#fanHypeValue");
+      const sentimentEl = $("#fanHypeSentiment");
+      
+      if (circle && value && sentimentEl) {
+        circle.style.setProperty('--hype-percent', hype);
+        circle.style.setProperty('--hype-color', sentiment.color);
+        circle.classList.toggle('glow', sentiment.glow);
+        
+        value.textContent = Math.round(hype);
+        value.style.color = sentiment.color;
+        sentimentEl.textContent = sentiment.label;
+        sentimentEl.style.color = sentiment.color;
+      }
+      
+      // Update owner view hype meter
+      const ownerCircle = $("#ownerFanHypeCircle");
+      const ownerValue = $("#ownerFanHypeValue");
+      const ownerSentiment = $("#ownerFanHypeSentiment");
+      
+      if (ownerCircle && ownerValue && ownerSentiment) {
+        ownerCircle.style.setProperty('--hype-percent', hype);
+        ownerCircle.style.setProperty('--hype-color', sentiment.color);
+        ownerCircle.classList.toggle('glow', sentiment.glow);
+        
+        ownerValue.textContent = Math.round(hype);
+        ownerValue.style.color = sentiment.color;
+        ownerSentiment.textContent = sentiment.label;
+        ownerSentiment.style.color = sentiment.color;
+      }
+    }
+    
     function renderDashboardCaps(){
       const {cap,tax,apron1,apron2} = STATE.meta.rules;
       const payroll = sum(STATE.roster, p=>p.salary);
@@ -5394,6 +7411,13 @@
           
           if (act === "waive") {
             if (confirm(`Waive ${p.name}? This cannot be undone.`)) {
+              // Fan hype update for cutting players
+              if (p.ovr >= 75) {
+                updateFanHype(-10, `Trading away fan favorite ${p.name}`);
+              } else if (p.ovr >= 65) {
+                updateFanHype(-3, `Cutting rotation player ${p.name}`);
+              }
+              
               STATE.roster = STATE.roster.filter(x => x.id !== id);
               addEvent(`${p.name} was waived.`, "league");
               rerenderAll();
@@ -6049,26 +8073,6 @@
       `;
     });
 
-    $("#genProspects").addEventListener("click", ()=>{
-      STATE.prospects = Array.from({length:10}).map((_,i)=>({
-        id:uid(),
-        name: genName(),
-        pos: ["PG","SG","SF","PF","C"][Math.floor(Math.random()*5)],
-        age: 19,
-        ovr: 65 + Math.floor(Math.random()*20),
-        scouted: ["B-","B","B+","A-","A"][Math.floor(Math.random()*5)]
-      }));
-      $("#draftArea").className="";
-      $("#draftArea").innerHTML = `
-        <table style="width:100%">
-          <thead><tr><th>Name</th><th>Pos</th><th class="num">OVR (foggy)</th><th class="num">Scout Grade</th></tr></thead>
-          <tbody>
-            ${STATE.prospects.map(p=>`<tr><td>${escapeHtml(p.name)}</td><td>${p.pos}</td><td class="num">${p.ovr}</td><td class="num">${p.scouted}</td></tr>`).join("")}
-          </tbody>
-        </table>
-      `;
-    });
-
     // -------------------------------
     // Free Agency Rendering & Handlers
     // -------------------------------
@@ -6459,6 +8463,15 @@
         STATE.roster.push(newPlayer);
         STATE.freeAgents = STATE.freeAgents.filter(fa => fa.id !== selectedFA.id);
         
+        // Fan hype update for signings
+        if (selectedFA.ovr >= 85) {
+          updateFanHype(15, `Signing superstar ${selectedFA.name}`);
+        } else if (selectedFA.ovr >= 75) {
+          updateFanHype(8, `Adding quality talent ${selectedFA.name}`);
+        } else if (selectedFA.ovr >= 70) {
+          updateFanHype(3, `Bringing in solid contributor ${selectedFA.name}`);
+        }
+        
         addEvent(`✅ Signed ${selectedFA.name} to a ${offerYears}-year, ${fmt(offerSalary)} contract!`, "transaction");
         save(STATE);
         
@@ -6503,6 +8516,22 @@
     $("#faSearch")?.addEventListener("input", (e) => {
       currentFASearch = e.target.value.toLowerCase();
       renderFreeAgency();
+    });
+    
+    // Draft Event Handlers
+    $("#generateProspectsBtn")?.addEventListener("click", () => window.generateProspects());
+    $("#startDraftBtn")?.addEventListener("click", () => window.startDraft());
+    $("#autoDraftBtn")?.addEventListener("click", () => window.autoDraftUser());
+    
+    // Draft detail tabs
+    $$("[data-draft-tab]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const tab = btn.dataset.draftTab;
+        $$("[data-draft-tab]").forEach(b => b.classList.toggle("active", b === btn));
+        $$("[data-draft-panel]").forEach(panel => {
+          panel.hidden = panel.dataset.draftPanel !== tab;
+        });
+      });
     });
     
     $("#showInterestedOnly")?.addEventListener("change", (e) => {
@@ -6807,26 +8836,55 @@
       
       const coach = currentCoachSelection;
       
-      // Fire current head coach if exists
-      if (STATE.coaches.head) {
-        addEvent(`Fired head coach ${STATE.coaches.head.name}.`, "league");
+      // Check for owner intervention on expensive hires
+      if (coach.contract.salary > 4_000_000) {
+        const interventionCheck = checkOwnerIntervention("coachHiring", {
+          coachName: coach.name,
+          coachStyle: coach.style.name,
+          salary: coach.contract.salary
+        });
+        
+        if (interventionCheck.intervene) {
+          $("#hireCoachModal").style.display = "none";
+          showInterventionModal(interventionCheck.outcome, (allowed) => {
+            if (allowed) {
+              proceedWithHire();
+            } else {
+              toast("Owner vetoed the hire");
+              currentCoachSelection = null;
+              renderCoaching();
+            }
+          });
+          return;
+        }
       }
       
-      // Hire new coach
-      coach.role = "head";
-      coach.trust = 70; // Start at neutral
-      STATE.coaches.head = coach;
+      proceedWithHire();
       
-      // Remove from candidates
-      STATE.coaches.candidates = STATE.coaches.candidates.filter(c => c.id !== coach.id);
-      
-      addEvent(`Hired ${coach.name} as head coach (${coach.style.name}).`, "league");
-      toast(`${coach.name} hired as Head Coach!`);
-      
-      $("#hireCoachModal").style.display = "none";
-      currentCoachSelection = null;
-      renderCoaching();
-      save(STATE);
+      function proceedWithHire() {
+        // Fire current head coach if exists
+        if (STATE.coaches.head) {
+          addEvent(`Fired head coach ${STATE.coaches.head.name}.`, "league");
+          updateFanHype(-8, `Firing head coach ${STATE.coaches.head.name}`);
+        }
+        
+        // Hire new coach
+        coach.role = "head";
+        coach.trust = 70; // Start at neutral
+        STATE.coaches.head = coach;
+        
+        // Remove from candidates
+        STATE.coaches.candidates = STATE.coaches.candidates.filter(c => c.id !== coach.id);
+        
+        addEvent(`Hired ${coach.name} as head coach (${coach.style.name}).`, "league");
+        updateFanHype(5, `Hiring new head coach ${coach.name}`);
+        toast(`${coach.name} hired as Head Coach!`);
+        
+        $("#hireCoachModal").style.display = "none";
+        currentCoachSelection = null;
+        renderCoaching();
+        save(STATE);
+      }
     }
     
     function openFireCoachModal(coachId, isHead) {
@@ -6849,26 +8907,49 @@
       $("#fireCoachBuyoutDetails").textContent = `${coach.contract.yearsLeft} years remaining`;
       
       $("#confirmFireBtn").onclick = () => {
-        if (isHead) {
-          STATE.coaches.head = null;
-          addEvent(`Fired head coach ${coach.name}. Buyout: ${fmt(buyout)}`, "league");
-        } else {
-          STATE.coaches.assistants = STATE.coaches.assistants.filter(c => c.id !== coachId);
-          addEvent(`Fired assistant coach ${coach.name}.`, "league");
-        }
-        
-        // Decrease trust with remaining staff
-        if (STATE.coaches.head && !isHead) {
-          STATE.coaches.head.trust = Math.max(0, STATE.coaches.head.trust - 5);
-        }
-        STATE.coaches.assistants.forEach(c => {
-          c.trust = Math.max(0, c.trust - 3);
+        // Check for owner intervention
+        const interventionCheck = checkOwnerIntervention("coachFiring", {
+          coachName: coach.name,
+          coachType: isHead ? "head" : "assistant",
+          coachRecord: coach.record
         });
         
-        toast(`Fired ${coach.name}`);
-        modal.style.display = "none";
-        renderCoaching();
-        save(STATE);
+        const proceedWithFiring = () => {
+          if (isHead) {
+            STATE.coaches.head = null;
+            addEvent(`Fired head coach ${coach.name}. Buyout: ${fmt(buyout)}`, "league");
+          } else {
+            STATE.coaches.assistants = STATE.coaches.assistants.filter(c => c.id !== coachId);
+            addEvent(`Fired assistant coach ${coach.name}.`, "league");
+          }
+          
+          // Decrease trust with remaining staff
+          if (STATE.coaches.head && !isHead) {
+            STATE.coaches.head.trust = Math.max(0, STATE.coaches.head.trust - 5);
+          }
+          STATE.coaches.assistants.forEach(c => {
+            c.trust = Math.max(0, c.trust - 3);
+          });
+          
+          toast(`Fired ${coach.name}`);
+          modal.style.display = "none";
+          renderCoaching();
+          save(STATE);
+        };
+        
+        if (interventionCheck.intervene) {
+          modal.style.display = "none";
+          showInterventionModal(interventionCheck.outcome, (allowed) => {
+            if (allowed) {
+              proceedWithFiring();
+            } else {
+              toast("Owner blocked the firing");
+              renderCoaching();
+            }
+          });
+        } else {
+          proceedWithFiring();
+        }
       };
       
       modal.style.display = "flex";
@@ -7105,6 +9186,796 @@
       } else {
         meetingHistory.innerHTML = '<div class="empty-state">No meetings yet this season</div>';
       }
+    }
+    
+    function renderFinance() {
+      if (!STATE.finance) {
+        STATE.finance = {
+          revenue: { tickets: 0, merch: 0, playoffs: 0, total: 0 },
+          expenses: { players: 0, staff: 0, facilities: 0, promo: 0, tax: 0, total: 0 },
+          settings: { ticketPrice: 1.0, promoSpend: 0, facilityLvl: 0 },
+          projections: []
+        };
+      }
+      
+      // Calculate current financials
+      const revenue = calculateRevenue(STATE, STATE.finance);
+      const expenses = calculateExpenses(STATE, STATE.finance);
+      const profit = calculateProfit(revenue, expenses);
+      
+      // Update stored values
+      STATE.finance.revenue = revenue;
+      STATE.finance.expenses = expenses;
+      
+      const payroll = sum(STATE.roster, p => p.salary);
+      const rules = STATE.meta.rules;
+      const capSpace = Math.max(0, rules.cap - payroll);
+      const capStatus = getCapStatus(payroll, rules);
+      
+      // Panel 1: Payroll & Cap Status
+      $("#finPayroll").textContent = formatMoney(payroll);
+      $("#finCapSpace").textContent = formatMoney(capSpace);
+      
+      const capBadge = $("#finCapStatus");
+      capBadge.textContent = capStatus.text;
+      capBadge.style.background = capStatus.color;
+      capBadge.style.color = "#fff";
+      
+      // Cap visual bar
+      const capPct = Math.min(100, (payroll / rules.apron2) * 100);
+      $("#finCapBar").style.width = capPct + "%";
+      
+      // Position markers
+      const taxPct = (rules.tax / rules.apron2) * 100;
+      const apron1Pct = (rules.apron1 / rules.apron2) * 100;
+      const apron2Pct = 100;
+      
+      $("#finTaxMarker").style.left = taxPct + "%";
+      $("#finApron1Marker").style.left = apron1Pct + "%";
+      $("#finApron2Marker").style.left = apron2Pct + "%";
+      
+      // Cap legend
+      $("#finCapAmount").textContent = (rules.cap / 1_000_000).toFixed(0);
+      $("#finTaxAmount").textContent = (rules.tax / 1_000_000).toFixed(0);
+      $("#finApron1Amount").textContent = (rules.apron1 / 1_000_000).toFixed(0);
+      $("#finApron2Amount").textContent = (rules.apron2 / 1_000_000).toFixed(0);
+      
+      // Top salaries
+      const topSalaries = STATE.roster.slice().sort((a, b) => b.salary - a.salary).slice(0, 5);
+      $("#finTopSalaries").innerHTML = topSalaries.map(p => `
+        <div class="salary-row">
+          <span class="salary-player-name">${p.name}</span>
+          <span class="salary-player-value">${formatMoney(p.salary)}</span>
+        </div>
+      `).join('');
+      
+      // Panel 2: Profit & Loss
+      $("#finRevenue").textContent = formatMoney(revenue.total);
+      $("#finExpenses").textContent = formatMoney(expenses.total);
+      
+      const profitEl = $("#finProfit");
+      profitEl.textContent = formatMoney(profit);
+      profitEl.className = "kpi-value " + (profit >= 0 ? "good" : "bad");
+      
+      // Revenue breakdown
+      const maxRevenue = Math.max(revenue.tickets, revenue.merch, revenue.playoffs || 1);
+      $("#finRevenueTickets").textContent = formatMoney(revenue.tickets);
+      $("#finRevenueTicketsBar").style.width = ((revenue.tickets / maxRevenue) * 100) + "%";
+      
+      $("#finRevenueMerch").textContent = formatMoney(revenue.merch);
+      $("#finRevenueMerchBar").style.width = ((revenue.merch / maxRevenue) * 100) + "%";
+      
+      $("#finRevenuePlayoffs").textContent = formatMoney(revenue.playoffs);
+      $("#finRevenuePlayoffsBar").style.width = revenue.playoffs > 0 ? ((revenue.playoffs / maxRevenue) * 100) + "%" : "0%";
+      
+      // Expense breakdown
+      const maxExpense = Math.max(expenses.players, expenses.staff, expenses.facilities, expenses.promo, expenses.tax || 1);
+      $("#finExpensePlayers").textContent = formatMoney(expenses.players);
+      $("#finExpensePlayersBar").style.width = ((expenses.players / maxExpense) * 100) + "%";
+      
+      $("#finExpenseStaff").textContent = formatMoney(expenses.staff);
+      $("#finExpenseStaffBar").style.width = ((expenses.staff / maxExpense) * 100) + "%";
+      
+      $("#finExpenseFacilities").textContent = formatMoney(expenses.facilities);
+      $("#finExpenseFacilitiesBar").style.width = ((expenses.facilities / maxExpense) * 100) + "%";
+      
+      $("#finExpensePromo").textContent = formatMoney(expenses.promo);
+      $("#finExpensePromoBar").style.width = expenses.promo > 0 ? ((expenses.promo / maxExpense) * 100) + "%" : "0%";
+      
+      $("#finExpenseTax").textContent = formatMoney(expenses.tax);
+      $("#finExpenseTaxBar").style.width = expenses.tax > 0 ? ((expenses.tax / maxExpense) * 100) + "%" : "0%";
+      
+      // Finance controls
+      $("#finTicketPrice").value = STATE.finance.settings.ticketPrice;
+      $("#finTicketPriceValue").textContent = STATE.finance.settings.ticketPrice.toFixed(1) + "x";
+      
+      $("#finPromoSpend").value = STATE.finance.settings.promoSpend;
+      $("#finPromoSpendValue").textContent = "$" + STATE.finance.settings.promoSpend + "M";
+      
+      $("#finFacilityLvl").value = STATE.finance.settings.facilityLvl;
+      $("#finFacilityLvlValue").textContent = "Level " + STATE.finance.settings.facilityLvl;
+      
+      // Panel 3: Multi-Year Outlook
+      const projections = calculateMultiYearOutlook(STATE);
+      STATE.finance.projections = projections;
+      
+      const outlookTable = $("#finOutlookTable");
+      const outlookRows = projections.map(proj => {
+        const vsCapDiff = proj.total - rules.cap;
+        const vsCapStatus = vsCapDiff > 0 ? "Over" : "Under";
+        const vsCapColor = vsCapDiff > 0 ? "var(--bad)" : "var(--good)";
+        
+        return `
+          <div class="outlook-row">
+            <div class="outlook-cell year">${proj.year}</div>
+            <div class="outlook-cell">${formatMoney(proj.guaranteed)}</div>
+            <div class="outlook-cell">${formatMoney(proj.options)}</div>
+            <div class="outlook-cell">${formatMoney(proj.dead)}</div>
+            <div class="outlook-cell total">${formatMoney(proj.total)}</div>
+            <div class="outlook-cell status" style="color:${vsCapColor}">${vsCapStatus} ${formatMoney(Math.abs(vsCapDiff))}</div>
+          </div>
+        `;
+      }).join('');
+      
+      outlookTable.innerHTML = `
+        <div class="outlook-header">
+          <div class="outlook-cell">Year</div>
+          <div class="outlook-cell">Guaranteed</div>
+          <div class="outlook-cell">Options</div>
+          <div class="outlook-cell">Dead Money</div>
+          <div class="outlook-cell">Total</div>
+          <div class="outlook-cell">vs Cap</div>
+        </div>
+        ${outlookRows}
+      `;
+      
+      // Panel 4: Owner Budget & Risk
+      const budgetTarget = calculateOwnerBudgetTarget(STATE.owner, rules);
+      $("#finOwnerBudget").textContent = formatMoney(budgetTarget);
+      
+      const budgetDiff = payroll - budgetTarget;
+      const budgetStatusEl = $("#finBudgetStatus");
+      if (budgetDiff > 10_000_000) {
+        budgetStatusEl.textContent = "Over Budget";
+        budgetStatusEl.style.background = "var(--bad)";
+      } else if (budgetDiff > 0) {
+        budgetStatusEl.textContent = "At Limit";
+        budgetStatusEl.style.background = "var(--warn)";
+      } else {
+        budgetStatusEl.textContent = "On Track";
+        budgetStatusEl.style.background = "var(--good)";
+      }
+      budgetStatusEl.style.color = "#fff";
+      
+      // Trust impact (simulated)
+      const trustImpact = $("#finTrustImpact");
+      let trustDelta = 0;
+      if (expenses.tax > 0 && STATE.dashboard.wins < 45) trustDelta -= 8;
+      else if (expenses.tax > 0 && STATE.dashboard.wins >= 50) trustDelta -= 2;
+      if (profit > 0 && payroll < budgetTarget) trustDelta += 4;
+      if (profit < -20_000_000) trustDelta -= 3;
+      
+      trustImpact.textContent = (trustDelta >= 0 ? "+" : "") + trustDelta;
+      trustImpact.className = "kpi-value " + (trustDelta >= 0 ? "good" : "bad");
+      
+      // Owner details
+      $("#finOwnerArchetype").textContent = STATE.owner.archetype;
+      
+      let philosophy = "Balanced approach";
+      if (STATE.owner.archetype === "Business Mogul") philosophy = "Profit-focused, avoid luxury tax";
+      else if (STATE.owner.archetype === "Legacy Builder") philosophy = "Win at all costs";
+      else if (STATE.owner.archetype === "Billionaire Fan") philosophy = "Generous spending for contention";
+      else if (STATE.owner.traits.greed >= 70) philosophy = "Cost-conscious operations";
+      else if (STATE.owner.traits.ambition >= 80) philosophy = "Aggressive investment";
+      
+      $("#finOwnerPhilosophy").textContent = philosophy;
+      
+      const marketSize = getMarketSize(STATE.meta.teamName);
+      $("#finMarketSize").textContent = marketSize.charAt(0).toUpperCase() + marketSize.slice(1);
+      
+      // Risk factors
+      const riskFactors = [];
+      if (expenses.tax > 5_000_000) {
+        riskFactors.push({ level: "high", icon: "🔴", text: `Paying $${(expenses.tax / 1_000_000).toFixed(1)}M in luxury tax` });
+      }
+      if (payroll >= rules.apron2) {
+        riskFactors.push({ level: "high", icon: "⚠️", text: "Second apron violation - limited roster flexibility" });
+      }
+      if (payroll >= rules.apron1 && payroll < rules.apron2) {
+        riskFactors.push({ level: "medium", icon: "🟡", text: "First apron - restricted in transactions" });
+      }
+      if (profit < -10_000_000) {
+        riskFactors.push({ level: "medium", icon: "💸", text: `Operating at $${Math.abs(profit / 1_000_000).toFixed(1)}M loss` });
+      }
+      if (projections[0] && projections[0].total > rules.apron1) {
+        riskFactors.push({ level: "medium", icon: "📅", text: "Projected over apron next season" });
+      }
+      
+      const riskList = $("#finRiskFactors");
+      if (riskFactors.length > 0) {
+        riskList.innerHTML = riskFactors.map(r => `
+          <div class="risk-item ${r.level}">
+            <span class="risk-icon">${r.icon}</span>
+            <span>${r.text}</span>
+          </div>
+        `).join('');
+      } else {
+        riskList.innerHTML = '<div class="risk-item low"><span class="risk-icon">✅</span><span>No significant financial risks detected</span></div>';
+      }
+      
+      // Recommendations
+      const recommendations = [];
+      if (capSpace > 20_000_000 && STATE.dashboard.wins < 35) {
+        recommendations.push({ icon: "💰", text: "Significant cap space available - consider free agent upgrades" });
+      }
+      if (expenses.tax > 0 && STATE.dashboard.wins < 45) {
+        recommendations.push({ icon: "📉", text: "Reduce payroll to avoid luxury tax while team rebuilds" });
+      }
+      if (payroll < rules.cap * 0.8 && STATE.dashboard.wins >= 45) {
+        recommendations.push({ icon: "📈", text: "Invest in talent - team is competitive and under budget" });
+      }
+      if (STATE.finance.settings.facilityLvl < 3 && profit > 10_000_000) {
+        recommendations.push({ icon: "🏗️", text: "Upgrade facilities to boost merchandise revenue" });
+      }
+      if (STATE.finance.settings.promoSpend === 0 && marketSize === "small") {
+        recommendations.push({ icon: "📢", text: "Increase marketing spend to boost revenue in small market" });
+      }
+      
+      const recList = $("#finRecommendations");
+      if (recommendations.length > 0) {
+        recList.innerHTML = recommendations.map(r => `
+          <div class="recommendation-item">
+            <span class="recommendation-icon">${r.icon}</span>
+            <span>${r.text}</span>
+          </div>
+        `).join('');
+      } else {
+        recList.innerHTML = '<div class="recommendation-item"><span class="recommendation-icon">✅</span><span>Financial strategy is sound - continue current approach</span></div>';
+      }
+    }
+    
+    function renderDraft() {
+      if (!STATE.draft) {
+        STATE.draft = {
+          prospects: [],
+          yourPick: 15,
+          currentPick: 0,
+          scoutingPoints: 100,
+          maxScoutingPoints: 100,
+          draftStarted: false,
+          selectedProspect: null,
+          draftedPlayers: []
+        };
+      }
+      
+      // Update header stats
+      $("#draftYourPick").textContent = `#${STATE.draft.yourPick}`;
+      $("#draftScoutPoints").textContent = `${STATE.draft.scoutingPoints}/${STATE.draft.maxScoutingPoints}`;
+      $("#draftCurrentPick").textContent = STATE.draft.draftStarted ? `#${STATE.draft.currentPick + 1}` : "Not Started";
+      
+      // Enable/disable buttons
+      $("#startDraftBtn").disabled = STATE.draft.prospects.length === 0 || STATE.draft.draftStarted;
+      $("#autoDraftBtn").disabled = !STATE.draft.draftStarted || STATE.draft.currentPick !== STATE.draft.yourPick - 1;
+      
+      // Render big board
+      renderDraftBoard();
+      
+      // Render team needs
+      renderTeamNeeds();
+    }
+    
+    function renderDraftBoard() {
+      const board = $("#draftBoardList");
+      
+      if (!STATE.draft.prospects || STATE.draft.prospects.length === 0) {
+        board.innerHTML = '<div class="empty-state">Generate draft class to begin scouting</div>';
+        return;
+      }
+      
+      // Group by tier
+      const tiers = ["Elite", "High", "Mid", "Late", "Flyer"];
+      const tierGroups = {};
+      
+      tiers.forEach(tier => {
+        tierGroups[tier] = STATE.draft.prospects.filter(p => p.tier === tier && !p.draftPosition);
+      });
+      
+      let html = "";
+      
+      tiers.forEach(tier => {
+        const prospects = tierGroups[tier];
+        if (prospects.length === 0) return;
+        
+        html += `
+          <div class="tier-group">
+            <div class="tier-header">
+              <span class="tier-badge ${tier}">${tier}</span>
+              <span style="color:var(--muted); font-size:10px;">${prospects.length} prospects</span>
+            </div>
+            <div class="prospect-list">
+        `;
+        
+        prospects.forEach(p => {
+          const isSelected = STATE.draft.selectedProspect?.id === p.id;
+          const confidenceWidth = p.scoutingConfidence;
+          const flags = [];
+          if (p.userFlags.includes("⭐")) flags.push("⭐");
+          if (p.userFlags.includes("🚫")) flags.push("🚫");
+          
+          html += `
+            <div class="prospect-card ${isSelected ? 'selected' : ''}" data-prospect-id="${p.id}">
+              <div class="prospect-header">
+                <div>
+                  <div class="prospect-name">${p.name}</div>
+                  <div class="prospect-meta">
+                    <span>${p.pos}</span>
+                    <span>•</span>
+                    <span>Age ${p.age}</span>
+                    <span>•</span>
+                    <span>${p.archetype}</span>
+                  </div>
+                </div>
+                <div class="prospect-rank">#${p.userRank}</div>
+              </div>
+              ${flags.length > 0 ? `
+                <div class="prospect-flags">
+                  ${flags.map(f => `<span class="prospect-flag">${f}</span>`).join('')}
+                </div>
+              ` : ''}
+              <div class="confidence-bar-container" title="Scouting Confidence: ${confidenceWidth}%">
+                <div class="confidence-bar" style="width: ${confidenceWidth}%"></div>
+              </div>
+            </div>
+          `;
+        });
+        
+        html += `
+            </div>
+          </div>
+        `;
+      });
+      
+      board.innerHTML = html;
+      
+      // Add click handlers
+      board.querySelectorAll(".prospect-card").forEach(card => {
+        card.addEventListener("click", () => {
+          const id = card.dataset.prospectId;
+          const prospect = STATE.draft.prospects.find(p => p.id === id);
+          if (prospect) {
+            STATE.draft.selectedProspect = prospect;
+            renderDraft();
+            renderProspectDetail(prospect);
+          }
+        });
+      });
+    }
+    
+    function renderProspectDetail(prospect) {
+      const detailDiv = $("#detailProspect");
+      
+      if (!prospect) {
+        detailDiv.innerHTML = '<div class="empty-state">Select a prospect to view details</div>';
+        return;
+      }
+      
+      const confidence = prospect.scoutingConfidence;
+      const showFullDetails = confidence >= 50;
+      
+      // Calculate risk degrees for visual dials
+      const injuryDeg = (prospect.injuryRisk / 100) * 360;
+      const characterDeg = (prospect.characterRisk / 100) * 360;
+      
+      detailDiv.innerHTML = `
+        <div class="prospect-detail-card">
+          <div class="prospect-detail-header">
+            <div>
+              <div class="prospect-detail-name">${prospect.name}</div>
+              <div class="prospect-detail-archetype">${prospect.archetype} • ${prospect.pos}</div>
+            </div>
+            <div class="tier-badge ${prospect.tier}">${prospect.tier}</div>
+          </div>
+          
+          <div class="prospect-measurables">
+            <div class="measurable-item">
+              <div class="measurable-label">Height</div>
+              <div class="measurable-value">${prospect.height}</div>
+            </div>
+            <div class="measurable-item">
+              <div class="measurable-label">Weight</div>
+              <div class="measurable-value">${prospect.weight}</div>
+            </div>
+            <div class="measurable-item">
+              <div class="measurable-label">Wingspan</div>
+              <div class="measurable-value">${prospect.wingspan}</div>
+            </div>
+            <div class="measurable-item">
+              <div class="measurable-label">Age</div>
+              <div class="measurable-value">${prospect.age}</div>
+            </div>
+            <div class="measurable-item">
+              <div class="measurable-label">Proj OVR</div>
+              <div class="measurable-value">${showFullDetails ? prospect.projectedOvr : "???"}</div>
+            </div>
+            <div class="measurable-item">
+              <div class="measurable-label">Ceiling</div>
+              <div class="measurable-value">${showFullDetails ? prospect.ceiling : "???"}</div>
+            </div>
+          </div>
+          
+          <h4 style="font-size:13px; color:var(--muted); text-transform:uppercase; margin-bottom:12px;">Skill Grades</h4>
+          <div class="skills-grid">
+            ${Object.entries(prospect.skills).map(([skill, grade]) => {
+              const hidden = confidence < 30 && !['shooting', 'athleticism'].includes(skill);
+              return `
+                <div class="skill-item">
+                  <span class="skill-label">${skill.charAt(0).toUpperCase() + skill.slice(1)}</span>
+                  <span class="skill-grade ${grade} ${hidden ? 'hidden' : ''}">${hidden ? '?' : grade}</span>
+                </div>
+              `;
+            }).join('')}
+          </div>
+          
+          ${showFullDetails ? `
+            <h4 style="font-size:13px; color:var(--muted); text-transform:uppercase; margin:20px 0 12px;">Risk Assessment</h4>
+            <div class="risk-dials">
+              <div class="risk-dial">
+                <div class="risk-dial-label">Injury Risk</div>
+                <div class="risk-dial-circle" style="--risk-deg: ${injuryDeg}deg;">
+                  <div class="risk-dial-value">${prospect.injuryRisk}</div>
+                </div>
+              </div>
+              <div class="risk-dial">
+                <div class="risk-dial-label">Character Risk</div>
+                <div class="risk-dial-circle" style="--risk-deg: ${characterDeg}deg;">
+                  <div class="risk-dial-value">${prospect.characterRisk}</div>
+                </div>
+              </div>
+            </div>
+          ` : ''}
+          
+          ${prospect.revealedTraits.length > 0 ? `
+            <div class="traits-section">
+              <h4>Revealed Traits</h4>
+              <div class="trait-badges">
+                ${prospect.revealedTraits.map(trait => {
+                  const isPositive = ["High Motor", "Elite Work Ethic", "Team Leader"].includes(trait);
+                  const isNegative = ["Injury History", "Character Concerns", "Low Basketball IQ"].includes(trait);
+                  const className = isPositive ? 'positive' : isNegative ? 'negative' : 'neutral';
+                  return `<span class="trait-badge ${className}">${trait}</span>`;
+                }).join('')}
+              </div>
+            </div>
+          ` : ''}
+          
+          ${showFullDetails && prospect.personality ? `
+            <h4 style="font-size:13px; color:var(--muted); text-transform:uppercase; margin:20px 0 12px;">Personality Profile</h4>
+            <div class="personality-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:12px; margin-bottom:16px;">
+              ${Object.entries(prospect.personality).slice(0, 6).map(([trait, value]) => `
+                <div style="background:var(--bg-3); padding:10px; border-radius:6px; border:1px solid var(--border);">
+                  <div style="font-size:11px; color:var(--muted); text-transform:uppercase; margin-bottom:4px;">${trait}</div>
+                  <div style="font-size:16px; font-weight:600; color:${value >= 75 ? 'var(--good)' : value >= 50 ? 'var(--text-0)' : 'var(--bad)'};">${value}</div>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+          
+          ${confidence >= 70 && prospect.bio ? `
+            <h4 style="font-size:13px; color:var(--muted); text-transform:uppercase; margin:20px 0 12px;">Background</h4>
+            <div style="background:var(--bg-3); padding:14px; border-radius:8px; border:1px solid var(--border); margin-bottom:16px;">
+              <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; margin-bottom:12px; font-size:12px;">
+                <div><span style="color:var(--muted);">College:</span> <strong>${prospect.bio.college}</strong></div>
+                <div><span style="color:var(--muted);">Birthplace:</span> <strong>${prospect.bio.birthplace}</strong></div>
+                <div><span style="color:var(--muted);">Shoots:</span> <strong>${prospect.bio.shoots}</strong></div>
+                <div><span style="color:var(--muted);">Born:</span> <strong>${prospect.bio.birthDate}</strong></div>
+              </div>
+              <div style="font-size:12px; color:var(--text-1); line-height:1.6; padding-top:12px; border-top:1px solid var(--border);">
+                ${prospect.bio.bioText}
+              </div>
+            </div>
+          ` : ''}
+          
+          <div style="margin-top:20px; display:flex; gap:12px;">
+            <button class="btn" onclick="toggleProspectFlag('${prospect.id}', '⭐')">
+              ${prospect.userFlags.includes("⭐") ? "★ Favorited" : "☆ Favorite"}
+            </button>
+            <button class="btn" onclick="toggleProspectFlag('${prospect.id}', '🚫')">
+              ${prospect.userFlags.includes("🚫") ? "✓ On DNP List" : "🚫 Do Not Draft"}
+            </button>
+          </div>
+        </div>
+      `;
+      
+      // Render scouting tab
+      renderScoutingActions(prospect);
+    }
+    
+    function renderScoutingActions(prospect) {
+      const scoutDiv = $("#detailScout");
+      
+      if (!prospect) {
+        scoutDiv.innerHTML = '<div class="empty-state">Select a prospect to scout</div>';
+        return;
+      }
+      
+      const scoutActions = [
+        { type: "combine", name: "Combine Measurements", desc: "Physical testing & measurements", cost: 10, gain: 15 },
+        { type: "workout", name: "Private Workout", desc: "Skill demonstration & drills", cost: 20, gain: 20 },
+        { type: "interview", name: "Interview", desc: "Character & mentality evaluation", cost: 15, gain: 12 },
+        { type: "film", name: "Film Study", desc: "Game tape analysis", cost: 15, gain: 18 }
+      ];
+      
+      let html = '<div class="scouting-actions">';
+      
+      scoutActions.forEach(action => {
+        const completed = prospect.scoutingReports[action.type];
+        const canAfford = STATE.draft.scoutingPoints >= action.cost;
+        
+        html += `
+          <div class="scout-action ${completed ? 'completed' : ''}">
+            <div class="scout-action-info">
+              <div class="scout-action-name">${action.name}</div>
+              <div class="scout-action-desc">${action.desc}</div>
+              <div class="scout-action-cost">Cost: ${action.cost} points • +${action.gain}% confidence</div>
+            </div>
+            ${!completed ? `
+              <button class="btn ${canAfford ? 'good' : ''}" 
+                      onclick="performScouting('${prospect.id}', '${action.type}')"
+                      ${!canAfford ? 'disabled' : ''}>
+                Scout
+              </button>
+            ` : ''}
+          </div>
+        `;
+      });
+      
+      html += '</div>';
+      scoutDiv.innerHTML = html;
+    }
+    
+    function renderTeamNeeds() {
+      const needsDiv = $("#teamNeedsDisplay");
+      
+      const positions = ["PG", "SG", "SF", "PF", "C"];
+      const positionCounts = {};
+      
+      STATE.roster.forEach(p => {
+        positionCounts[p.pos] = (positionCounts[p.pos] || 0) + 1;
+      });
+      
+      let html = '<div class="needs-grid">';
+      
+      positions.forEach(pos => {
+        const count = positionCounts[pos] || 0;
+        const need = Math.max(0, 100 - (count * 20)); // Max need at 0 players, min at 5+
+        const needLabel = need > 75 ? "Critical" : need > 50 ? "High" : need > 25 ? "Moderate" : "Low";
+        
+        html += `
+          <div class="need-item">
+            <div class="need-pos">${pos}</div>
+            <div class="need-bar-container">
+              <div class="need-bar" style="height: ${need}%"></div>
+            </div>
+            <div class="need-label">${needLabel} (${count})</div>
+          </div>
+        `;
+      });
+      
+      html += '</div>';
+      needsDiv.innerHTML = html;
+    }
+    
+    // Draft event handlers
+    window.performScouting = function(prospectId, scoutType) {
+      const prospect = STATE.draft.prospects.find(p => p.id === prospectId);
+      if (!prospect) return;
+      
+      const costs = { combine: 10, workout: 20, interview: 15, film: 15 };
+      const cost = costs[scoutType];
+      
+      if (STATE.draft.scoutingPoints < cost) {
+        showToast("Not enough scouting points!", "bad");
+        return;
+      }
+      
+      scoutProspect(prospect, scoutType);
+      STATE.draft.scoutingPoints -= cost;
+      
+      save(STATE);
+      renderDraft();
+      renderProspectDetail(prospect);
+      
+      showToast(`Scouted ${prospect.name} - ${scoutType}`, "good");
+    };
+    
+    window.toggleProspectFlag = function(prospectId, flag) {
+      const prospect = STATE.draft.prospects.find(p => p.id === prospectId);
+      if (!prospect) return;
+      
+      const idx = prospect.userFlags.indexOf(flag);
+      if (idx >= 0) {
+        prospect.userFlags.splice(idx, 1);
+      } else {
+        prospect.userFlags.push(flag);
+      }
+      
+      save(STATE);
+      renderDraft();
+      renderProspectDetail(prospect);
+    };
+    
+    window.generateProspects = function() {
+      const prospects = generateDraftProspects(STATE.year, 60);
+      STATE.draft.prospects = prospects;
+      STATE.draft.selectedProspect = null;
+      STATE.draft.draftedPlayers = [];
+      STATE.draft.currentPick = 0;
+      STATE.draft.draftStarted = false;
+      STATE.draft.scoutingPoints = STATE.draft.maxScoutingPoints;
+      
+      // Assign initial user ranks
+      prospects.forEach((p, i) => {
+        p.userRank = i + 1;
+      });
+      
+      save(STATE);
+      renderDraft();
+      
+      showToast("Draft class generated! Begin scouting.", "good");
+    };
+    
+    window.startDraft = function() {
+      if (STATE.draft.prospects.length === 0) {
+        showToast("Generate prospects first!", "bad");
+        return;
+      }
+      
+      STATE.draft.draftStarted = true;
+      STATE.draft.currentPick = 0;
+      
+      save(STATE);
+      renderDraft();
+      
+      showToast("Draft has begun!", "good");
+      
+      // Start advancing picks
+      advanceDraft();
+    };
+    
+    function advanceDraft() {
+      if (!STATE.draft.draftStarted) return;
+      
+      // Check if draft is over
+      if (STATE.draft.currentPick >= 60) {
+        endDraft();
+        return;
+      }
+      
+      // If it's the user's pick, wait for manual selection
+      if (STATE.draft.currentPick === STATE.draft.yourPick - 1) {
+        showToast("Your pick is ready! Select a prospect.", "neutral");
+        renderDraft();
+        return;
+      }
+      
+      // Auto-draft for CPU teams
+      setTimeout(() => {
+        autoDraftCPU();
+        STATE.draft.currentPick++;
+        save(STATE);
+        renderDraft();
+        advanceDraft();
+      }, 800); // 0.8 second between picks
+    }
+    
+    function autoDraftCPU() {
+      const available = STATE.draft.prospects.filter(p => !p.draftPosition);
+      if (available.length === 0) return;
+      
+      // CPU picks best available with slight randomness
+      const topTier = available.filter(p => p.tier === "Elite" || p.tier === "High");
+      const pickPool = topTier.length > 0 ? topTier : available;
+      
+      const idx = Math.floor(Math.random() * Math.min(5, pickPool.length));
+      const picked = pickPool[idx];
+      
+      picked.draftPosition = STATE.draft.currentPick + 1;
+      picked.draftedBy = `Team ${STATE.draft.currentPick + 1}`;
+      
+      STATE.draft.draftedPlayers.push(picked);
+    }
+    
+    window.autoDraftUser = function() {
+      if (STATE.draft.currentPick !== STATE.draft.yourPick - 1) {
+        showToast("Not your pick yet!", "bad");
+        return;
+      }
+      
+      const available = STATE.draft.prospects.filter(p => !p.draftPosition && !p.userFlags.includes("🚫"));
+      if (available.length === 0) {
+        showToast("No prospects available!", "bad");
+        return;
+      }
+      
+      // Calculate BPA vs Needs
+      const positionCounts = {};
+      STATE.roster.forEach(p => {
+        positionCounts[p.pos] = (positionCounts[p.pos] || 0) + 1;
+      });
+      
+      const needyPositions = ["PG", "SG", "SF", "PF", "C"].filter(pos => (positionCounts[pos] || 0) < 2);
+      
+      let bestProspect = available[0];
+      let bestScore = 0;
+      
+      available.forEach(p => {
+        let score = (p.projectedOvr || 70) + (p.scoutingConfidence / 2);
+        
+        // Boost for team needs
+        if (needyPositions.includes(p.pos)) {
+          score += 15;
+        }
+        
+        // Boost for favorited
+        if (p.userFlags.includes("⭐")) {
+          score += 20;
+        }
+        
+        if (score > bestScore) {
+          bestScore = score;
+          bestProspect = p;
+        }
+      });
+      
+      executePick(bestProspect, "standard");
+    };
+    
+    function executePick(prospect, contractType) {
+      if (!prospect) return;
+      
+      prospect.draftPosition = STATE.draft.yourPick;
+      prospect.draftedBy = "Your Team";
+      
+      STATE.draft.draftedPlayers.push(prospect);
+      
+      const newPlayer = draftPlayer(prospect, contractType);
+      STATE.roster.push(newPlayer);
+      
+      // Fan hype update for draft picks
+      if (prospect.tier === "Elite") {
+        updateFanHype(15, `Drafting elite prospect ${prospect.name}`);
+      } else if (prospect.tier === "High") {
+        updateFanHype(10, `Selecting high-upside ${prospect.name} in draft`);
+      } else if (prospect.tier === "Mid") {
+        updateFanHype(5, `Adding solid prospect ${prospect.name}`);
+      }
+      
+      STATE.draft.currentPick++;
+      
+      save(STATE);
+      renderDraft();
+      renderRoster();
+      
+      showToast(`Drafted ${prospect.name} at #${STATE.draft.yourPick}!`, "good");
+      
+      // Continue draft
+      advanceDraft();
+    }
+    
+    function endDraft() {
+      STATE.draft.draftStarted = false;
+      
+      const yourPick = STATE.draft.draftedPlayers.find(p => p.draftedBy === "Your Team");
+      
+      let msg = "Draft complete!";
+      if (yourPick) {
+        msg += ` You selected ${yourPick.name} at #${yourPick.draftPosition}.`;
+      }
+      
+      showToast(msg, "good");
+      
+      save(STATE);
+      renderDraft();
     }
     
     function openOwnerMeeting(meetingType = "progress") {
@@ -7369,6 +10240,25 @@
     $("#requestMeetingBtn")?.addEventListener("click", () => {
       openOwnerMeeting("progress");
     });
+    
+    // Finance control listeners
+    $("#finTicketPrice")?.addEventListener("input", (e) => {
+      STATE.finance.settings.ticketPrice = parseFloat(e.target.value);
+      renderFinance();
+      save(STATE);
+    });
+    
+    $("#finPromoSpend")?.addEventListener("input", (e) => {
+      STATE.finance.settings.promoSpend = parseInt(e.target.value);
+      renderFinance();
+      save(STATE);
+    });
+    
+    $("#finFacilityLvl")?.addEventListener("input", (e) => {
+      STATE.finance.settings.facilityLvl = parseInt(e.target.value);
+      renderFinance();
+      save(STATE);
+    });
 
     // -------------------------------
     // Helpers
@@ -7376,6 +10266,13 @@
     function rerenderAll(){
       $(".title").textContent = STATE.meta.teamName;
       $("#seasonTag").textContent = `Season: ${STATE.meta.season}`;
+      
+      // Update settings UI
+      $("#teamName").value = STATE.meta.teamName;
+      $("#seasonInput").value = STATE.meta.season;
+      if (!STATE.settings) STATE.settings = { ownerIntervention: true };
+      $("#ownerInterventionToggle").checked = STATE.settings.ownerIntervention !== false;
+      
       renderDashboardCaps();
       renderDashboardRecord();
       renderPerformance();
@@ -7383,6 +10280,8 @@
       renderLeagueHeadlines();
       renderTopPerformer();
       renderAnalytics();
+      renderFanHype();
+      renderDraft();
       renderRoster();
       renderCapSheet();
     }
@@ -7397,6 +10296,27 @@
       document.body.appendChild(el);
       setTimeout(()=>el.remove(), 1800);
     }
+    
+    function showToast(msg, type = "neutral"){
+      const el = document.createElement("div");
+      el.textContent = msg;
+      el.style.position="fixed"; el.style.bottom="16px"; el.style.right="16px";
+      el.style.padding="10px 12px";
+      el.style.borderRadius="8px"; el.style.boxShadow="var(--shadow)"; el.style.zIndex=9999;
+      el.style.border="1px solid var(--border)";
+      
+      if (type === "good") {
+        el.style.background="#1a3d1a"; el.style.color="#4ade80"; el.style.borderColor="#4ade80";
+      } else if (type === "bad") {
+        el.style.background="#3d1a1a"; el.style.color="#f87171"; el.style.borderColor="#f87171";
+      } else {
+        el.style.background="var(--bg-3)"; el.style.color="var(--text-0)";
+      }
+      
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(), 2000);
+    }
+    
     function escapeHtml(s){ return (s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) }
     function inferTeamNeed(){
       // naive: find lowest OVR position
