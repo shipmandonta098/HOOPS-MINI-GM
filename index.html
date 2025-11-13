@@ -4069,6 +4069,7 @@
     // -------------------------------
     // League Setup Logic
     // -------------------------------
+    const STORAGE_KEY = "hoops-mini-gm";
     const SETUP_STORAGE_KEY = "hoops-mini-gm-setup";
     
     // Check if league already exists
@@ -4110,11 +4111,13 @@
       const setupScreen = document.getElementById("setupScreen");
       const mainApp = document.getElementById("mainApp");
       
-      setupScreen.classList.add("fade-out");
-      setTimeout(() => {
-        setupScreen.style.display = "none";
-        mainApp.classList.add("active");
-      }, 500);
+      if (setupScreen && mainApp) {
+        setupScreen.classList.add("fade-out");
+        setTimeout(() => {
+          setupScreen.style.display = "none";
+          mainApp.classList.add("active");
+        }, 500);
+      }
     });
 
     // Load Save button
@@ -4128,13 +4131,15 @@
       const setupScreen = document.getElementById("setupScreen");
       const mainApp = document.getElementById("mainApp");
       
-      setupScreen.classList.add("fade-out");
-      setTimeout(() => {
-        setupScreen.style.display = "none";
-        mainApp.classList.add("active");
-        // STATE will be loaded from localStorage automatically
-        rerenderAll();
-      }, 500);
+      if (setupScreen && mainApp) {
+        setupScreen.classList.add("fade-out");
+        setTimeout(() => {
+          setupScreen.style.display = "none";
+          mainApp.classList.add("active");
+          // STATE will be loaded from localStorage automatically
+          rerenderAll();
+        }, 500);
+      }
     });
 
     // Auto-load if save exists
@@ -6362,9 +6367,21 @@
     }
     
     function generateRoster() {
-      const first = ["Darius","Kai","Marcus","Jalen","Devon","Rico","Andre","Isaiah","Kobe","Zion","Luka","Dante","Niko","Tyler","Miles","Kenji","Carlos","Jamal","Elias","Xavier"];
-      const last = ["Lawson","Ajayi","Vega","Rodriguez","Nguyen","Silva","Khan","Yamamoto","Dubois","Rossi","O'Neal","Okafor","Petrovic","Han","Ivanov","Chen","Diaz","Kim","Patel","Brown"];
-      const positions = ["PG","SG","SF","PF","C"];
+      const first = ["Darius","Marcus","Jalen","Devin","Kobe","Zion","Trey","Lamont","Elijah",
+"Kendrick","Andre","Isaiah","Tyrese","Jordan","Jayden","Brice","Dominic",
+"Caleb","Roman","Silas","Malik","Kamari","Jett","Cameron","Bryson",
+"Colby","Miles","Carson","Evan","Logan","Jamal","Corey","Travis",
+"Derrick","Shawn","Trevor","Hayden","Parker","Chase","Owen","Blake",
+"Hunter","Shane","Noah","Caden","Tanner","Grant","Wesley","Nate"]
+
+      const last = ["Lawson","Coleman","Harper","Wells","Patterson","Knight","Holloway",
+"Reyes","Carter","Morrison","Harris","Shaw","Mitchell","Burns","Sullivan",
+"Porter","Henderson","Bryant","Howard","Stevens","Wade","Douglas","Green",
+"Duncan","Palmer","Saunders","Matthews","Foster","Webb","Armstrong",
+"Griffin","Banks","Hayes","Miller","Cooper","Reed","Walker","Price",
+"Bailey","Dean","Rice","Hughes","Wallace","Payne","Cross","Garrett",
+"Long","Hardy","Rivers","Stephens"]
+
       const archetypes = {
         PG: ["Floor General", "Scoring Guard", "Defensive Pest", "Combo Guard", "Pure Point"],
         SG: ["3&D Wing", "Shot Creator", "Slasher", "Defensive Stopper", "Volume Scorer"],
@@ -6372,6 +6389,8 @@
         PF: ["Stretch Four", "Power Forward", "Rim Protector", "Face-Up Big", "Enforcer"],
         C: ["Paint Beast", "Stretch Five", "Defensive Anchor", "Pick & Roll Big", "Traditional Center"]
       };
+      
+      const positions = ["PG","SG","SF","PF","C"];
       const roster = [];
       
       // Generate 15 players
@@ -6569,8 +6588,21 @@
     // Free Agency System
     // -------------------------------
     function generateFreeAgents(count = 75) {
-      const first = ["Darius","Kai","Marcus","Jalen","Devon","Rico","Andre","Isaiah","Kobe","Zion","Luka","Dante","Niko","Tyler","Miles","Kenji","Carlos","Jamal","Elias","Xavier"];
-      const last = ["Lawson","Ajayi","Vega","Rodriguez","Nguyen","Silva","Khan","Yamamoto","Dubois","Rossi","O'Neal","Okafor","Petrovic","Han","Ivanov","Chen","Diaz","Kim","Patel","Brown"];
+      const first = ["Darius","Marcus","Jalen","Devin","Kobe","Zion","Trey","Lamont","Elijah",
+"Kendrick","Andre","Isaiah","Tyrese","Jordan","Jayden","Brice","Dominic",
+"Caleb","Roman","Silas","Malik","Kamari","Jett","Cameron","Bryson",
+"Colby","Miles","Carson","Evan","Logan","Jamal","Corey","Travis",
+"Derrick","Shawn","Trevor","Hayden","Parker","Chase","Owen","Blake",
+"Hunter","Shane","Noah","Caden","Tanner","Grant","Wesley","Nate"]
+
+      const last = ["Lawson","Coleman","Harper","Wells","Patterson","Knight","Holloway",
+"Reyes","Carter","Morrison","Harris","Shaw","Mitchell","Burns","Sullivan",
+"Porter","Henderson","Bryant","Howard","Stevens","Wade","Douglas","Green",
+"Duncan","Palmer","Saunders","Matthews","Foster","Webb","Armstrong",
+"Griffin","Banks","Hayes","Miller","Cooper","Reed","Walker","Price",
+"Bailey","Dean","Rice","Hughes","Wallace","Payne","Cross","Garrett",
+"Long","Hardy","Rivers","Stephens"]
+
       const positions = ["PG","SG","SF","PF","C"];
       const archetypes = {
         PG: ["Floor General", "Scoring Guard", "Defensive Pest", "Combo Guard", "Pure Point"],
@@ -7241,7 +7273,7 @@
     // -------------------------------
     // Storage
     // -------------------------------
-    const STORAGE_KEY = "hoops-mini-gm";
+    // STORAGE_KEY already defined at top of script
     function load(){
       try { 
         const saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || initialState;
