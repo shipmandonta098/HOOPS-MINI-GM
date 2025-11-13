@@ -1473,6 +1473,162 @@
     .fan-hype-delta.positive{ color:#4ade80; }
     .fan-hype-delta.negative{ color:#f87171; }
     
+    /* Schedule Styles */
+    .schedule-container{
+      display:flex; flex-direction:column; gap:20px;
+    }
+    .schedule-header{
+      display:grid; grid-template-columns:1fr auto auto; gap:20px; align-items:center;
+      padding:16px;
+    }
+    .schedule-nav{
+      display:flex; gap:12px; align-items:center;
+    }
+    .month-display{
+      font-size:18px; font-weight:700; min-width:150px; text-align:center;
+    }
+    .schedule-stats{
+      display:flex; gap:20px;
+    }
+    .stat-item{
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .stat-label{
+      font-size:11px; color:var(--muted); text-transform:uppercase;
+    }
+    .stat-value{
+      font-size:16px; font-weight:600;
+    }
+    .schedule-actions{
+      display:flex; gap:8px;
+    }
+    .schedule-layout{
+      display:grid; grid-template-columns:500px 1fr; gap:20px;
+    }
+    .schedule-calendar{
+      display:flex; flex-direction:column; gap:16px;
+    }
+    .calendar-filters{
+      display:flex; gap:8px; flex-wrap:wrap;
+    }
+    .filter-btn{
+      background:var(--bg-3); border:1px solid var(--border); padding:6px 12px;
+      border-radius:6px; font-size:12px; cursor:pointer; transition:all 0.2s;
+    }
+    .filter-btn:hover{
+      background:var(--bg-2); color:var(--text-0);
+    }
+    .filter-btn.active{
+      background:var(--accent); color:#000; font-weight:600;
+    }
+    .calendar-grid{
+      display:grid; grid-template-columns:repeat(7, 1fr); gap:4px;
+    }
+    .calendar-day-header{
+      background:var(--bg-3); padding:8px 4px; text-align:center;
+      font-size:10px; font-weight:600; color:var(--muted);
+      text-transform:uppercase; border-radius:4px;
+    }
+    .calendar-cell{
+      background:var(--bg-3); border:1px solid var(--border); border-radius:6px;
+      padding:6px; min-height:80px; cursor:pointer; transition:all 0.2s;
+      position:relative;
+    }
+    .calendar-cell:hover{
+      background:var(--bg-2); border-color:var(--accent);
+    }
+    .calendar-cell.selected{
+      background:var(--bg-2); border-color:var(--accent); box-shadow:0 0 12px rgba(74,222,128,0.3);
+    }
+    .calendar-cell.other-month{
+      opacity:0.3;
+    }
+    .calendar-cell.today{
+      border-color:var(--accent); border-width:2px;
+    }
+    .cell-date{
+      font-size:11px; color:var(--muted); margin-bottom:4px;
+    }
+    .game-badge{
+      font-size:10px; padding:3px 6px; border-radius:4px; margin-bottom:2px;
+      display:inline-block;
+    }
+    .game-badge.home{
+      background:rgba(74,222,128,0.2); color:#4ade80; border:1px solid #4ade80;
+    }
+    .game-badge.away{
+      background:rgba(96,165,250,0.2); color:#60a5fa; border:1px solid #60a5fa;
+    }
+    .game-badge.tv{
+      background:rgba(251,191,36,0.2); color:#fbbf24; border:1px solid #fbbf24;
+      font-weight:600;
+    }
+    .game-badge.rivalry{
+      background:rgba(239,68,68,0.2); color:#ef4444; border:1px solid #ef4444;
+      font-weight:600;
+    }
+    .game-badge.b2b{
+      background:rgba(168,85,247,0.2); color:#a855f7; border:1px solid #a855f7;
+    }
+    .game-result{
+      font-size:13px; font-weight:700; margin-top:4px;
+    }
+    .game-result.win{
+      color:var(--good);
+    }
+    .game-result.loss{
+      color:var(--bad);
+    }
+    .game-opponent{
+      font-size:11px; color:var(--text-1); margin-top:4px;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .game-detail-panel{
+      min-height:600px;
+    }
+    .game-detail-header{
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border);
+    }
+    .game-detail-title{
+      font-size:20px; font-weight:700;
+    }
+    .game-detail-meta{
+      font-size:12px; color:var(--muted); display:flex; gap:12px; margin-top:8px;
+    }
+    .win-probability{
+      display:flex; flex-direction:column; gap:8px; margin:20px 0;
+      padding:16px; background:var(--bg-3); border-radius:8px;
+    }
+    .win-prob-label{
+      font-size:12px; color:var(--muted); text-transform:uppercase;
+    }
+    .win-prob-bar{
+      height:24px; background:var(--bg-1); border-radius:4px; overflow:hidden;
+      position:relative;
+    }
+    .win-prob-fill{
+      height:100%; background:linear-gradient(90deg, var(--good), #4ade80);
+      transition:width 0.3s;
+    }
+    .win-prob-value{
+      position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
+      font-size:14px; font-weight:700; color:var(--text-0);
+    }
+    .opponent-preview{
+      display:grid; grid-template-columns:repeat(2, 1fr); gap:16px;
+      margin:20px 0; padding:16px; background:var(--bg-3); border-radius:8px;
+    }
+    .preview-item{
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .preview-label{
+      font-size:11px; color:var(--muted); text-transform:uppercase;
+    }
+    .preview-value{
+      font-size:14px; font-weight:600;
+    }
+    
     /* Draft Styles */
     .draft-container{
       display:flex; flex-direction:column; gap:20px;
@@ -1805,6 +1961,20 @@
       font-size:11px; color:var(--muted); margin-top:8px;
       text-transform:uppercase;
     }
+    
+    /* Schedule game action buttons */
+    .schedule-game-row button{
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .schedule-game-row button:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      filter: brightness(1.1);
+    }
+    .schedule-game-row button:active{
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body>
@@ -1992,6 +2162,7 @@
         <button class="nav-btn" data-view="owner">👑 Owner</button>
         <button class="nav-btn" data-view="finance">🏦 Finance</button>
         <button class="nav-btn" data-view="trades">🔁 Trades</button>
+        <button class="nav-btn" data-view="schedule">🗓️ Schedule</button>
         <button class="nav-btn" data-view="draft">🧢 Draft</button>
       </nav>
       <div class="nav-section">
@@ -2295,7 +2466,56 @@
         <div id="tradeArea" class="empty">Trade engine not wired yet. This is where pick protections, matching rules, and AI team preferences will live.</div>
       </section>
 
-      <!-- DRAFT -->
+      <!-- SCHEDULE -->
+      <section data-view="schedule" hidden>
+        <div class="schedule-container">
+          <h2>Season Schedule</h2>
+          
+          <div style="margin-bottom: 12px;">
+            <button class="btn good" id="generateScheduleBtn">🔄 Generate Schedule</button>
+          </div>
+          
+          <!-- Header Controls -->
+          <div class="schedule-header panel">
+            <div class="schedule-stats">
+              <div class="stat-item">
+                <span class="stat-label">Record:</span>
+                <span class="stat-value" id="scheduleRecord">0-0</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Win %:</span>
+                <span class="stat-value" id="scheduleWinPct">.000</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Next Game:</span>
+                <span class="stat-value" id="scheduleNextGame">TBD</span>
+              </div>
+            </div>
+            
+            <div class="schedule-actions">
+              <button class="btn good" id="simGame" disabled>▶ Sim Game</button>
+              <button class="btn" id="simWeek">⏩ Sim Week</button>
+              <button class="btn" id="simMonth">⏭ Sim Month</button>
+            </div>
+          </div>
+          
+          <!-- Simple List Layout -->
+          <div class="panel">
+            <div class="schedule-filters" style="margin-bottom: 16px; display: flex; gap: 8px;">
+              <button class="filter-btn active" data-filter="all">All</button>
+              <button class="filter-btn" data-filter="home">Home</button>
+              <button class="filter-btn" data-filter="away">Away</button>
+              <button class="filter-btn" data-filter="upcoming">Upcoming</button>
+              <button class="filter-btn" data-filter="completed">Completed</button>
+            </div>
+            
+            <div id="scheduleList">
+              <!-- Generated by JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- DRAFT -->
       <section data-view="draft" hidden>
         <div class="draft-container">
@@ -5215,6 +5435,429 @@
     }
     
     // -------------------------------
+    // Rivalry System
+    // -------------------------------
+    
+    function getRivalryKey(team1, team2) {
+      // Always return consistent key (alphabetical order)
+      return team1 < team2 ? `${team1}_${team2}` : `${team2}_${team1}`;
+    }
+    
+    function initializeRivalries() {
+      if (!STATE.rivalries) STATE.rivalries = {};
+      
+      // Natural geographic/historical rivalries start at 50 (Warm)
+      const naturalRivals = [
+        ["LA Lightning", "Golden State Guardians"],
+        ["New York Navigators", "Brooklyn Bridges"],
+        ["Chicago Cyclones", "Detroit Dynamos"],
+        ["Boston Breakers", "Philadelphia Phoenixes"],
+        ["Miami Mirage", "Orlando Overdrive"],
+        ["Dallas Dynasty", "Houston Heatwave"],
+        ["Portland Pioneers", "San Francisco Riptide"]
+      ];
+      
+      naturalRivals.forEach(([team1, team2]) => {
+        const key = getRivalryKey(team1, team2);
+        if (!STATE.rivalries[key]) {
+          STATE.rivalries[key] = {
+            heat: 50,
+            history: [],
+            lastMeeting: 0,
+            totalMeetings: 0,
+            playoffMeetings: 0
+          };
+        }
+      });
+    }
+    
+    function getRivalryHeat(team1, team2) {
+      const key = getRivalryKey(team1, team2);
+      return STATE.rivalries[key]?.heat || 0;
+    }
+    
+    function getRivalryLevel(heat) {
+      if (heat >= 81) return { label: "Red Hot", color: "#ef4444", icon: "🔥🔥", glow: "0 0 20px #ef4444" };
+      if (heat >= 61) return { label: "Hot", color: "#f97316", icon: "🔥", glow: "0 0 15px #f97316" };
+      if (heat >= 41) return { label: "Warm", color: "#eab308", icon: "🌡️", glow: "none" };
+      if (heat >= 21) return { label: "Cold", color: "#60a5fa", icon: "❄️", glow: "none" };
+      return { label: "Ice Cold", color: "#3b82f6", icon: "🧊", glow: "none" };
+    }
+    
+    function updateRivalryHeat(team1, team2, delta, reason) {
+      const key = getRivalryKey(team1, team2);
+      
+      if (!STATE.rivalries[key]) {
+        STATE.rivalries[key] = {
+          heat: 0,
+          history: [],
+          lastMeeting: 0,
+          totalMeetings: 0,
+          playoffMeetings: 0
+        };
+      }
+      
+      const rivalry = STATE.rivalries[key];
+      const oldHeat = rivalry.heat;
+      rivalry.heat = Math.max(0, Math.min(100, rivalry.heat + delta));
+      
+      // Log significant changes
+      if (Math.abs(delta) >= 5) {
+        rivalry.history.unshift({
+          day: STATE.schedule?.currentDay || 0,
+          delta: delta,
+          reason: reason,
+          newHeat: rivalry.heat
+        });
+        
+        // Keep only last 20 events
+        if (rivalry.history.length > 20) {
+          rivalry.history = rivalry.history.slice(0, 20);
+        }
+      }
+      
+      // Generate feed entry for major heat changes
+      const oldLevel = getRivalryLevel(oldHeat);
+      const newLevel = getRivalryLevel(rivalry.heat);
+      
+      if (oldLevel.label !== newLevel.label) {
+        addEvent(`${team1} vs ${team2} rivalry now ${newLevel.icon} ${newLevel.label}! ${reason}`, "league");
+      }
+      
+      return rivalry.heat;
+    }
+    
+    function decayRivalryHeat() {
+      // Called periodically (e.g., every 30 days) to reduce heat for inactive rivalries
+      const currentDay = STATE.schedule?.currentDay || 0;
+      
+      Object.keys(STATE.rivalries).forEach(key => {
+        const rivalry = STATE.rivalries[key];
+        const daysSinceLastMeeting = currentDay - rivalry.lastMeeting;
+        
+        // Decay 1 point every 10 days of inactivity (after 30 day grace period)
+        if (daysSinceLastMeeting > 30) {
+          const decay = Math.floor((daysSinceLastMeeting - 30) / 10);
+          if (decay > 0) {
+            rivalry.heat = Math.max(0, rivalry.heat - Math.min(decay, 3)); // Max 3 per decay check
+          }
+        }
+      });
+    }
+    
+    function processRivalryGameEvents(game, won, scoreDiff) {
+      const myTeam = STATE.meta.teamName;
+      const isHome = game.homeTeam === myTeam;
+      const opponent = isHome ? game.awayTeam : game.homeTeam;
+      
+      const key = getRivalryKey(myTeam, opponent);
+      if (!STATE.rivalries[key]) {
+        STATE.rivalries[key] = {
+          heat: 20, // Start new rivalries at Cold
+          history: [],
+          lastMeeting: 0,
+          totalMeetings: 0,
+          playoffMeetings: 0
+        };
+      }
+      
+      const rivalry = STATE.rivalries[key];
+      rivalry.lastMeeting = game.day;
+      rivalry.totalMeetings++;
+      
+      let heatDelta = 0;
+      let reasons = [];
+      
+      // Base heat from any meeting
+      heatDelta += 2;
+      reasons.push("game played");
+      
+      // Close game (within 5 points)
+      if (scoreDiff <= 5) {
+        heatDelta += 8;
+        reasons.push("nail-biter finish");
+      }
+      
+      // Blowout (20+ points) - slight decrease
+      if (scoreDiff >= 20) {
+        heatDelta -= 3;
+        reasons.push("one-sided affair");
+      }
+      
+      // Overtime adds heat
+      if (game.overtime) {
+        heatDelta += 10;
+        reasons.push("overtime thriller");
+      }
+      
+      // TV game adds exposure
+      if (game.tvGame) {
+        heatDelta += 5;
+        reasons.push("national TV spotlight");
+      }
+      
+      // Back-to-back revenge factor
+      const myLastGame = STATE.schedule.games
+        .filter(g => g.day < game.day && g.status === 'final' && 
+                (g.homeTeam === myTeam || g.awayTeam === myTeam) &&
+                (g.homeTeam === opponent || g.awayTeam === opponent))
+        .sort((a, b) => b.day - a.day)[0];
+      
+      if (myLastGame && (game.day - myLastGame.day) <= 15) {
+        // Recent meeting - check if this is revenge
+        const lastGameWon = (myLastGame.homeTeam === myTeam && myLastGame.score.home > myLastGame.score.away) ||
+                           (myLastGame.awayTeam === myTeam && myLastGame.score.away > myLastGame.score.home);
+        
+        if (lastGameWon !== won) {
+          heatDelta += 7;
+          reasons.push("revenge game");
+        }
+      }
+      
+      // Win streak against rival
+      const recentGames = STATE.schedule.games
+        .filter(g => g.day <= game.day && g.status === 'final' && 
+                (g.homeTeam === myTeam || g.awayTeam === myTeam) &&
+                (g.homeTeam === opponent || g.awayTeam === opponent))
+        .sort((a, b) => b.day - a.day)
+        .slice(0, 3);
+      
+      const myWins = recentGames.filter(g => 
+        (g.homeTeam === myTeam && g.score.home > g.score.away) ||
+        (g.awayTeam === myTeam && g.score.away > g.score.home)
+      ).length;
+      
+      if (myWins === 3 || myWins === 0) {
+        heatDelta += 6;
+        reasons.push(myWins === 3 ? "dominating the series" : "struggling in matchup");
+      }
+      
+      // Already a hot rivalry? Amplify changes
+      if (rivalry.heat >= 70) {
+        heatDelta = Math.floor(heatDelta * 1.3);
+      }
+      
+      updateRivalryHeat(myTeam, opponent, heatDelta, reasons.join(", "));
+    }
+    
+    // -------------------------------
+    // Schedule System - Day-Based (170-day season)
+    // -------------------------------
+    
+    function generateDayBasedSchedule(myTeamId) {
+      const teams = LEAGUE_TEAMS;
+      const totalTeams = teams.length; // 30 teams
+      const totalDays = 170;
+      const gamesPerTeam = 82;
+      const allStarBreakStart = 61;
+      const allStarBreakEnd = 66;
+      
+      // Rivalry pairs
+      const rivalries = {
+        "LA Lightning": ["Golden State Guardians"],
+        "Golden State Guardians": ["LA Lightning"],
+        "New York Navigators": ["Brooklyn Bridges"],
+        "Brooklyn Bridges": ["New York Navigators"],
+        "Chicago Cyclones": ["Detroit Dynamos"],
+        "Detroit Dynamos": ["Chicago Cyclones"],
+        "Boston Breakers": ["Philadelphia Phoenixes"],
+        "Philadelphia Phoenixes": ["Boston Breakers"],
+        "Miami Mirage": ["Orlando Overdrive"],
+        "Orlando Overdrive": ["Miami Mirage"],
+        "Dallas Dynasty": ["Houston Heatwave"],
+        "Houston Heatwave": ["Dallas Dynasty"],
+        "Portland Pioneers": ["San Francisco Riptide"],
+        "San Francisco Riptide": ["Portland Pioneers"]
+      };
+      
+      // Initialize team schedules
+      const teamSchedules = {};
+      teams.forEach(team => {
+        teamSchedules[team] = {
+          games: [],
+          homeGames: 0,
+          awayGames: 0,
+          b2bCount: 0,
+          lastGameDay: 0,
+          currentRoadTrip: 0,
+          currentHomeStand: 0
+        };
+      });
+      
+      const allGames = [];
+      let gameId = 0;
+      
+      // Phase 1: Generate matchups (who plays who, how many times)
+      const matchups = [];
+      teams.forEach((team, idx) => {
+        const opponents = teams.filter(t => t !== team);
+        
+        // Play each opponent 2-3 times (total 82 games)
+        // Same conference: 3-4 games, Different conference: 2 games
+        opponents.forEach(opp => {
+          const isRival = rivalries[team]?.includes(opp);
+          const gamesVsOpp = isRival ? 4 : (Math.random() < 0.5 ? 3 : 2);
+          
+          for (let i = 0; i < gamesVsOpp; i++) {
+            if (teamSchedules[team].games.length < gamesPerTeam) {
+              matchups.push({
+                team1: team,
+                team2: opp,
+                isRival: isRival
+              });
+            }
+          }
+        });
+      });
+      
+      // Phase 2: Distribute games across 170 days (skip days 1-10 and 61-66)
+      const availableDays = [];
+      for (let d = 11; d <= totalDays; d++) {
+        if (d < allStarBreakStart || d > allStarBreakEnd) {
+          availableDays.push(d);
+        }
+      }
+      
+      // Shuffle matchups for variety
+      for (let i = matchups.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [matchups[i], matchups[j]] = [matchups[j], matchups[i]];
+      }
+      
+      // Phase 3: Schedule games day by day
+      let currentDay = 11;
+      let matchupIndex = 0;
+      const scheduledPairs = new Set();
+      
+      while (matchupIndex < matchups.length && currentDay <= totalDays) {
+        // Skip All-Star break
+        if (currentDay >= allStarBreakStart && currentDay <= allStarBreakEnd) {
+          currentDay++;
+          continue;
+        }
+        
+        const gamesThisDay = [];
+        const teamsPlayingToday = new Set();
+        
+        // Try to schedule 12-15 games per day (24-30 teams playing)
+        const targetGamesPerDay = 12 + Math.floor(Math.random() * 4);
+        
+        for (let attempt = 0; attempt < matchups.length && gamesThisDay.length < targetGamesPerDay; attempt++) {
+          const matchup = matchups[matchupIndex % matchups.length];
+          const { team1, team2, isRival } = matchup;
+          
+          // Check if both teams are available today
+          if (!teamsPlayingToday.has(team1) && !teamsPlayingToday.has(team2)) {
+            const t1Sched = teamSchedules[team1];
+            const t2Sched = teamSchedules[team2];
+            
+            // Check if teams haven't exceeded game limits
+            if (t1Sched.games.length < gamesPerTeam && t2Sched.games.length < gamesPerTeam) {
+              // Decide home/away
+              let homeTeam, awayTeam;
+              if (t1Sched.homeGames < 41 && t2Sched.awayGames < 41) {
+                homeTeam = team1;
+                awayTeam = team2;
+              } else if (t1Sched.awayGames < 41 && t2Sched.homeGames < 41) {
+                homeTeam = team2;
+                awayTeam = team1;
+              } else {
+                // Balance needed
+                if (t1Sched.homeGames < t1Sched.awayGames) {
+                  homeTeam = team1;
+                  awayTeam = team2;
+                } else {
+                  homeTeam = team2;
+                  awayTeam = team1;
+                }
+              }
+              
+              // Check for back-to-backs
+              const b2bHome = (currentDay - t1Sched.lastGameDay === 1);
+              const b2bAway = (currentDay - t2Sched.lastGameDay === 1);
+              const homeSched = teamSchedules[homeTeam];
+              const awaySched = teamSchedules[awayTeam];
+              
+              // Limit B2Bs to 15 per team
+              if ((b2bHome && homeSched.b2bCount >= 15) || (b2bAway && awaySched.b2bCount >= 15)) {
+                matchupIndex++;
+                continue;
+              }
+              
+              // Determine if TV game (rivals, top matchups, random 25%)
+              const isTVGame = isRival || Math.random() < 0.25;
+              
+              // Determine fatigue
+              let fatigue = "none";
+              if (b2bHome || b2bAway) fatigue = "medium";
+              if (b2bHome && b2bAway) fatigue = "high";
+              
+              const game = {
+                id: `game_${gameId++}`,
+                day: currentDay,
+                homeTeam: homeTeam,
+                awayTeam: awayTeam,
+                b2bHome: b2bHome,
+                b2bAway: b2bAway,
+                tvGame: isTVGame,
+                rivalry: isRival,
+                status: "upcoming",
+                score: null,
+                fatigue: fatigue,
+                attendance: 0
+              };
+              
+              allGames.push(game);
+              gamesThisDay.push(game);
+              teamsPlayingToday.add(homeTeam);
+              teamsPlayingToday.add(awayTeam);
+              
+              // Update team schedules
+              homeSched.games.push(game.id);
+              homeSched.homeGames++;
+              homeSched.lastGameDay = currentDay;
+              if (b2bHome) homeSched.b2bCount++;
+              
+              awaySched.games.push(game.id);
+              awaySched.awayGames++;
+              awaySched.lastGameDay = currentDay;
+              if (b2bAway) awaySched.b2bCount++;
+              
+              matchupIndex++;
+            } else {
+              matchupIndex++;
+            }
+          } else {
+            matchupIndex++;
+          }
+        }
+        
+        currentDay++;
+      }
+      
+      // Sort games by day
+      allGames.sort((a, b) => a.day - b.day);
+      
+      console.log(`Generated ${allGames.length} games across ${totalDays} days`);
+      return allGames;
+    }
+    
+    function calculateWinProbability(teamElo, oppElo, isHome) {
+      const HCA = isHome ? 100 : -100; // Home court advantage
+      const eloDiff = oppElo - teamElo + HCA;
+      return 1 / (1 + Math.pow(10, eloDiff / 400));
+    }
+    
+    function initializeLeagueElos() {
+      const elos = {};
+      LEAGUE_TEAMS.forEach(team => {
+        // Random Elo between 1300-1700 (1500 average)
+        elos[team] = 1400 + Math.floor(Math.random() * 200);
+      });
+      return elos;
+    }
+    
+    // -------------------------------
     // Draft System
     // -------------------------------
     
@@ -6567,6 +7210,17 @@
         selectedProspect: null,
         draftedPlayers: []
       },
+      schedule: {
+        games: [], // Array of game objects (170-day schedule)
+        currentDay: 1, // Current day of season (1-170)
+        selectedGame: null,
+        elo: 1500, // Team Elo rating
+        leagueElos: {} // Opponent Elo ratings
+      },
+      rivalries: {
+        // Format: "TeamA_TeamB": { heat: 0-100, history: [], lastMeeting: day }
+        // Pre-seeded natural rivalries
+      },
       dashboard: {
         wins: 0,
         losses: 0,
@@ -6668,6 +7322,7 @@
         if(view === "coaching") renderCoaching();
         if(view === "owner") renderOwner();
         if(view === "finance") renderFinance();
+        if(view === "schedule") renderSchedule();
         if(view === "draft") renderDraft();
       });
     });
@@ -8523,6 +9178,81 @@
     $("#startDraftBtn")?.addEventListener("click", () => window.startDraft());
     $("#autoDraftBtn")?.addEventListener("click", () => window.autoDraftUser());
     
+    // Schedule Event Handlers
+    $("#generateScheduleBtn")?.addEventListener("click", () => {
+      console.log("Force generating 170-day schedule...");
+      
+      // Initialize rivalries on first schedule generation
+      initializeRivalries();
+      
+      STATE.schedule = {
+        games: generateDayBasedSchedule(STATE.meta.teamName),
+        currentDay: 1,
+        selectedGame: null,
+        elo: 1500,
+        leagueElos: initializeLeagueElos()
+      };
+      save(STATE);
+      renderSchedule();
+      toast("170-day schedule generated with 82 games!");
+    });
+    
+    $("#simGame")?.addEventListener("click", () => {
+      const myTeam = STATE.meta.teamName;
+      const nextGame = STATE.schedule.games.find(g => 
+        g.status === "upcoming" && (g.homeTeam === myTeam || g.awayTeam === myTeam)
+      );
+      if (nextGame) {
+        simulateGame(nextGame);
+        renderSchedule();
+        toast("Game simulated!");
+      }
+    });
+    
+    $("#simWeek")?.addEventListener("click", () => {
+      const myTeam = STATE.meta.teamName;
+      const currentDay = STATE.schedule.currentDay || 1;
+      const weekEnd = currentDay + 7;
+      
+      const weekGames = STATE.schedule.games.filter(g => {
+        return g.status === "upcoming" && 
+               g.day >= currentDay && 
+               g.day < weekEnd &&
+               (g.homeTeam === myTeam || g.awayTeam === myTeam);
+      });
+      
+      weekGames.forEach(g => simulateGame(g));
+      
+      // Decay rivalries every 30 days
+      if (currentDay % 30 === 0) {
+        decayRivalryHeat();
+      }
+      
+      renderSchedule();
+      toast(`Simulated ${weekGames.length} game(s)!`);
+    });
+    
+    $("#simMonth")?.addEventListener("click", () => {
+      const myTeam = STATE.meta.teamName;
+      const currentDay = STATE.schedule.currentDay || 1;
+      const monthEnd = currentDay + 30;
+      
+      const monthGames = STATE.schedule.games.filter(g => {
+        return g.status === "upcoming" && 
+               g.day >= currentDay && 
+               g.day < monthEnd &&
+               (g.homeTeam === myTeam || g.awayTeam === myTeam);
+      });
+      
+      monthGames.forEach(g => simulateGame(g));
+      
+      // Decay rivalries after each month simulation
+      decayRivalryHeat();
+      
+      renderSchedule();
+      toast(`Simulated ${monthGames.length} game(s)!`);
+    });
+    
     // Draft detail tabs
     $$("[data-draft-tab]").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -9434,6 +10164,606 @@
       }
     }
     
+    // -------------------------------
+    // Schedule Rendering & Simulation
+    // -------------------------------
+    
+    function renderSchedule() {
+      console.log("renderSchedule called", STATE.schedule);
+      
+      // Initialize schedule if empty
+      if (!STATE.schedule) {
+        STATE.schedule = {
+          games: [],
+          currentDay: 1,
+          selectedGame: null,
+          elo: 1500,
+          leagueElos: {}
+        };
+      }
+      
+      if (!STATE.schedule.games || STATE.schedule.games.length === 0) {
+        console.log("Generating day-based schedule for:", STATE.meta.teamName);
+        STATE.schedule.games = generateDayBasedSchedule(STATE.meta.teamName);
+        STATE.schedule.currentDay = 1;
+        STATE.schedule.elo = 1500;
+        STATE.schedule.leagueElos = initializeLeagueElos();
+        console.log("Generated", STATE.schedule.games.length, "total games");
+        save(STATE);
+      }
+      
+      // Count my team's games
+      const myTeam = STATE.meta.teamName;
+      const myGames = STATE.schedule.games.filter(g => g.homeTeam === myTeam || g.awayTeam === myTeam);
+      const myCompleted = myGames.filter(g => g.status === 'final');
+      
+      // Update header stats
+      $("#scheduleRecord").textContent = `${STATE.dashboard.wins}-${STATE.dashboard.losses}`;
+      const winPct = (STATE.dashboard.wins / (STATE.dashboard.wins + STATE.dashboard.losses || 1)).toFixed(3);
+      $("#scheduleWinPct").textContent = winPct;
+      
+      // Find next game
+      const nextGame = myGames.find(g => g.status === "upcoming");
+      if (nextGame) {
+        const isHome = nextGame.homeTeam === myTeam;
+        const opponent = isHome ? nextGame.awayTeam : nextGame.homeTeam;
+        $("#scheduleNextGame").textContent = `Day ${nextGame.day}: ${isHome ? 'vs' : '@'} ${opponent}`;
+        $("#simGame").disabled = false;
+      } else {
+        $("#scheduleNextGame").textContent = "Season Complete";
+        $("#simGame").disabled = true;
+      }
+      
+      // Render simple list
+      renderScheduleList();
+    }
+    
+    function renderScheduleList() {
+      const list = $("#scheduleList");
+      
+      if (!list) {
+        console.error("Schedule list not found!");
+        return;
+      }
+      
+      if (!STATE.schedule || !STATE.schedule.games || STATE.schedule.games.length === 0) {
+        list.innerHTML = '<div style="padding:20px; color:var(--muted); text-align:center;">No schedule generated. Click "Generate Schedule" button.</div>';
+        return;
+      }
+      
+      const myTeam = STATE.meta.teamName;
+      
+      // Filter games for my team only
+      const myGames = STATE.schedule.games.filter(g => 
+        g.homeTeam === myTeam || g.awayTeam === myTeam
+      );
+      
+      console.log(`Displaying ${myGames.length} games for ${myTeam}`);
+      
+      let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
+      
+      myGames.forEach((game, idx) => {
+        const isHome = game.homeTeam === myTeam;
+        const opponent = isHome ? game.awayTeam : game.homeTeam;
+        const myB2B = isHome ? game.b2bHome : game.b2bAway;
+        const oppB2B = isHome ? game.b2bAway : game.b2bHome;
+        
+        // Get rivalry info
+        const rivalryHeat = getRivalryHeat(myTeam, opponent);
+        const rivalryLevel = getRivalryLevel(rivalryHeat);
+        const isRivalry = rivalryHeat >= 41; // Warm or higher
+        
+        // Determine win probability for upcoming games
+        let wpDisplay = '';
+        if (game.status === 'upcoming') {
+          const oppElo = STATE.schedule.leagueElos?.[opponent] || 1500;
+          const myElo = STATE.schedule.elo || 1500;
+          const wp = calculateWinProbability(myElo, oppElo, isHome);
+          wpDisplay = `<span style="color: var(--muted); font-size: 12px;">Win: ${(wp * 100).toFixed(0)}%</span>`;
+        }
+        
+        // Color coding for day ranges
+        let dayColor = 'var(--text-1)';
+        if (game.day <= 10) dayColor = 'var(--accent)'; // Training camp
+        if (game.day >= 61 && game.day <= 66) dayColor = 'var(--muted)'; // All-Star break
+        
+        // Add border glow for hot rivalries
+        const borderStyle = rivalryLevel.glow 
+          ? `border: 2px solid ${rivalryLevel.color}; box-shadow: 0 0 12px ${rivalryLevel.color}40;`
+          : 'border: 1px solid var(--border);';
+        
+        const tooltipText = isRivalry 
+          ? `Rivalry: ${rivalryLevel.label} (${rivalryHeat}/100)` 
+          : '';
+        
+        html += `
+          <div class="schedule-game-row" title="${tooltipText}" style="display: flex; align-items: center; padding: 12px; background: var(--bg-2); ${borderStyle} border-radius: 8px; gap: 12px;">
+            <div style="min-width: 50px; font-weight: 700; color: ${dayColor};">Day ${game.day}</div>
+            <div style="min-width: 80px;">
+              <span style="padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; background: ${isHome ? '#1a3d1a' : '#1a2a3d'}; color: ${isHome ? '#4ade80' : '#60a5fa'};">
+                ${isHome ? '🏠 HOME' : '✈️ AWAY'}
+              </span>
+            </div>
+            <div style="flex: 1; font-weight: 600; font-size: 15px;">${isHome ? 'vs' : '@'} ${opponent}</div>
+            
+            <div style="display: flex; gap: 6px; align-items: center;">
+              ${myB2B ? '<span style="padding: 4px 8px; border-radius: 4px; font-size: 11px; background: #3d1a3d; color: #c084fc;">⚡ B2B</span>' : ''}
+              ${game.tvGame ? '<span style="padding: 4px 8px; border-radius: 4px; font-size: 11px; background: #3d3d1a; color: #fbbf24;">📺 TV</span>' : ''}
+              ${isRivalry ? `<span style="padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; background: ${rivalryLevel.color}20; color: ${rivalryLevel.color}; border: 1px solid ${rivalryLevel.color};">${rivalryLevel.icon} ${rivalryLevel.label.toUpperCase()}</span>` : ''}
+              ${game.fatigue === 'high' ? '<span style="padding: 4px 8px; border-radius: 4px; font-size: 11px; background: #3d1a1a; color: #f87171;">😴 TIRED</span>' : ''}
+            </div>
+            
+            <div style="min-width: 120px; text-align: right;">
+              ${game.status === 'final' ? `
+                <span style="font-weight: 700; font-size: 18px; color: ${game.score?.home > game.score?.away ? (isHome ? 'var(--good)' : 'var(--bad)') : (isHome ? 'var(--bad)' : 'var(--good)')};">
+                  ${(isHome ? game.score?.home > game.score?.away : game.score?.away > game.score?.home) ? 'W' : 'L'} 
+                  ${isHome ? game.score?.home : game.score?.away}-${isHome ? game.score?.away : game.score?.home}
+                </span>
+              ` : `
+                <div style="display: flex; gap: 6px; justify-content: flex-end;">
+                  <button onclick="window.quickSimGame('${game.day}')" style="padding: 6px 12px; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">⚡ Simulate</button>
+                  <button onclick="window.watchLive('${game.day}')" style="padding: 6px 12px; background: var(--good); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">👁️ Watch Live</button>
+                </div>
+                <div style="margin-top: 4px;">${wpDisplay}</div>
+              `}
+            </div>
+          </div>
+        `;
+      });
+      
+      html += '</div>';
+      
+      // Add season phase indicators
+      const phases = `
+        <div style="margin-top: 20px; padding: 16px; background: var(--bg-3); border-radius: 8px; border: 1px solid var(--border);">
+          <div style="font-weight: 700; margin-bottom: 12px; color: var(--text-0);">Season Phases</div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+            <div style="padding: 8px; background: var(--bg-2); border-radius: 4px;">
+              <div style="font-size: 12px; color: var(--muted);">Training Camp</div>
+              <div style="font-weight: 600; color: var(--accent);">Days 1-10</div>
+            </div>
+            <div style="padding: 8px; background: var(--bg-2); border-radius: 4px;">
+              <div style="font-size: 12px; color: var(--muted);">All-Star Break</div>
+              <div style="font-weight: 600; color: var(--muted);">Days 61-66</div>
+            </div>
+            <div style="padding: 8px; background: var(--bg-2); border-radius: 4px;">
+              <div style="font-size: 12px; color: var(--muted);">Regular Season</div>
+              <div style="font-weight: 600; color: var(--good);">82 Games</div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      list.innerHTML = html + phases;
+    }
+    
+    function renderCalendar() {
+      // Deprecated - no longer using calendar view
+      return;
+    }
+    
+    function renderGameDetail(game) {
+      // Deprecated - no longer using game detail panel
+      return;
+    }
+    
+    window.selectGame = function(gameId) {
+      // No longer needed for list view
+    };
+    
+    window.simSelectedGame = function() {
+      // No longer needed for list view
+    };
+    
+    // Quick simulate a game by day
+    window.quickSimGame = function(day) {
+      const myTeam = STATE.meta.teamName;
+      const game = STATE.schedule.games.find(g => 
+        g.day === parseInt(day) && 
+        g.status === 'upcoming' && 
+        (g.homeTeam === myTeam || g.awayTeam === myTeam)
+      );
+      
+      if (game) {
+        simulateGame(game);
+        renderSchedule();
+        toast("Game simulated!");
+      }
+    };
+    
+    // Watch a game live by day
+    window.watchLive = function(day) {
+      const myTeam = STATE.meta.teamName;
+      const game = STATE.schedule.games.find(g => 
+        g.day === parseInt(day) && 
+        g.status === 'upcoming' && 
+        (g.homeTeam === myTeam || g.awayTeam === myTeam)
+      );
+      
+      if (game) {
+        watchLiveGame(game).then(() => {
+          renderSchedule();
+        });
+      }
+    };
+    
+    // Play-by-play live game simulation
+    async function watchLiveGame(game) {
+      const myTeam = STATE.meta.teamName;
+      const isHome = game.homeTeam === myTeam;
+      const opponent = isHome ? game.awayTeam : game.homeTeam;
+      
+      // Create modal overlay
+      const modal = document.createElement('div');
+      modal.id = 'live-game-modal';
+      modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;';
+      
+      const modalContent = document.createElement('div');
+      modalContent.style.cssText = 'background: var(--bg-1); border-radius: 12px; max-width: 800px; width: 100%; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; border: 2px solid var(--border);';
+      
+      modalContent.innerHTML = `
+        <div style="padding: 20px; border-bottom: 2px solid var(--border); background: var(--bg-2);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: 24px; font-weight: 700; color: var(--text-0);">
+              🏀 ${isHome ? myTeam : opponent} vs ${isHome ? opponent : myTeam}
+            </div>
+            <button onclick="document.getElementById('live-game-modal').remove()" style="background: var(--bad); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">Close</button>
+          </div>
+          <div style="margin-top: 12px; font-size: 14px; color: var(--muted);">Day ${game.day} • ${isHome ? '🏠 Home Game' : '✈️ Away Game'}</div>
+        </div>
+        
+        <div style="padding: 24px; background: var(--bg-3); display: flex; justify-content: space-around; align-items: center; border-bottom: 2px solid var(--border);">
+          <div style="text-align: center;">
+            <div style="font-size: 16px; font-weight: 600; color: var(--text-1); margin-bottom: 8px;">${isHome ? myTeam : opponent}</div>
+            <div id="live-score-home" style="font-size: 48px; font-weight: 700; color: var(--text-0);">0</div>
+          </div>
+          <div style="text-align: center;">
+            <div id="live-quarter" style="font-size: 20px; font-weight: 700; color: var(--accent);">1st</div>
+            <div id="live-time" style="font-size: 16px; color: var(--muted); margin-top: 4px;">12:00</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 16px; font-weight: 600; color: var(--text-1); margin-bottom: 8px;">${isHome ? opponent : myTeam}</div>
+            <div id="live-score-away" style="font-size: 48px; font-weight: 700; color: var(--text-0);">0</div>
+          </div>
+        </div>
+        
+        <div id="live-play-by-play" style="flex: 1; overflow-y: auto; padding: 20px; background: var(--bg-1);">
+          <div style="text-align: center; color: var(--muted); padding: 40px;">Starting game...</div>
+        </div>
+      `;
+      
+      modal.appendChild(modalContent);
+      document.body.appendChild(modal);
+      
+      // Simulate play-by-play
+      const playByPlay = document.getElementById('live-play-by-play');
+      const scoreHome = document.getElementById('live-score-home');
+      const scoreAway = document.getElementById('live-score-away');
+      const quarterEl = document.getElementById('live-quarter');
+      const timeEl = document.getElementById('live-time');
+      
+      let homeScore = 0;
+      let awayScore = 0;
+      playByPlay.innerHTML = '';
+      
+      const oppElo = STATE.schedule.leagueElos[opponent] || 1500;
+      let teamElo = STATE.schedule.elo;
+      const myB2B = isHome ? game.b2bHome : game.b2bAway;
+      if (myB2B) teamElo -= 15;
+      if (game.fatigue === 'high') teamElo -= 25;
+      else if (game.fatigue === 'medium') teamElo -= 15;
+      
+      const wp = calculateWinProbability(teamElo, oppElo, isHome);
+      
+      const plays = [
+        "makes a layup", "hits a jump shot", "drains a three-pointer", "scores on a fast break",
+        "makes both free throws", "scores on a putback", "finishes the alley-oop", "hits a mid-range jumper",
+        "converts the and-one", "scores in transition", "makes a contested layup", "hits from downtown"
+      ];
+      
+      const quarters = ['1st', '2nd', '3rd', '4th'];
+      
+      for (let quarter = 0; quarter < 4; quarter++) {
+        quarterEl.textContent = quarters[quarter];
+        
+        // Each quarter has 8-12 scoring plays
+        const playsInQuarter = 8 + Math.floor(Math.random() * 5);
+        
+        for (let i = 0; i < playsInQuarter; i++) {
+          await new Promise(resolve => setTimeout(resolve, 600)); // 600ms between plays
+          
+          const minutes = 12 - Math.floor((i / playsInQuarter) * 12);
+          const seconds = Math.floor(Math.random() * 60);
+          timeEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+          
+          // Determine who scores based on win probability
+          const myTeamScores = Math.random() < (isHome ? wp : 1 - wp);
+          const scoringTeam = myTeamScores ? myTeam : opponent;
+          const points = Math.random() < 0.3 ? 3 : 2; // 30% chance of 3-pointer
+          
+          if (myTeamScores) {
+            if (isHome) homeScore += points;
+            else awayScore += points;
+          } else {
+            if (isHome) awayScore += points;
+            else homeScore += points;
+          }
+          
+          scoreHome.textContent = homeScore;
+          scoreAway.textContent = awayScore;
+          
+          const play = plays[Math.floor(Math.random() * plays.length)];
+          const teamColor = scoringTeam === myTeam ? 'var(--good)' : 'var(--text-1)';
+          
+          const playDiv = document.createElement('div');
+          playDiv.style.cssText = 'padding: 12px; margin-bottom: 8px; background: var(--bg-2); border-radius: 6px; border-left: 3px solid ' + teamColor + '; animation: slideIn 0.3s ease;';
+          playDiv.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <span style="font-weight: 700; color: ${teamColor};">${scoringTeam}</span>
+                <span style="color: var(--text-1);"> ${play}</span>
+                ${points === 3 ? ' <span style="color: var(--accent);">+3</span>' : ' <span style="color: var(--muted);">+2</span>'}
+              </div>
+              <div style="font-size: 12px; color: var(--muted);">${minutes}:${seconds.toString().padStart(2, '0')}</div>
+            </div>
+          `;
+          
+          playByPlay.insertBefore(playDiv, playByPlay.firstChild);
+          
+          // Keep only last 15 plays visible
+          while (playByPlay.children.length > 15) {
+            playByPlay.removeChild(playByPlay.lastChild);
+          }
+        }
+        
+        // Quarter break
+        if (quarter < 3) {
+          await new Promise(resolve => setTimeout(resolve, 800));
+          const breakDiv = document.createElement('div');
+          breakDiv.style.cssText = 'padding: 16px; margin-bottom: 8px; background: var(--bg-3); border-radius: 6px; text-align: center; font-weight: 700; color: var(--accent); border: 1px dashed var(--border);';
+          breakDiv.textContent = `End of ${quarters[quarter]} Quarter`;
+          playByPlay.insertBefore(breakDiv, playByPlay.firstChild);
+        }
+      }
+      
+      // Check for overtime if close
+      if (Math.abs(homeScore - awayScore) <= 3 && Math.random() < 0.15) {
+        game.overtime = true;
+        quarterEl.textContent = 'OT';
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        const overtimeDiv = document.createElement('div');
+        overtimeDiv.style.cssText = 'padding: 16px; margin-bottom: 8px; background: var(--accent); border-radius: 6px; text-align: center; font-weight: 700; color: white;';
+        overtimeDiv.textContent = '🔥 OVERTIME!';
+        playByPlay.insertBefore(overtimeDiv, playByPlay.firstChild);
+        
+        const otPlays = 3 + Math.floor(Math.random() * 3);
+        for (let i = 0; i < otPlays; i++) {
+          await new Promise(resolve => setTimeout(resolve, 700));
+          
+          const myTeamScores = Math.random() < (isHome ? wp : 1 - wp);
+          const scoringTeam = myTeamScores ? myTeam : opponent;
+          const points = Math.random() < 0.35 ? 3 : 2;
+          
+          if (myTeamScores) {
+            if (isHome) homeScore += points;
+            else awayScore += points;
+          } else {
+            if (isHome) awayScore += points;
+            else homeScore += points;
+          }
+          
+          scoreHome.textContent = homeScore;
+          scoreAway.textContent = awayScore;
+          
+          const play = plays[Math.floor(Math.random() * plays.length)];
+          const teamColor = scoringTeam === myTeam ? 'var(--good)' : 'var(--text-1)';
+          
+          const playDiv = document.createElement('div');
+          playDiv.style.cssText = 'padding: 12px; margin-bottom: 8px; background: var(--bg-2); border-radius: 6px; border-left: 3px solid ' + teamColor + ';';
+          playDiv.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <span style="font-weight: 700; color: ${teamColor};">${scoringTeam}</span>
+                <span style="color: var(--text-1);"> ${play}</span>
+                ${points === 3 ? ' <span style="color: var(--accent);">+3</span>' : ' <span style="color: var(--muted);">+2</span>'}
+              </div>
+              <div style="font-size: 12px; color: var(--muted);">OT</div>
+            </div>
+          `;
+          playByPlay.insertBefore(playDiv, playByPlay.firstChild);
+        }
+      }
+      
+      // Make sure there's a winner
+      if (homeScore === awayScore) {
+        if (Math.random() < (isHome ? wp : 1 - wp)) homeScore += 2;
+        else awayScore += 2;
+        scoreHome.textContent = homeScore;
+        scoreAway.textContent = awayScore;
+      }
+      
+      timeEl.textContent = '0:00';
+      quarterEl.textContent = game.overtime ? 'FINAL/OT' : 'FINAL';
+      
+      // Show final message
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const won = (isHome && homeScore > awayScore) || (!isHome && awayScore > homeScore);
+      const finalDiv = document.createElement('div');
+      finalDiv.style.cssText = `padding: 20px; margin-bottom: 8px; background: ${won ? 'var(--good)' : 'var(--bad)'}; border-radius: 8px; text-align: center; font-weight: 700; color: white; font-size: 18px;`;
+      finalDiv.textContent = won ? '🎉 VICTORY!' : '😞 DEFEAT';
+      playByPlay.insertBefore(finalDiv, playByPlay.firstChild);
+      
+      // Update game state
+      game.score = { home: homeScore, away: awayScore };
+      game.status = 'final';
+      
+      // Update Elo and stats (same as simulateGame)
+      const K = 32;
+      const expected = 1 / (1 + Math.pow(10, (oppElo - teamElo) / 400));
+      const actual = won ? 1 : 0;
+      const eloChange = Math.round(K * (actual - expected));
+      game.eloChange = eloChange;
+      STATE.schedule.elo += eloChange;
+      
+      if (isHome) {
+        const baseAttendance = 18000;
+        const hypeBonus = STATE.fans?.hype || 50;
+        const rivalryHeat = getRivalryHeat(myTeam, opponent);
+        const rivalryBonus = rivalryHeat >= 41 ? 1.2 : 1.0;
+        const tvBonus = game.tvGame ? 1.1 : 1.0;
+        game.attendance = Math.round(baseAttendance * (hypeBonus / 50) * rivalryBonus * tvBonus);
+      }
+      
+      if (won) {
+        STATE.dashboard.wins++;
+        if (STATE.dashboard.streak.type === "w") STATE.dashboard.streak.count++;
+        else STATE.dashboard.streak = {type: "w", count: 1};
+      } else {
+        STATE.dashboard.losses++;
+        if (STATE.dashboard.streak.type === "l") STATE.dashboard.streak.count++;
+        else STATE.dashboard.streak = {type: "l", count: 1};
+      }
+      
+      const blowout = Math.abs(homeScore - awayScore) >= 20;
+      const rivalryHeat = getRivalryHeat(myTeam, opponent);
+      const rivalryLevel = getRivalryLevel(rivalryHeat);
+      
+      let hypeMultiplier = 1.0;
+      if (rivalryHeat >= 61) hypeMultiplier = 1.5;
+      else if (rivalryHeat >= 41) hypeMultiplier = 1.2;
+      
+      if (won && rivalryHeat >= 41) {
+        updateFanHype?.(Math.floor(8 * hypeMultiplier), `${rivalryLevel.icon} Rivalry win vs ${opponent}!`);
+      } else if (!won && rivalryHeat >= 41) {
+        updateFanHype?.(Math.floor(-6 * hypeMultiplier), `${rivalryLevel.icon} Rivalry loss to ${opponent}`);
+      } else if (won && game.tvGame) {
+        updateFanHype?.(5, `Win on national TV`);
+      } else if (!won && game.tvGame) {
+        updateFanHype?.(-3, `Loss on national TV`);
+      } else if (!won && blowout && isHome) {
+        updateFanHype?.(-5, `Blowout home loss`);
+      }
+      
+      const finalScoreDiff = Math.abs(homeScore - awayScore);
+      processRivalryGameEvents(game, won, finalScoreDiff);
+      
+      STATE.schedule.currentDay = game.day + 1;
+      save(STATE);
+    }
+    
+    function simulateGame(game) {
+      const myTeam = STATE.meta.teamName;
+      const isHome = game.homeTeam === myTeam;
+      const opponent = isHome ? game.awayTeam : game.homeTeam;
+      
+      const oppElo = STATE.schedule.leagueElos[opponent] || 1500;
+      let teamElo = STATE.schedule.elo;
+      
+      // Apply B2B fatigue
+      const myB2B = isHome ? game.b2bHome : game.b2bAway;
+      if (myB2B) teamElo -= 15;
+      
+      // Apply high fatigue penalty
+      if (game.fatigue === 'high') teamElo -= 25;
+      else if (game.fatigue === 'medium') teamElo -= 15;
+      
+      const wp = calculateWinProbability(teamElo, oppElo, isHome);
+      const won = Math.random() < wp;
+      
+      // Generate score
+      const baseScore = 100 + Math.floor(Math.random() * 20);
+      const scoreDiff = 5 + Math.floor(Math.random() * 20);
+      
+      let homeScore, awayScore;
+      if (won) {
+        if (isHome) {
+          homeScore = baseScore + scoreDiff;
+          awayScore = baseScore;
+        } else {
+          awayScore = baseScore + scoreDiff;
+          homeScore = baseScore;
+        }
+      } else {
+        if (isHome) {
+          homeScore = baseScore;
+          awayScore = baseScore + scoreDiff;
+        } else {
+          awayScore = baseScore;
+          homeScore = baseScore + scoreDiff;
+        }
+      }
+      
+      // Overtime check
+      if (Math.abs(homeScore - awayScore) <= 3 && Math.random() < 0.15) {
+        game.overtime = true;
+        homeScore += Math.floor(Math.random() * 8);
+        awayScore += Math.floor(Math.random() * 8);
+      }
+      
+      game.score = { home: homeScore, away: awayScore };
+      
+      // Update Elo
+      const K = 32;
+      const expected = 1 / (1 + Math.pow(10, (oppElo - teamElo) / 400));
+      const actual = won ? 1 : 0;
+      const eloChange = Math.round(K * (actual - expected));
+      game.eloChange = eloChange;
+      STATE.schedule.elo += eloChange;
+      
+      // Calculate attendance (only for home games)
+      if (isHome) {
+        const baseAttendance = 18000;
+        const hypeBonus = STATE.fans?.hype || 50;
+        const rivalryBonus = game.rivalry ? 1.2 : 1.0;
+        const tvBonus = game.tvGame ? 1.1 : 1.0;
+        game.attendance = Math.round(baseAttendance * (hypeBonus / 50) * rivalryBonus * tvBonus);
+      }
+      
+      // Update records
+      if (won) {
+        STATE.dashboard.wins++;
+        if (STATE.dashboard.streak.type === "w") STATE.dashboard.streak.count++;
+        else STATE.dashboard.streak = {type: "w", count: 1};
+      } else {
+        STATE.dashboard.losses++;
+        if (STATE.dashboard.streak.type === "l") STATE.dashboard.streak.count++;
+        else STATE.dashboard.streak = {type: "l", count: 1};
+      }
+      
+      // Update fan hype with rivalry amplification
+      const blowout = Math.abs(homeScore - awayScore) >= 20;
+      const rivalryHeat = getRivalryHeat(myTeam, opponent);
+      const rivalryLevel = getRivalryLevel(rivalryHeat);
+      
+      // Rivalry games have amplified fan reactions
+      let hypeMultiplier = 1.0;
+      if (rivalryHeat >= 61) hypeMultiplier = 1.5; // Hot/Red Hot rivalries
+      else if (rivalryHeat >= 41) hypeMultiplier = 1.2; // Warm rivalries
+      
+      if (won && rivalryHeat >= 41) {
+        updateFanHype?.(Math.floor(8 * hypeMultiplier), `${rivalryLevel.icon} Rivalry win vs ${opponent}!`);
+      } else if (!won && rivalryHeat >= 41) {
+        updateFanHype?.(Math.floor(-6 * hypeMultiplier), `${rivalryLevel.icon} Rivalry loss to ${opponent}`);
+      } else if (won && game.tvGame) {
+        updateFanHype?.(5, `Win on national TV`);
+      } else if (!won && game.tvGame) {
+        updateFanHype?.(-3, `Loss on national TV`);
+      } else if (!won && blowout && isHome) {
+        updateFanHype?.(-5, `Blowout home loss`);
+      }
+      
+      // Process rivalry heat changes
+      const finalScoreDiff = Math.abs(homeScore - awayScore);
+      processRivalryGameEvents(game, won, finalScoreDiff);
+      
+      game.status = "final";
+      STATE.schedule.currentDay = game.day;
+      
+      addEvent(`Day ${game.day}: ${won ? 'W' : 'L'} ${isHome ? homeScore : awayScore}-${isHome ? awayScore : homeScore} ${isHome ? 'vs' : '@'} ${opponent}`, "league");
+      save(STATE);
+    }
+    
     function renderDraft() {
       if (!STATE.draft) {
         STATE.draft = {
@@ -10281,6 +11611,7 @@
       renderTopPerformer();
       renderAnalytics();
       renderFanHype();
+      renderSchedule();
       renderDraft();
       renderRoster();
       renderCapSheet();
