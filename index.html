@@ -4844,9 +4844,11 @@
           
           // Automatically show dashboard after league is created
           setTimeout(() => {
-            switchView('dashboard');
-            renderDashboard();
-          }, 50);
+            const dashboardBtn = document.querySelector('#nav .nav-btn[data-view="dashboard"]');
+            if (dashboardBtn) {
+              dashboardBtn.click();
+            }
+          }, 100);
         }, 500);
       }
     });
@@ -6178,6 +6180,9 @@
     // -------------------------------
     
     function getRivalryKey(team1, team2) {
+      // Safety check for undefined team names
+      if (!team1 || !team2) return '';
+      
       // Always return consistent key (alphabetical order)
       return team1 < team2 ? `${team1}_${team2}` : `${team2}_${team1}`;
     }
@@ -6211,6 +6216,9 @@
     }
     
     function getRivalryHeat(team1, team2) {
+      // Safety check for undefined team names
+      if (!team1 || !team2) return 0;
+      
       const key = getRivalryKey(team1, team2);
       return STATE.rivalries[key]?.heat || 0;
     }
