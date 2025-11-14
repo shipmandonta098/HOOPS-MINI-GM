@@ -4842,9 +4842,11 @@
           setupScreen.style.display = "none";
           mainApp.classList.add("active");
           
-          // Automatically show dashboard
-          switchView('dashboard');
-          renderDashboard();
+          // Automatically show dashboard after league is created
+          setTimeout(() => {
+            switchView('dashboard');
+            renderDashboard();
+          }, 50);
         }, 500);
       }
     });
