@@ -13156,100 +13156,150 @@
         };
       }
       
-      // Populate form fields
-      $("#teamFullName").value = STATE.teamInfo.fullName || "";
-      $("#teamCity").value = STATE.teamInfo.city || "";
-      $("#teamNickname").value = STATE.teamInfo.nickname || "";
-      $("#teamAbbr").value = STATE.teamInfo.abbreviation || "";
+      // Populate form fields with null checks
+      const teamFullName = $("#teamFullName");
+      const teamCity = $("#teamCity");
+      const teamNickname = $("#teamNickname");
+      const teamAbbr = $("#teamAbbr");
+      
+      if (teamFullName) teamFullName.value = STATE.teamInfo.fullName || "";
+      if (teamCity) teamCity.value = STATE.teamInfo.city || "";
+      if (teamNickname) teamNickname.value = STATE.teamInfo.nickname || "";
+      if (teamAbbr) teamAbbr.value = STATE.teamInfo.abbreviation || "";
       
       // Colors
-      $("#teamPrimaryColor").value = STATE.teamInfo.colors?.primary || "#3b82f6";
-      $("#teamPrimaryColorText").value = STATE.teamInfo.colors?.primary || "#3b82f6";
-      $("#teamSecondaryColor").value = STATE.teamInfo.colors?.secondary || "#1e40af";
-      $("#teamSecondaryColorText").value = STATE.teamInfo.colors?.secondary || "#1e40af";
-      $("#teamAccentColor").value = STATE.teamInfo.colors?.accent || "#fbbf24";
-      $("#teamAccentColorText").value = STATE.teamInfo.colors?.accent || "#fbbf24";
+      const primaryColor = $("#teamPrimaryColor");
+      const primaryColorText = $("#teamPrimaryColorText");
+      const secondaryColor = $("#teamSecondaryColor");
+      const secondaryColorText = $("#teamSecondaryColorText");
+      const accentColor = $("#teamAccentColor");
+      const accentColorText = $("#teamAccentColorText");
+      
+      if (primaryColor) primaryColor.value = STATE.teamInfo.colors?.primary || "#3b82f6";
+      if (primaryColorText) primaryColorText.value = STATE.teamInfo.colors?.primary || "#3b82f6";
+      if (secondaryColor) secondaryColor.value = STATE.teamInfo.colors?.secondary || "#1e40af";
+      if (secondaryColorText) secondaryColorText.value = STATE.teamInfo.colors?.secondary || "#1e40af";
+      if (accentColor) accentColor.value = STATE.teamInfo.colors?.accent || "#fbbf24";
+      if (accentColorText) accentColorText.value = STATE.teamInfo.colors?.accent || "#fbbf24";
       
       // Logos
-      $("#teamPrimaryLogo").value = STATE.teamInfo.logos?.primary || "";
-      $("#teamSecondaryLogo").value = STATE.teamInfo.logos?.secondary || "";
+      const primaryLogo = $("#teamPrimaryLogo");
+      const secondaryLogo = $("#teamSecondaryLogo");
+      
+      if (primaryLogo) primaryLogo.value = STATE.teamInfo.logos?.primary || "";
+      if (secondaryLogo) secondaryLogo.value = STATE.teamInfo.logos?.secondary || "";
       
       // League structure
-      $("#teamConference").value = STATE.teamInfo.conference || "Western";
-      $("#teamDivision").value = STATE.teamInfo.division || "Pacific";
+      const conference = $("#teamConference");
+      const division = $("#teamDivision");
+      
+      if (conference) conference.value = STATE.teamInfo.conference || "Western";
+      if (division) division.value = STATE.teamInfo.division || "Pacific";
       
       // Update logo previews
       updateLogoPreview("primary", STATE.teamInfo.logos?.primary);
       updateLogoPreview("secondary", STATE.teamInfo.logos?.secondary);
-      
-      // Setup event listeners for live updates
-      setupTeamManagementListeners();
     }
     
+    // Setup event listeners once on page load
+    let teamManagementListenersSetup = false;
+    
     function setupTeamManagementListeners() {
+      if (teamManagementListenersSetup) return;
+      teamManagementListenersSetup = true;
+      
       // Color pickers sync with text inputs
-      $("#teamPrimaryColor")?.addEventListener("input", (e) => {
-        $("#teamPrimaryColorText").value = e.target.value;
-      });
-      $("#teamPrimaryColorText")?.addEventListener("input", (e) => {
-        if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
-          $("#teamPrimaryColor").value = e.target.value;
-        }
-      });
+      const primaryColor = $("#teamPrimaryColor");
+      const primaryColorText = $("#teamPrimaryColorText");
       
-      $("#teamSecondaryColor")?.addEventListener("input", (e) => {
-        $("#teamSecondaryColorText").value = e.target.value;
-      });
-      $("#teamSecondaryColorText")?.addEventListener("input", (e) => {
-        if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
-          $("#teamSecondaryColor").value = e.target.value;
-        }
-      });
+      if (primaryColor && primaryColorText) {
+        primaryColor.addEventListener("input", (e) => {
+          primaryColorText.value = e.target.value;
+        });
+        primaryColorText.addEventListener("input", (e) => {
+          if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+            primaryColor.value = e.target.value;
+          }
+        });
+      }
       
-      $("#teamAccentColor")?.addEventListener("input", (e) => {
-        $("#teamAccentColorText").value = e.target.value;
-      });
-      $("#teamAccentColorText")?.addEventListener("input", (e) => {
-        if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
-          $("#teamAccentColor").value = e.target.value;
-        }
-      });
+      const secondaryColor = $("#teamSecondaryColor");
+      const secondaryColorText = $("#teamSecondaryColorText");
+      
+      if (secondaryColor && secondaryColorText) {
+        secondaryColor.addEventListener("input", (e) => {
+          secondaryColorText.value = e.target.value;
+        });
+        secondaryColorText.addEventListener("input", (e) => {
+          if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+            secondaryColor.value = e.target.value;
+          }
+        });
+      }
+      
+      const accentColor = $("#teamAccentColor");
+      const accentColorText = $("#teamAccentColorText");
+      
+      if (accentColor && accentColorText) {
+        accentColor.addEventListener("input", (e) => {
+          accentColorText.value = e.target.value;
+        });
+        accentColorText.addEventListener("input", (e) => {
+          if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+            accentColor.value = e.target.value;
+          }
+        });
+      }
       
       // Logo URL changes trigger preview update
-      $("#teamPrimaryLogo")?.addEventListener("input", (e) => {
-        updateLogoPreview("primary", e.target.value);
-      });
-      $("#teamSecondaryLogo")?.addEventListener("input", (e) => {
-        updateLogoPreview("secondary", e.target.value);
-      });
+      const primaryLogo = $("#teamPrimaryLogo");
+      const secondaryLogo = $("#teamSecondaryLogo");
+      
+      if (primaryLogo) {
+        primaryLogo.addEventListener("input", (e) => {
+          updateLogoPreview("primary", e.target.value);
+        });
+      }
+      
+      if (secondaryLogo) {
+        secondaryLogo.addEventListener("input", (e) => {
+          updateLogoPreview("secondary", e.target.value);
+        });
+      }
       
       // Save button
-      $("#saveTeamInfo")?.addEventListener("click", saveTeamInfo);
+      const saveBtn = $("#saveTeamInfo");
+      if (saveBtn) {
+        saveBtn.addEventListener("click", saveTeamInfo);
+      }
       
       // Reset button
-      $("#resetTeamInfo")?.addEventListener("click", () => {
-        if (confirm("Reset all team information to defaults?")) {
-          STATE.teamInfo = {
-            fullName: "San Francisco Riptide",
-            city: "San Francisco",
-            nickname: "Riptide",
-            abbreviation: "SFR",
-            colors: {
-              primary: "#3b82f6",
-              secondary: "#1e40af",
-              accent: "#fbbf24"
-            },
-            logos: {
-              primary: "",
-              secondary: ""
-            },
-            conference: "Western",
-            division: "Pacific"
-          };
-          renderTeamManagement();
-          toast("Team info reset to defaults!");
-        }
-      });
+      const resetBtn = $("#resetTeamInfo");
+      if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+          if (confirm("Reset all team information to defaults?")) {
+            STATE.teamInfo = {
+              fullName: "San Francisco Riptide",
+              city: "San Francisco",
+              nickname: "Riptide",
+              abbreviation: "SFR",
+              colors: {
+                primary: "#3b82f6",
+                secondary: "#1e40af",
+                accent: "#fbbf24"
+              },
+              logos: {
+                primary: "",
+                secondary: ""
+              },
+              conference: "Western",
+              division: "Pacific"
+            };
+            renderTeamManagement();
+            toast("Team info reset to defaults!");
+          }
+        });
+      }
     }
     
     function updateLogoPreview(type, url) {
@@ -13396,6 +13446,9 @@
     if (STATE.owner && (!STATE.owner.goals || STATE.owner.goals.length === 0)) {
       STATE.owner.goals = generateSeasonGoals(STATE, STATE.owner);
     }
+    
+    // Setup team management listeners on page load
+    setupTeamManagementListeners();
     
     rerenderAll();
   </script>
