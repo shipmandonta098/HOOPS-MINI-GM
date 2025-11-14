@@ -2361,6 +2361,126 @@
       color: var(--text-1);
       line-height: 1.5;
     }
+
+    /* Team Management Styles */
+    .team-mgmt-container{
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .team-mgmt-section{
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .team-mgmt-section h3{
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-0);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .form-grid{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+    .form-group{
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group label{
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-0);
+    }
+    .form-group input[type="text"],
+    .form-group input[type="url"],
+    .form-group select{
+      padding: 8px 12px;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-0);
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus{
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    .helper-text{
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .color-input-wrapper{
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .color-input-wrapper input[type="color"]{
+      width: 60px;
+      height: 40px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      background: var(--bg-1);
+    }
+    .color-input-wrapper input[type="text"]{
+      flex: 1;
+    }
+    .logo-preview{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .logo-preview-item{
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .logo-preview-label{
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-1);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .logo-preview-box{
+      aspect-ratio: 1;
+      background: var(--bg-1);
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .logo-preview-box img{
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+    }
+    .logo-placeholder{
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+    .team-mgmt-actions{
+      display: flex;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
   </style>
 </head>
 <body>
@@ -2567,6 +2687,7 @@
         <button class="nav-btn" data-view="history">🏛️ History</button>
       </nav>
       <div class="nav-section">
+        <button class="nav-btn" data-view="team">🏀 Team</button>
         <button class="nav-btn" data-view="settings">⚙️ Settings</button>
       </div>
     </aside>
@@ -3603,6 +3724,145 @@
               </div>
               
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <!-- TEAM MANAGEMENT -->
+      <section class="panel" data-view="team" hidden>
+        <h2>Team Management</h2>
+        <p style="color: var(--text-1); margin-bottom: 20px;">Customize your team's identity, branding, and league placement.</p>
+        
+        <div class="team-mgmt-container">
+          <!-- Team Identity -->
+          <div class="team-mgmt-section">
+            <h3>Team Identity</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="teamFullName">Full Team Name</label>
+                <input type="text" id="teamFullName" placeholder="San Francisco Riptide" />
+                <span class="helper-text">Full name of your team</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="teamCity">City/Location</label>
+                <input type="text" id="teamCity" placeholder="San Francisco" />
+                <span class="helper-text">City or region name</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="teamNickname">Team Nickname</label>
+                <input type="text" id="teamNickname" placeholder="Riptide" />
+                <span class="helper-text">Team mascot/nickname</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="teamAbbr">Abbreviation</label>
+                <input type="text" id="teamAbbr" placeholder="SFR" maxlength="3" />
+                <span class="helper-text">3-letter team code</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Team Branding -->
+          <div class="team-mgmt-section">
+            <h3>Team Colors & Branding</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="teamPrimaryColor">Primary Color</label>
+                <div class="color-input-wrapper">
+                  <input type="color" id="teamPrimaryColor" value="#3b82f6" />
+                  <input type="text" id="teamPrimaryColorText" value="#3b82f6" placeholder="#3b82f6" />
+                </div>
+                <span class="helper-text">Main team color</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="teamSecondaryColor">Secondary Color</label>
+                <div class="color-input-wrapper">
+                  <input type="color" id="teamSecondaryColor" value="#1e40af" />
+                  <input type="text" id="teamSecondaryColorText" value="#1e40af" placeholder="#1e40af" />
+                </div>
+                <span class="helper-text">Accent/secondary color</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="teamAccentColor">Accent Color</label>
+                <div class="color-input-wrapper">
+                  <input type="color" id="teamAccentColor" value="#fbbf24" />
+                  <input type="text" id="teamAccentColorText" value="#fbbf24" placeholder="#fbbf24" />
+                </div>
+                <span class="helper-text">Trim/detail color</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Team Logos -->
+          <div class="team-mgmt-section">
+            <h3>Team Logos</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="teamPrimaryLogo">Primary Logo URL</label>
+                <input type="url" id="teamPrimaryLogo" placeholder="https://example.com/logo.png" />
+                <span class="helper-text">Main team logo (PNG, SVG, or image URL)</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="teamSecondaryLogo">Secondary Logo URL</label>
+                <input type="url" id="teamSecondaryLogo" placeholder="https://example.com/alt-logo.png" />
+                <span class="helper-text">Alternative or wordmark logo (optional)</span>
+              </div>
+            </div>
+            
+            <div class="logo-preview">
+              <div class="logo-preview-item">
+                <div class="logo-preview-label">Primary Logo</div>
+                <div class="logo-preview-box" id="primaryLogoPreview">
+                  <span class="logo-placeholder">No logo set</span>
+                </div>
+              </div>
+              <div class="logo-preview-item">
+                <div class="logo-preview-label">Secondary Logo</div>
+                <div class="logo-preview-box" id="secondaryLogoPreview">
+                  <span class="logo-placeholder">No logo set</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- League Structure -->
+          <div class="team-mgmt-section">
+            <h3>League Structure</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="teamConference">Conference</label>
+                <select id="teamConference">
+                  <option value="Eastern">Eastern Conference</option>
+                  <option value="Western">Western Conference</option>
+                </select>
+                <span class="helper-text">Conference assignment</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="teamDivision">Division</label>
+                <select id="teamDivision">
+                  <option value="Atlantic">Atlantic</option>
+                  <option value="Central">Central</option>
+                  <option value="Southeast">Southeast</option>
+                  <option value="Northwest">Northwest</option>
+                  <option value="Pacific">Pacific</option>
+                  <option value="Southwest">Southwest</option>
+                </select>
+                <span class="helper-text">Division within conference</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="team-mgmt-actions">
+            <button class="btn good" id="saveTeamInfo">💾 Save Changes</button>
+            <button class="btn" id="resetTeamInfo">↩️ Reset to Defaults</button>
           </div>
         </div>
       </section>
@@ -7938,6 +8198,23 @@
 
     const initialState = {
       meta: { teamName: "San Francisco Riptide", season: 2026, rules: DEFAULT_RULES },
+      teamInfo: {
+        fullName: "San Francisco Riptide",
+        city: "San Francisco",
+        nickname: "Riptide",
+        abbreviation: "SFR",
+        colors: {
+          primary: "#3b82f6",
+          secondary: "#1e40af",
+          accent: "#fbbf24"
+        },
+        logos: {
+          primary: "",
+          secondary: ""
+        },
+        conference: "Western",
+        division: "Pacific"
+      },
       roster: generateRoster(),
       leagueRosters: generateLeagueRosters(),
       owner: (() => {
@@ -8134,6 +8411,7 @@
         if(view === "schedule") renderSchedule();
         if(view === "draft") renderDraft();
         if(view === "history") renderHistory();
+        if(view === "team") renderTeamManagement();
       });
     });
     $$("[data-view-jump]").forEach(btn=>{
@@ -12853,6 +13131,193 @@
       renderFinance();
       save(STATE);
     });
+
+    // -------------------------------
+    // Team Management
+    // -------------------------------
+    function renderTeamManagement() {
+      if (!STATE.teamInfo) {
+        STATE.teamInfo = {
+          fullName: STATE.meta.teamName || "San Francisco Riptide",
+          city: "San Francisco",
+          nickname: "Riptide",
+          abbreviation: "SFR",
+          colors: {
+            primary: "#3b82f6",
+            secondary: "#1e40af",
+            accent: "#fbbf24"
+          },
+          logos: {
+            primary: "",
+            secondary: ""
+          },
+          conference: "Western",
+          division: "Pacific"
+        };
+      }
+      
+      // Populate form fields
+      $("#teamFullName").value = STATE.teamInfo.fullName || "";
+      $("#teamCity").value = STATE.teamInfo.city || "";
+      $("#teamNickname").value = STATE.teamInfo.nickname || "";
+      $("#teamAbbr").value = STATE.teamInfo.abbreviation || "";
+      
+      // Colors
+      $("#teamPrimaryColor").value = STATE.teamInfo.colors?.primary || "#3b82f6";
+      $("#teamPrimaryColorText").value = STATE.teamInfo.colors?.primary || "#3b82f6";
+      $("#teamSecondaryColor").value = STATE.teamInfo.colors?.secondary || "#1e40af";
+      $("#teamSecondaryColorText").value = STATE.teamInfo.colors?.secondary || "#1e40af";
+      $("#teamAccentColor").value = STATE.teamInfo.colors?.accent || "#fbbf24";
+      $("#teamAccentColorText").value = STATE.teamInfo.colors?.accent || "#fbbf24";
+      
+      // Logos
+      $("#teamPrimaryLogo").value = STATE.teamInfo.logos?.primary || "";
+      $("#teamSecondaryLogo").value = STATE.teamInfo.logos?.secondary || "";
+      
+      // League structure
+      $("#teamConference").value = STATE.teamInfo.conference || "Western";
+      $("#teamDivision").value = STATE.teamInfo.division || "Pacific";
+      
+      // Update logo previews
+      updateLogoPreview("primary", STATE.teamInfo.logos?.primary);
+      updateLogoPreview("secondary", STATE.teamInfo.logos?.secondary);
+      
+      // Setup event listeners for live updates
+      setupTeamManagementListeners();
+    }
+    
+    function setupTeamManagementListeners() {
+      // Color pickers sync with text inputs
+      $("#teamPrimaryColor")?.addEventListener("input", (e) => {
+        $("#teamPrimaryColorText").value = e.target.value;
+      });
+      $("#teamPrimaryColorText")?.addEventListener("input", (e) => {
+        if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+          $("#teamPrimaryColor").value = e.target.value;
+        }
+      });
+      
+      $("#teamSecondaryColor")?.addEventListener("input", (e) => {
+        $("#teamSecondaryColorText").value = e.target.value;
+      });
+      $("#teamSecondaryColorText")?.addEventListener("input", (e) => {
+        if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+          $("#teamSecondaryColor").value = e.target.value;
+        }
+      });
+      
+      $("#teamAccentColor")?.addEventListener("input", (e) => {
+        $("#teamAccentColorText").value = e.target.value;
+      });
+      $("#teamAccentColorText")?.addEventListener("input", (e) => {
+        if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+          $("#teamAccentColor").value = e.target.value;
+        }
+      });
+      
+      // Logo URL changes trigger preview update
+      $("#teamPrimaryLogo")?.addEventListener("input", (e) => {
+        updateLogoPreview("primary", e.target.value);
+      });
+      $("#teamSecondaryLogo")?.addEventListener("input", (e) => {
+        updateLogoPreview("secondary", e.target.value);
+      });
+      
+      // Save button
+      $("#saveTeamInfo")?.addEventListener("click", saveTeamInfo);
+      
+      // Reset button
+      $("#resetTeamInfo")?.addEventListener("click", () => {
+        if (confirm("Reset all team information to defaults?")) {
+          STATE.teamInfo = {
+            fullName: "San Francisco Riptide",
+            city: "San Francisco",
+            nickname: "Riptide",
+            abbreviation: "SFR",
+            colors: {
+              primary: "#3b82f6",
+              secondary: "#1e40af",
+              accent: "#fbbf24"
+            },
+            logos: {
+              primary: "",
+              secondary: ""
+            },
+            conference: "Western",
+            division: "Pacific"
+          };
+          renderTeamManagement();
+          toast("Team info reset to defaults!");
+        }
+      });
+    }
+    
+    function updateLogoPreview(type, url) {
+      const previewId = type === "primary" ? "primaryLogoPreview" : "secondaryLogoPreview";
+      const preview = $(`#${previewId}`);
+      
+      if (!preview) return;
+      
+      if (url && url.trim()) {
+        // Try to load the image
+        const img = new Image();
+        img.onload = () => {
+          preview.innerHTML = `<img src="${url}" alt="${type} logo" />`;
+        };
+        img.onerror = () => {
+          preview.innerHTML = `<span class="logo-placeholder" style="color: var(--bad);">Invalid URL</span>`;
+        };
+        img.src = url;
+      } else {
+        preview.innerHTML = `<span class="logo-placeholder">No logo set</span>`;
+      }
+    }
+    
+    function saveTeamInfo() {
+      // Collect values from form
+      const fullName = $("#teamFullName").value.trim();
+      const city = $("#teamCity").value.trim();
+      const nickname = $("#teamNickname").value.trim();
+      const abbr = $("#teamAbbr").value.trim().toUpperCase();
+      
+      // Validation
+      if (!fullName) {
+        toast("Please enter a team name!");
+        return;
+      }
+      
+      if (abbr && abbr.length !== 3) {
+        toast("Abbreviation must be exactly 3 characters!");
+        return;
+      }
+      
+      // Save to STATE
+      STATE.teamInfo = {
+        fullName: fullName,
+        city: city,
+        nickname: nickname,
+        abbreviation: abbr || "TM",
+        colors: {
+          primary: $("#teamPrimaryColor").value,
+          secondary: $("#teamSecondaryColor").value,
+          accent: $("#teamAccentColor").value
+        },
+        logos: {
+          primary: $("#teamPrimaryLogo").value.trim(),
+          secondary: $("#teamSecondaryLogo").value.trim()
+        },
+        conference: $("#teamConference").value,
+        division: $("#teamDivision").value
+      };
+      
+      // Update meta.teamName to match
+      STATE.meta.teamName = fullName;
+      
+      // Save and re-render
+      save(STATE);
+      rerenderAll();
+      toast("Team information saved successfully!");
+    }
 
     // -------------------------------
     // Helpers
