@@ -4867,29 +4867,36 @@
     
     // Save league data
     function saveLeague(leagueId, state, metadata) {
-      const key = LEAGUE_PREFIX + leagueId;
-      const data = {
-        state: state,
-        metadata: metadata,
-        lastPlayed: Date.now()
-      };
-      localStorage.setItem(key, JSON.stringify(data));
-      
-      // Update index
-      const leagues = getAllLeagues();
-      const existing = leagues.find(l => l.id === leagueId);
-      if (existing) {
-        existing.metadata = metadata;
-        existing.lastPlayed = Date.now();
-      } else {
-        leagues.push({
-          id: leagueId,
+      try {
+        const key = LEAGUE_PREFIX + leagueId;
+        const data = {
+          state: state,
           metadata: metadata,
-          created: Date.now(),
           lastPlayed: Date.now()
-        });
+        };
+        localStorage.setItem(key, JSON.stringify(data));
+        
+        // Update index
+        const leagues = getAllLeagues();
+        const existing = leagues.find(l => l.id === leagueId);
+        if (existing) {
+          existing.metadata = metadata;
+          existing.lastPlayed = Date.now();
+        } else {
+          leagues.push({
+            id: leagueId,
+            metadata: metadata,
+            created: Date.now(),
+            lastPlayed: Date.now()
+          });
+        }
+        saveLeaguesIndex(leagues);
+      } catch (e) {
+        if (e.name === 'QuotaExceededError') {
+          throw e; // Re-throw to be handled by save() function
+        }
+        console.error("Error saving league:", e);
       }
-      saveLeaguesIndex(leagues);
     }
     
     // Load league data
@@ -8357,19 +8364,114 @@
       catch { return initialState }
     }
     function save(state){
-      // Save to current league if using multi-league system
-      if (currentLeagueId) {
-        const metadata = {
-          name: state.meta?.leagueName || 'My League',
-          teamName: state.meta?.teamName || 'Unknown Team',
-          season: state.meta?.season || 2026
-        };
-        saveLeague(currentLeagueId, state, metadata);
-      } else {
-        // Fallback to old single-league system
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      try {
+        // Create a cleaned version of state to reduce size
+        const cleanedState = cleanStateForStorage(state);
+        
+        // Save to current league if using multi-league system
+        if (currentLeagueId) {
+          const metadata = {
+            name: state.meta?.leagueName || 'My League',
+            teamName: state.meta?.teamName || 'Unknown Team',
+            season: state.meta?.season || 2026
+          };
+          saveLeague(currentLeagueId, cleanedState, metadata);
+        } else {
+          // Fallback to old single-league system
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(cleanedState));
+        }
+        toast("Saved league.");
+      } catch (e) {
+        if (e.name === 'QuotaExceededError') {
+          console.error("Storage quota exceeded. Attempting cleanup...");
+          
+          // Try to save with more aggressive cleanup
+          try {
+            const minimalState = cleanStateForStorage(state, true);
+            if (currentLeagueId) {
+              const metadata = {
+                name: state.meta?.leagueName || 'My League',
+                teamName: state.meta?.teamName || 'Unknown Team',
+                season: state.meta?.season || 2026
+              };
+              localStorage.setItem(LEAGUE_PREFIX + currentLeagueId, JSON.stringify(minimalState));
+              localStorage.setItem(LEAGUE_PREFIX + currentLeagueId + '-metadata', JSON.stringify(metadata));
+            } else {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(minimalState));
+            }
+            toast("⚠️ Saved with reduced data (storage limit reached)");
+          } catch (e2) {
+            console.error("Failed to save even with cleanup:", e2);
+            alert("Unable to save: Storage quota exceeded. Please export your league or delete old saves.");
+          }
+        } else {
+          console.error("Save error:", e);
+          toast("❌ Failed to save league");
+        }
       }
-      toast("Saved league.");
+    }
+    
+    function cleanStateForStorage(state, aggressive = false) {
+      const cleaned = JSON.parse(JSON.stringify(state)); // Deep clone
+      
+      // Limit event history to last 100 events
+      if (cleaned.events && cleaned.events.length > 100) {
+        cleaned.events = cleaned.events.slice(0, 100);
+      }
+      
+      // Limit owner events to last 50
+      if (cleaned.ownerEvents && cleaned.ownerEvents.length > 50) {
+        cleaned.ownerEvents = cleaned.ownerEvents.slice(0, 50);
+      }
+      
+      // Limit fan history
+      if (cleaned.fans?.history && cleaned.fans.history.length > 50) {
+        cleaned.fans.history = cleaned.fans.history.slice(0, 50);
+      }
+      
+      // Limit finance projections
+      if (cleaned.finance?.projections && cleaned.finance.projections.length > 20) {
+        cleaned.finance.projections = cleaned.finance.projections.slice(0, 20);
+      }
+      
+      if (aggressive) {
+        // More aggressive cleanup for emergency saves
+        
+        // Reduce draft prospects to only top 60
+        if (cleaned.draft?.prospects && cleaned.draft.prospects.length > 60) {
+          cleaned.draft.prospects = cleaned.draft.prospects
+            .sort((a, b) => b.projectedOvr - a.projectedOvr)
+            .slice(0, 60);
+        }
+        
+        // Limit free agents to 75
+        if (cleaned.freeAgents && cleaned.freeAgents.length > 75) {
+          cleaned.freeAgents = cleaned.freeAgents
+            .sort((a, b) => b.ovr - a.ovr)
+            .slice(0, 75);
+        }
+        
+        // Reduce schedule games - keep only upcoming and last 20 completed
+        if (cleaned.schedule?.games) {
+          const upcoming = cleaned.schedule.games.filter(g => g.status === 'upcoming');
+          const completed = cleaned.schedule.games
+            .filter(g => g.status !== 'upcoming')
+            .slice(0, 20);
+          cleaned.schedule.games = [...upcoming, ...completed];
+        }
+        
+        // Limit events to last 50
+        if (cleaned.events && cleaned.events.length > 50) {
+          cleaned.events = cleaned.events.slice(0, 50);
+        }
+        
+        // Remove coach candidates except top 6
+        if (cleaned.coaches?.candidates && cleaned.coaches.candidates.length > 6) {
+          cleaned.coaches.candidates = cleaned.coaches.candidates.slice(0, 6);
+        }
+      }
+      
+      return cleaned;
     }
 
     // -------------------------------
