@@ -1975,6 +1975,312 @@
     .schedule-game-row button:active{
       transform: translateY(0);
     }
+    
+    /* Franchise History Styles */
+    .history-container{
+      padding: 20px;
+    }
+    .history-grid{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .history-left, .history-right{
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .history-overview{
+      text-align: center;
+      padding: 24px;
+    }
+    .franchise-logo{
+      font-size: 64px;
+      margin-bottom: 16px;
+    }
+    .franchise-name{
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-0);
+      margin-bottom: 8px;
+    }
+    .franchise-founded{
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .history-stats-grid{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .history-stat{
+      background: var(--bg-3);
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .history-stat .stat-icon{
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    .history-stat .stat-value{
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+    .history-stat .stat-label{
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+    .best-worst-records{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .record-item{
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+    .record-item.best{
+      background: linear-gradient(135deg, var(--bg-2), rgba(74, 222, 128, 0.1));
+      border-color: var(--good);
+    }
+    .record-item.worst{
+      background: linear-gradient(135deg, var(--bg-2), rgba(239, 68, 68, 0.1));
+      border-color: var(--bad);
+    }
+    .record-label{
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .record-value{
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-0);
+    }
+    .history-seasons{
+      max-height: 600px;
+    }
+    .seasons-list{
+      max-height: 520px;
+      overflow-y: auto;
+    }
+    .season-item{
+      padding: 12px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s;
+    }
+    .season-item:hover{
+      background: var(--bg-3);
+      border-color: var(--accent);
+    }
+    .season-year{
+      font-weight: 700;
+      color: var(--text-0);
+    }
+    .season-record{
+      font-family: var(--mono);
+      color: var(--text-1);
+    }
+    .season-result{
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .season-result.champion{
+      background: #fbbf24;
+      color: #000;
+    }
+    .season-result.finals{
+      background: #c0c0c0;
+      color: #000;
+    }
+    .season-result.conf-finals{
+      background: #cd7f32;
+      color: #fff;
+    }
+    .season-result.playoffs{
+      background: var(--accent);
+      color: #fff;
+    }
+    .season-result.missed{
+      background: var(--bg-3);
+      color: var(--muted);
+    }
+    .leaders-tabs{
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .leader-tab{
+      padding: 8px 12px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-1);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .leader-tab:hover{
+      background: var(--bg-3);
+      border-color: var(--accent);
+    }
+    .leader-tab.active{
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    .leaders-list{
+      min-height: 200px;
+    }
+    .leader-item{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+    .leader-rank{
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--muted);
+      width: 40px;
+    }
+    .leader-rank.top{
+      color: #fbbf24;
+    }
+    .leader-info{
+      flex: 1;
+    }
+    .leader-name{
+      font-weight: 700;
+      color: var(--text-0);
+    }
+    .leader-years{
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .leader-value{
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+    .retired-item{
+      padding: 16px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      border-left: 3px solid var(--accent);
+    }
+    .retired-header{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .retired-number{
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+    .retired-player{
+      flex: 1;
+    }
+    .retired-name{
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-0);
+    }
+    .retired-years{
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .retired-desc{
+      font-size: 13px;
+      color: var(--text-1);
+      font-style: italic;
+      line-height: 1.5;
+    }
+    .awards-grid{
+      display: grid;
+      gap: 12px;
+    }
+    .award-category{
+      margin-bottom: 16px;
+    }
+    .award-title{
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .award-item{
+      padding: 8px 12px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .award-player{
+      font-weight: 600;
+      color: var(--text-0);
+    }
+    .award-year{
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+    .moments-feed{
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .moment-item{
+      padding: 12px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--good);
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+    .moment-year{
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .moment-text{
+      color: var(--text-1);
+      line-height: 1.5;
+    }
   </style>
 </head>
 <body>
@@ -2164,6 +2470,7 @@
         <button class="nav-btn" data-view="trades">🔁 Trades</button>
         <button class="nav-btn" data-view="schedule">🗓️ Schedule</button>
         <button class="nav-btn" data-view="draft">🧢 Draft</button>
+        <button class="nav-btn" data-view="history">🏛️ History</button>
       </nav>
       <div class="nav-section">
         <button class="nav-btn" data-view="settings">⚙️ Settings</button>
@@ -3094,6 +3401,113 @@
               <div id="finRecommendations" class="recommendations-list">
                 <!-- Populated by JS -->
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FRANCHISE HISTORY -->
+      <section data-view="history" hidden>
+        <div class="history-container">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>🏛️ Franchise History</h2>
+            <button class="btn" id="populateSampleHistoryBtn" style="font-size: 12px;">📊 Load Sample Data</button>
+          </div>
+          
+          <div class="history-grid">
+            <!-- LEFT COLUMN -->
+            <div class="history-left">
+              
+              <!-- Franchise Overview -->
+              <div class="panel history-overview">
+                <h3>Franchise Overview</h3>
+                <div class="franchise-logo">🏀</div>
+                <div class="franchise-name" id="historyTeamName">Loading...</div>
+                <div class="franchise-founded" id="historyFounded">Est. 2026</div>
+                
+                <div class="history-stats-grid">
+                  <div class="history-stat">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value" id="historyChampionships">0</div>
+                    <div class="stat-label">Championships</div>
+                  </div>
+                  <div class="history-stat">
+                    <div class="stat-icon">🥈</div>
+                    <div class="stat-value" id="historyFinals">0</div>
+                    <div class="stat-label">Finals</div>
+                  </div>
+                  <div class="history-stat">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value" id="historyPlayoffs">0</div>
+                    <div class="stat-label">Playoffs</div>
+                  </div>
+                </div>
+                
+                <div class="best-worst-records">
+                  <div class="record-item best">
+                    <div class="record-label">Best Season</div>
+                    <div class="record-value" id="historyBestRecord">--</div>
+                  </div>
+                  <div class="record-item worst">
+                    <div class="record-label">Worst Season</div>
+                    <div class="record-value" id="historyWorstRecord">--</div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Season-by-Season Log -->
+              <div class="panel history-seasons">
+                <h3>Season-by-Season</h3>
+                <div class="seasons-list" id="historySeasonsList">
+                  <div class="empty-state">No seasons completed yet.</div>
+                </div>
+              </div>
+              
+            </div>
+            
+            <!-- RIGHT COLUMN -->
+            <div class="history-right">
+              
+              <!-- Franchise Leaders -->
+              <div class="panel history-leaders">
+                <h3>Franchise Leaders</h3>
+                <div class="leaders-tabs">
+                  <button class="leader-tab active" data-stat="points">Points</button>
+                  <button class="leader-tab" data-stat="rebounds">Rebounds</button>
+                  <button class="leader-tab" data-stat="assists">Assists</button>
+                  <button class="leader-tab" data-stat="steals">Steals</button>
+                  <button class="leader-tab" data-stat="blocks">Blocks</button>
+                  <button class="leader-tab" data-stat="threes">3PT</button>
+                </div>
+                <div class="leaders-list" id="historyLeadersList">
+                  <div class="empty-state">Play some seasons to see franchise leaders.</div>
+                </div>
+              </div>
+              
+              <!-- Retired Jerseys -->
+              <div class="panel history-retired">
+                <h3>Retired Jerseys</h3>
+                <div class="retired-list" id="historyRetiredList">
+                  <div class="empty-state">No jerseys retired yet.</div>
+                </div>
+              </div>
+              
+              <!-- Major Awards -->
+              <div class="panel history-awards">
+                <h3>Major Awards</h3>
+                <div class="awards-grid" id="historyAwardsList">
+                  <div class="empty-state">No major awards yet.</div>
+                </div>
+              </div>
+              
+              <!-- Historic Moments -->
+              <div class="panel history-moments">
+                <h3>Historic Moments</h3>
+                <div class="moments-feed" id="historyMomentsList">
+                  <div class="empty-state">Make history!</div>
+                </div>
+              </div>
+              
             </div>
           </div>
         </div>
@@ -7253,6 +7667,32 @@
         // Format: "TeamA_TeamB": { heat: 0-100, history: [], lastMeeting: day }
         // Pre-seeded natural rivalries
       },
+      history: {
+        founded: 2026,
+        championships: 0,
+        finals: 0,
+        playoffs: 0,
+        bestRecord: null, // { wins, losses, year }
+        worstRecord: null, // { wins, losses, year }
+        seasons: [], // Array of season summaries
+        leaders: {
+          points: [], // { name, value, seasons }
+          rebounds: [],
+          assists: [],
+          steals: [],
+          blocks: [],
+          threes: []
+        },
+        retired: [], // { number, name, fromYear, toYear, retiredYear, desc }
+        awards: {
+          MVP: [], // { player, year }
+          DPOY: [],
+          ROTY: [],
+          COY: [],
+          FMVP: []
+        },
+        moments: [] // { year, text }
+      },
       dashboard: {
         wins: 0,
         losses: 0,
@@ -7356,6 +7796,7 @@
         if(view === "finance") renderFinance();
         if(view === "schedule") renderSchedule();
         if(view === "draft") renderDraft();
+        if(view === "history") renderHistory();
       });
     });
     $$("[data-view-jump]").forEach(btn=>{
@@ -9285,6 +9726,13 @@
       toast(`Simulated ${monthGames.length} game(s)!`);
     });
     
+    // Populate sample history button
+    $("#populateSampleHistoryBtn")?.addEventListener("click", () => {
+      if (confirm("This will replace current history with sample data. Continue?")) {
+        populateSampleHistory();
+      }
+    });
+    
     // Draft detail tabs
     $$("[data-draft-tab]").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -10794,6 +11242,449 @@
       
       addEvent(`Day ${game.day}: ${won ? 'W' : 'L'} ${isHome ? homeScore : awayScore}-${isHome ? awayScore : homeScore} ${isHome ? 'vs' : '@'} ${opponent}`, "league");
       save(STATE);
+    }
+    
+    // -------------------------------
+    // Franchise History
+    // -------------------------------
+    function renderHistory() {
+      if (!STATE.history) {
+        // Initialize history if it doesn't exist (backward compatibility)
+        STATE.history = {
+          founded: STATE.meta.season || 2026,
+          championships: 0,
+          finals: 0,
+          playoffs: 0,
+          bestRecord: null,
+          worstRecord: null,
+          seasons: [],
+          leaders: { points: [], rebounds: [], assists: [], steals: [], blocks: [], threes: [] },
+          retired: [],
+          awards: { MVP: [], DPOY: [], ROTY: [], COY: [], FMVP: [] },
+          moments: []
+        };
+      }
+      
+      // Update overview
+      document.getElementById('historyTeamName').textContent = STATE.meta.teamName || "Your Team";
+      document.getElementById('historyFounded').textContent = `Est. ${STATE.history.founded}`;
+      document.getElementById('historyChampionships').textContent = STATE.history.championships;
+      document.getElementById('historyFinals').textContent = STATE.history.finals;
+      document.getElementById('historyPlayoffs').textContent = STATE.history.playoffs;
+      
+      // Best/Worst records
+      const bestEl = document.getElementById('historyBestRecord');
+      const worstEl = document.getElementById('historyWorstRecord');
+      
+      if (STATE.history.bestRecord) {
+        bestEl.textContent = `${STATE.history.bestRecord.wins}-${STATE.history.bestRecord.losses} (${STATE.history.bestRecord.year})`;
+      } else {
+        bestEl.textContent = '--';
+      }
+      
+      if (STATE.history.worstRecord) {
+        worstEl.textContent = `${STATE.history.worstRecord.wins}-${STATE.history.worstRecord.losses} (${STATE.history.worstRecord.year})`;
+      } else {
+        worstEl.textContent = '--';
+      }
+      
+      // Season-by-Season log
+      renderSeasonsList();
+      
+      // Franchise leaders
+      renderLeaders('points');
+      
+      // Retired jerseys
+      renderRetiredJerseys();
+      
+      // Awards
+      renderAwards();
+      
+      // Historic moments
+      renderMoments();
+      
+      // Wire up leader tabs
+      document.querySelectorAll('.leader-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.leader-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          renderLeaders(tab.dataset.stat);
+        });
+      });
+    }
+    
+    function renderSeasonsList() {
+      const list = document.getElementById('historySeasonsList');
+      
+      if (!STATE.history.seasons || STATE.history.seasons.length === 0) {
+        list.innerHTML = '<div class="empty-state">No seasons completed yet.</div>';
+        return;
+      }
+      
+      let html = '';
+      const sortedSeasons = [...STATE.history.seasons].reverse(); // Most recent first
+      
+      sortedSeasons.forEach(season => {
+        const resultClass = season.playoffResult.includes('Champion') ? 'champion' :
+                           season.playoffResult.includes('Finals') ? 'finals' :
+                           season.playoffResult.includes('Conference Finals') ? 'conf-finals' :
+                           season.playoffResult.includes('Playoffs') ? 'playoffs' : 'missed';
+        
+        html += `
+          <div class="season-item">
+            <div class="season-year">${season.year}</div>
+            <div class="season-record">${season.wins}-${season.losses}</div>
+            <div class="season-result ${resultClass}">${season.playoffResult}</div>
+          </div>
+        `;
+      });
+      
+      list.innerHTML = html;
+    }
+    
+    function renderLeaders(stat) {
+      const list = document.getElementById('historyLeadersList');
+      
+      if (!STATE.history.leaders[stat] || STATE.history.leaders[stat].length === 0) {
+        list.innerHTML = '<div class="empty-state">No data yet.</div>';
+        return;
+      }
+      
+      const leaders = [...STATE.history.leaders[stat]].sort((a, b) => b.value - a.value).slice(0, 5);
+      
+      let html = '';
+      leaders.forEach((leader, idx) => {
+        html += `
+          <div class="leader-item">
+            <div class="leader-rank ${idx < 3 ? 'top' : ''}">${idx + 1}.</div>
+            <div class="leader-info">
+              <div class="leader-name">${leader.name}</div>
+              <div class="leader-years">${leader.seasons} seasons</div>
+            </div>
+            <div class="leader-value">${leader.value.toLocaleString()}</div>
+          </div>
+        `;
+      });
+      
+      list.innerHTML = html;
+    }
+    
+    function renderRetiredJerseys() {
+      const list = document.getElementById('historyRetiredList');
+      
+      if (!STATE.history.retired || STATE.history.retired.length === 0) {
+        list.innerHTML = '<div class="empty-state">No jerseys retired yet.</div>';
+        return;
+      }
+      
+      let html = '';
+      STATE.history.retired.forEach(retired => {
+        html += `
+          <div class="retired-item">
+            <div class="retired-header">
+              <div class="retired-number">#${retired.number}</div>
+              <div class="retired-player">
+                <div class="retired-name">${retired.name}</div>
+                <div class="retired-years">${retired.fromYear}-${retired.toYear} • Retired ${retired.retiredYear}</div>
+              </div>
+            </div>
+            <div class="retired-desc">${retired.desc}</div>
+          </div>
+        `;
+      });
+      
+      list.innerHTML = html;
+    }
+    
+    function renderAwards() {
+      const container = document.getElementById('historyAwardsList');
+      
+      const hasAwards = Object.values(STATE.history.awards).some(arr => arr && arr.length > 0);
+      
+      if (!hasAwards) {
+        container.innerHTML = '<div class="empty-state">No major awards yet.</div>';
+        return;
+      }
+      
+      let html = '';
+      const awardTypes = [
+        { key: 'MVP', label: 'Most Valuable Player', icon: '🏆' },
+        { key: 'FMVP', label: 'Finals MVP', icon: '👑' },
+        { key: 'DPOY', label: 'Defensive Player of the Year', icon: '🛡️' },
+        { key: 'ROTY', label: 'Rookie of the Year', icon: '⭐' },
+        { key: 'COY', label: 'Coach of the Year', icon: '🧠' }
+      ];
+      
+      awardTypes.forEach(award => {
+        const winners = STATE.history.awards[award.key];
+        if (winners && winners.length > 0) {
+          html += `<div class="award-category">`;
+          html += `<div class="award-title">${award.icon} ${award.label}</div>`;
+          winners.forEach(w => {
+            html += `
+              <div class="award-item">
+                <div class="award-player">${w.player}</div>
+                <div class="award-year">${w.year}</div>
+              </div>
+            `;
+          });
+          html += `</div>`;
+        }
+      });
+      
+      container.innerHTML = html;
+    }
+    
+    function renderMoments() {
+      const list = document.getElementById('historyMomentsList');
+      
+      if (!STATE.history.moments || STATE.history.moments.length === 0) {
+        list.innerHTML = '<div class="empty-state">Make history!</div>';
+        return;
+      }
+      
+      let html = '';
+      const sortedMoments = [...STATE.history.moments].reverse(); // Most recent first
+      
+      sortedMoments.forEach(moment => {
+        html += `
+          <div class="moment-item">
+            <div class="moment-year">${moment.year}</div>
+            <div class="moment-text">${moment.text}</div>
+          </div>
+        `;
+      });
+      
+      list.innerHTML = html;
+    }
+    
+    // Add moment to history
+    function addHistoricMoment(year, text) {
+      if (!STATE.history.moments) STATE.history.moments = [];
+      STATE.history.moments.push({ year, text });
+      save(STATE);
+    }
+    
+    // Update history at end of season
+    function updateSeasonHistory(wins, losses, playoffResult = "Missed Playoffs") {
+      if (!STATE.history) return;
+      
+      const year = STATE.meta.season || 2026;
+      
+      // Add season to history
+      STATE.history.seasons.push({
+        year: `${year}-${String(year + 1).slice(2)}`,
+        wins,
+        losses,
+        playoffResult
+      });
+      
+      // Update best/worst records
+      if (!STATE.history.bestRecord || wins > STATE.history.bestRecord.wins) {
+        STATE.history.bestRecord = { wins, losses, year };
+        addHistoricMoment(year, `New franchise record: ${wins}-${losses} season!`);
+      }
+      
+      if (!STATE.history.worstRecord || wins < STATE.history.worstRecord.wins) {
+        STATE.history.worstRecord = { wins, losses, year };
+      }
+      
+      // Update playoff appearances
+      if (playoffResult !== "Missed Playoffs") {
+        STATE.history.playoffs++;
+        
+        if (playoffResult.includes("Finals")) {
+          STATE.history.finals++;
+        }
+        
+        if (playoffResult.includes("Champion")) {
+          STATE.history.championships++;
+          addHistoricMoment(year, `🏆 NBA CHAMPIONS! First championship in franchise history!`);
+        }
+      }
+      
+      // Check for extreme scenarios
+      if (wins >= 60) {
+        addHistoricMoment(year, `Dominant ${wins}-${losses} season - ${wins} wins!`);
+      }
+      
+      if (wins <= 20) {
+        addHistoricMoment(year, `Rebuilding year: ${wins}-${losses} record.`);
+      }
+      
+      // Update franchise leaders (accumulate player stats)
+      updateFranchiseLeaders(year);
+      
+      save(STATE);
+    }
+    
+    // Update franchise career leaders
+    function updateFranchiseLeaders(year) {
+      if (!STATE.history.leaders) {
+        STATE.history.leaders = {
+          points: [],
+          rebounds: [],
+          assists: [],
+          steals: [],
+          blocks: [],
+          threes: []
+        };
+      }
+      
+      // For each player on roster, update their career totals
+      // This is simplified - in full version would track actual game stats
+      STATE.roster.forEach(player => {
+        const stats = ['points', 'rebounds', 'assists', 'steals', 'blocks', 'threes'];
+        
+        stats.forEach(stat => {
+          let existing = STATE.history.leaders[stat].find(l => l.name === player.name);
+          
+          if (existing) {
+            // Update existing player stats (simplified calculation based on OVR)
+            const statValue = calculateSeasonStat(player, stat);
+            existing.value += statValue;
+            existing.seasons++;
+          } else {
+            // Add new player to leaders
+            const statValue = calculateSeasonStat(player, stat);
+            STATE.history.leaders[stat].push({
+              name: player.name,
+              value: statValue,
+              seasons: 1
+            });
+          }
+        });
+      });
+    }
+    
+    // Calculate estimated season stats for a player
+    function calculateSeasonStat(player, stat) {
+      const ovr = player.ovr || 70;
+      const gamesPlayed = 70; // Simplified assumption
+      
+      switch(stat) {
+        case 'points':
+          return Math.floor((ovr / 10) * gamesPlayed); // e.g., 80 OVR = ~560 pts
+        case 'rebounds':
+          return Math.floor((ovr / 15) * gamesPlayed);
+        case 'assists':
+          return Math.floor((ovr / 20) * gamesPlayed);
+        case 'steals':
+          return Math.floor((ovr / 30) * gamesPlayed);
+        case 'blocks':
+          return Math.floor((ovr / 40) * gamesPlayed);
+        case 'threes':
+          return Math.floor(((player.skills?.three || 50) / 30) * gamesPlayed);
+        default:
+          return 0;
+      }
+    }
+    
+    // Populate sample history data for demonstration
+    function populateSampleHistory() {
+      const currentYear = STATE.meta.season || 2026;
+      
+      STATE.history = {
+        founded: 2020,
+        championships: 1,
+        finals: 2,
+        playoffs: 4,
+        bestRecord: { wins: 58, losses: 24, year: 2024 },
+        worstRecord: { wins: 22, losses: 60, year: 2021 },
+        seasons: [
+          { year: "2020-21", wins: 22, losses: 60, playoffResult: "Missed Playoffs" },
+          { year: "2021-22", wins: 35, losses: 47, playoffResult: "Missed Playoffs" },
+          { year: "2022-23", wins: 41, losses: 41, playoffResult: "Lost in 1st Round" },
+          { year: "2023-24", wins: 58, losses: 24, playoffResult: "NBA Champions 🏆" },
+          { year: "2024-25", wins: 52, losses: 30, playoffResult: "Lost in Finals" },
+          { year: "2025-26", wins: 48, losses: 34, playoffResult: "Lost in Conference Finals" }
+        ],
+        leaders: {
+          points: [
+            { name: "Marcus Freeman", value: 12847, seasons: 6 },
+            { name: "Darius Knight", value: 9234, seasons: 4 },
+            { name: "Jalen Morrison", value: 7891, seasons: 5 },
+            { name: "Devin Carter", value: 6543, seasons: 3 },
+            { name: "Kobe Mitchell", value: 5234, seasons: 3 }
+          ],
+          rebounds: [
+            { name: "Andre Wallace", value: 5432, seasons: 6 },
+            { name: "Marcus Freeman", value: 4123, seasons: 6 },
+            { name: "Isaiah Duncan", value: 3891, seasons: 4 },
+            { name: "Jordan Hayes", value: 2987, seasons: 3 },
+            { name: "Caleb Palmer", value: 2456, seasons: 4 }
+          ],
+          assists: [
+            { name: "Tyrese Shaw", value: 3456, seasons: 5 },
+            { name: "Marcus Freeman", value: 2987, seasons: 6 },
+            { name: "Jayden Harris", value: 2134, seasons: 3 },
+            { name: "Trey Cooper", value: 1876, seasons: 4 },
+            { name: "Kendrick Reed", value: 1654, seasons: 2 }
+          ],
+          steals: [
+            { name: "Jalen Morrison", value: 876, seasons: 5 },
+            { name: "Tyrese Shaw", value: 743, seasons: 5 },
+            { name: "Marcus Freeman", value: 654, seasons: 6 },
+            { name: "Elijah Burns", value: 543, seasons: 3 },
+            { name: "Dominic Green", value: 432, seasons: 2 }
+          ],
+          blocks: [
+            { name: "Andre Wallace", value: 987, seasons: 6 },
+            { name: "Isaiah Duncan", value: 654, seasons: 4 },
+            { name: "Jordan Hayes", value: 543, seasons: 3 },
+            { name: "Silas Webb", value: 432, seasons: 4 },
+            { name: "Roman Armstrong", value: 321, seasons: 2 }
+          ],
+          threes: [
+            { name: "Darius Knight", value: 1234, seasons: 4 },
+            { name: "Kobe Mitchell", value: 987, seasons: 3 },
+            { name: "Marcus Freeman", value: 876, seasons: 6 },
+            { name: "Devin Carter", value: 765, seasons: 3 },
+            { name: "Jalen Morrison", value: 654, seasons: 5 }
+          ]
+        },
+        retired: [
+          {
+            number: 23,
+            name: "Marcus Freeman",
+            fromYear: 2020,
+            toYear: 2026,
+            retiredYear: 2027,
+            desc: "Franchise cornerstone who led the team to its first championship in 2024. 6-time All-Star and Finals MVP."
+          }
+        ],
+        awards: {
+          MVP: [
+            { player: "Marcus Freeman", year: 2024 }
+          ],
+          FMVP: [
+            { player: "Marcus Freeman", year: 2024 }
+          ],
+          DPOY: [
+            { player: "Andre Wallace", year: 2023 }
+          ],
+          ROTY: [
+            { player: "Darius Knight", year: 2023 }
+          ],
+          COY: [
+            { player: "Coach Stevens", year: 2024 }
+          ]
+        },
+        moments: [
+          { year: 2020, text: "Franchise founded. Beginning of a new era." },
+          { year: 2021, text: "Worst season in franchise history: 22-60 record." },
+          { year: 2023, text: "First playoff appearance! Lost in 1st Round." },
+          { year: 2024, text: "🏆 NBA CHAMPIONS! First championship in franchise history!" },
+          { year: 2024, text: "New franchise record: 58-24 season!" },
+          { year: 2024, text: "Marcus Freeman wins Finals MVP with historic performance." },
+          { year: 2025, text: "Back-to-back Finals appearances. Lost in 7 games." },
+          { year: 2026, text: "Deep playoff run ends in Conference Finals." }
+        ]
+      };
+      
+      save(STATE);
+      renderHistory();
+      toast("Sample history data loaded!");
     }
     
     function renderDraft() {
