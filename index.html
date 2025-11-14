@@ -148,6 +148,86 @@
       background:var(--bg-3); color:var(--text-0);
     }
     .setup-btn.secondary:hover{background:var(--bg-2)}
+    
+    /* Saved Leagues Styles */
+    .saved-leagues-section{
+      padding: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+    .saved-leagues-list{
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .league-card{
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .league-card:hover{
+      background: var(--bg-3);
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .league-icon{
+      font-size: 32px;
+      min-width: 48px;
+      text-align: center;
+    }
+    .league-info{
+      flex: 1;
+    }
+    .league-name{
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-0);
+      margin-bottom: 4px;
+    }
+    .league-meta{
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .league-actions{
+      display: flex;
+      gap: 8px;
+    }
+    .league-action-btn{
+      padding: 6px 12px;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-1);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .league-action-btn:hover{
+      background: var(--bg-1);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .league-action-btn.danger:hover{
+      border-color: var(--bad);
+      color: var(--bad);
+    }
+    .new-league-form{
+      transition: all 0.3s ease;
+    }
+    .new-league-form.hidden{
+      display: none;
+    }
     .setup-btn.secondary:hover{background:var(--bg-2)}
 
     /* Main App */
@@ -2292,6 +2372,19 @@
         <p class="tagline">Build your dynasty. Rewrite basketball history.</p>
       </div>
       
+      <!-- Saved Leagues Section -->
+      <div class="saved-leagues-section" id="savedLeaguesSection" style="display: none;">
+        <h3 style="margin-bottom: 16px; color: var(--text-0);">📂 Saved Leagues</h3>
+        <div class="saved-leagues-list" id="savedLeaguesList">
+          <!-- Leagues will be populated here -->
+        </div>
+        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
+          <button class="setup-btn secondary" id="newLeagueBtn">+ New League</button>
+        </div>
+      </div>
+      
+      <!-- New League Form -->
+      <div class="new-league-form" id="newLeagueForm">
       <div class="setup-body">
         <div class="form-group">
           <label for="leagueName">League Name</label>
@@ -2444,6 +2537,7 @@
         <button class="setup-btn secondary" id="loadSaveBtn">Load Save</button>
         <button class="setup-btn primary" id="startLeagueBtn">Start League</button>
       </div>
+      </div><!-- End new league form -->
     </div>
   </div>
 
@@ -4481,10 +4575,224 @@
 
   <script>
     // -------------------------------
+    // Multi-League Management
+    // -------------------------------
+    const LEAGUE_PREFIX = "hoops-gm-league-";
+    const LEAGUES_INDEX_KEY = "hoops-gm-leagues-index";
+    const STORAGE_KEY = "hoops-mini-gm"; // Default for backwards compatibility
+    const SETUP_STORAGE_KEY = "hoops-mini-gm-setup";
+    
+    let currentLeagueId = null;
+    
+    // Get all saved leagues
+    function getAllLeagues() {
+      const indexData = localStorage.getItem(LEAGUES_INDEX_KEY);
+      if (!indexData) return [];
+      try {
+        return JSON.parse(indexData);
+      } catch {
+        return [];
+      }
+    }
+    
+    // Save leagues index
+    function saveLeaguesIndex(leagues) {
+      localStorage.setItem(LEAGUES_INDEX_KEY, JSON.stringify(leagues));
+    }
+    
+    // Create new league ID
+    function createLeagueId() {
+      return `league-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    }
+    
+    // Save league data
+    function saveLeague(leagueId, state, metadata) {
+      const key = LEAGUE_PREFIX + leagueId;
+      const data = {
+        state: state,
+        metadata: metadata,
+        lastPlayed: Date.now()
+      };
+      localStorage.setItem(key, JSON.stringify(data));
+      
+      // Update index
+      const leagues = getAllLeagues();
+      const existing = leagues.find(l => l.id === leagueId);
+      if (existing) {
+        existing.metadata = metadata;
+        existing.lastPlayed = Date.now();
+      } else {
+        leagues.push({
+          id: leagueId,
+          metadata: metadata,
+          created: Date.now(),
+          lastPlayed: Date.now()
+        });
+      }
+      saveLeaguesIndex(leagues);
+    }
+    
+    // Load league data
+    function loadLeague(leagueId) {
+      const key = LEAGUE_PREFIX + leagueId;
+      const data = localStorage.getItem(key);
+      if (!data) return null;
+      try {
+        return JSON.parse(data);
+      } catch {
+        return null;
+      }
+    }
+    
+    // Delete league
+    function deleteLeague(leagueId) {
+      const key = LEAGUE_PREFIX + leagueId;
+      localStorage.removeItem(key);
+      
+      // Update index
+      const leagues = getAllLeagues().filter(l => l.id !== leagueId);
+      saveLeaguesIndex(leagues);
+    }
+    
+    // Export league to JSON
+    function exportLeague(leagueId) {
+      const leagueData = loadLeague(leagueId);
+      if (!leagueData) return;
+      
+      const exportData = JSON.stringify(leagueData, null, 2);
+      const blob = new Blob([exportData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${leagueData.metadata.name}-${leagueId}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    
+    // Rename league
+    function renameLeague(leagueId, newName) {
+      const leagues = getAllLeagues();
+      const league = leagues.find(l => l.id === leagueId);
+      if (league) {
+        league.metadata.name = newName;
+        saveLeaguesIndex(leagues);
+        
+        // Update the actual league data
+        const leagueData = loadLeague(leagueId);
+        if (leagueData) {
+          leagueData.metadata.name = newName;
+          if (leagueData.state && leagueData.state.meta) {
+            leagueData.state.meta.leagueName = newName;
+          }
+          const key = LEAGUE_PREFIX + leagueId;
+          localStorage.setItem(key, JSON.stringify(leagueData));
+        }
+      }
+    }
+    
+    // Render saved leagues list
+    function renderSavedLeagues() {
+      const leagues = getAllLeagues().sort((a, b) => b.lastPlayed - a.lastPlayed);
+      const container = document.getElementById('savedLeaguesList');
+      const section = document.getElementById('savedLeaguesSection');
+      const newLeagueForm = document.getElementById('newLeagueForm');
+      
+      if (leagues.length === 0) {
+        section.style.display = 'none';
+        newLeagueForm.classList.remove('hidden');
+        return;
+      }
+      
+      section.style.display = 'block';
+      newLeagueForm.classList.add('hidden');
+      
+      let html = '';
+      leagues.forEach(league => {
+        const lastPlayed = new Date(league.lastPlayed).toLocaleDateString();
+        const meta = league.metadata || {};
+        
+        html += `
+          <div class="league-card" onclick="loadSavedLeague('${league.id}')">
+            <div class="league-icon">🏀</div>
+            <div class="league-info">
+              <div class="league-name">${meta.name || 'Unnamed League'}</div>
+              <div class="league-meta">
+                <span>🏆 ${meta.teamName || 'Unknown Team'}</span>
+                <span>📅 Season ${meta.season || '2026'}</span>
+                <span>🕒 ${lastPlayed}</span>
+              </div>
+            </div>
+            <div class="league-actions" onclick="event.stopPropagation()">
+              <button class="league-action-btn" onclick="renameLeaguePrompt('${league.id}')">✏️ Rename</button>
+              <button class="league-action-btn" onclick="exportLeague('${league.id}')">💾 Export</button>
+              <button class="league-action-btn danger" onclick="deleteLeaguePrompt('${league.id}')">🗑️ Delete</button>
+            </div>
+          </div>
+        `;
+      });
+      
+      container.innerHTML = html;
+    }
+    
+    // Load a saved league
+    function loadSavedLeague(leagueId) {
+      const leagueData = loadLeague(leagueId);
+      if (!leagueData) {
+        alert('Failed to load league');
+        return;
+      }
+      
+      currentLeagueId = leagueId;
+      STATE = leagueData.state;
+      
+      // Hide setup, show main app
+      const setupScreen = document.getElementById("setupScreen");
+      const mainApp = document.getElementById("mainApp");
+      
+      if (setupScreen && mainApp) {
+        setupScreen.classList.add("fade-out");
+        setTimeout(() => {
+          setupScreen.style.display = "none";
+          mainApp.classList.add("active");
+          rerenderAll();
+        }, 500);
+      }
+    }
+    
+    // Prompt to rename league
+    function renameLeaguePrompt(leagueId) {
+      const leagues = getAllLeagues();
+      const league = leagues.find(l => l.id === leagueId);
+      if (!league) return;
+      
+      const newName = prompt('Enter new league name:', league.metadata.name);
+      if (newName && newName.trim()) {
+        renameLeague(leagueId, newName.trim());
+        renderSavedLeagues();
+      }
+    }
+    
+    // Prompt to delete league
+    function deleteLeaguePrompt(leagueId) {
+      const leagues = getAllLeagues();
+      const league = leagues.find(l => l.id === leagueId);
+      if (!league) return;
+      
+      if (confirm(`Delete league "${league.metadata.name}"? This cannot be undone.`)) {
+        deleteLeague(leagueId);
+        renderSavedLeagues();
+      }
+    }
+    
+    // Show new league form
+    document.getElementById("newLeagueBtn")?.addEventListener("click", () => {
+      document.getElementById('newLeagueForm').classList.remove('hidden');
+      document.getElementById('savedLeaguesSection').style.display = 'none';
+    });
+    
+    // -------------------------------
     // League Setup Logic
     // -------------------------------
-    const STORAGE_KEY = "hoops-mini-gm";
-    const SETUP_STORAGE_KEY = "hoops-mini-gm-setup";
     
     // Check if league already exists
     function hasExistingLeague(){
@@ -4517,6 +4825,9 @@
 
       // Save setup to localStorage
       localStorage.setItem(SETUP_STORAGE_KEY, JSON.stringify(leagueSetup));
+
+      // Create new league ID
+      currentLeagueId = createLeagueId();
 
       // Initialize new league with setup parameters
       initializeLeague(leagueSetup);
@@ -4556,8 +4867,11 @@
       }
     });
 
-    // Auto-load if save exists
+    // Auto-load and render saved leagues
     window.addEventListener("DOMContentLoaded", () => {
+      // Render saved leagues list
+      renderSavedLeagues();
+      
       if (hasExistingLeague()) {
         // Show load option more prominently
         document.getElementById("loadSaveBtn").style.background = "linear-gradient(135deg, var(--good) 0%, #2d9d5f 100%)";
@@ -7754,7 +8068,18 @@
       catch { return initialState }
     }
     function save(state){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      // Save to current league if using multi-league system
+      if (currentLeagueId) {
+        const metadata = {
+          name: state.meta?.leagueName || 'My League',
+          teamName: state.meta?.teamName || 'Unknown Team',
+          season: state.meta?.season || 2026
+        };
+        saveLeague(currentLeagueId, state, metadata);
+      } else {
+        // Fallback to old single-league system
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
       toast("Saved league.");
     }
 
