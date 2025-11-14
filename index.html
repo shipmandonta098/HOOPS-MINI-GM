@@ -4832,6 +4832,12 @@
       // Initialize new league with setup parameters
       initializeLeague(leagueSetup);
 
+      // Immediately switch to dashboard view (before fade transition)
+      const dashboardBtn = document.querySelector('#nav .nav-btn[data-view="dashboard"]');
+      if (dashboardBtn) {
+        dashboardBtn.click();
+      }
+
       // Fade transition
       const setupScreen = document.getElementById("setupScreen");
       const mainApp = document.getElementById("mainApp");
@@ -4841,14 +4847,6 @@
         setTimeout(() => {
           setupScreen.style.display = "none";
           mainApp.classList.add("active");
-          
-          // Automatically show dashboard after league is created
-          setTimeout(() => {
-            const dashboardBtn = document.querySelector('#nav .nav-btn[data-view="dashboard"]');
-            if (dashboardBtn) {
-              dashboardBtn.click();
-            }
-          }, 100);
         }, 500);
       }
     });
@@ -11003,6 +11001,10 @@
       
       if (!STATE.schedule.games || STATE.schedule.games.length === 0) {
         console.log("Generating day-based schedule for:", STATE.meta.teamName);
+        
+        // Initialize rivalries before generating schedule
+        initializeRivalries();
+        
         STATE.schedule.games = generateDayBasedSchedule(STATE.meta.teamName);
         STATE.schedule.currentDay = 1;
         STATE.schedule.elo = 1500;
