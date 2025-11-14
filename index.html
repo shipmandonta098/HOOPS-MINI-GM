@@ -13238,31 +13238,43 @@
     // Team Management
     // -------------------------------
     function renderTeamManagement() {
-      if (!STATE.teamInfo) {
-        STATE.teamInfo = {
-          fullName: STATE.meta.teamName || "San Francisco Riptide",
-          city: "San Francisco",
-          nickname: "Riptide",
-          abbreviation: "SFR",
-          colors: {
-            primary: "#3b82f6",
-            secondary: "#1e40af",
-            accent: "#fbbf24"
-          },
-          logos: {
-            primary: "",
-            secondary: ""
-          },
-          conference: "Western",
-          division: "Pacific"
-        };
-      }
-      
-      // Populate form fields with null checks
-      const teamFullName = $("#teamFullName");
-      const teamCity = $("#teamCity");
-      const teamNickname = $("#teamNickname");
-      const teamAbbr = $("#teamAbbr");
+      try {
+        console.log("renderTeamManagement called");
+        
+        if (!STATE.teamInfo) {
+          STATE.teamInfo = {
+            fullName: STATE.meta.teamName || "San Francisco Riptide",
+            city: "San Francisco",
+            nickname: "Riptide",
+            abbreviation: "SFR",
+            colors: {
+              primary: "#3b82f6",
+              secondary: "#1e40af",
+              accent: "#fbbf24"
+            },
+            logos: {
+              primary: "",
+              secondary: ""
+            },
+            conference: "Western",
+            division: "Pacific"
+          };
+        }
+        
+        console.log("Team info:", STATE.teamInfo);
+        
+        // Populate form fields with null checks
+        const teamFullName = $("#teamFullName");
+        const teamCity = $("#teamCity");
+        const teamNickname = $("#teamNickname");
+        const teamAbbr = $("#teamAbbr");
+        
+        console.log("Form elements found:", {
+          teamFullName: !!teamFullName,
+          teamCity: !!teamCity,
+          teamNickname: !!teamNickname,
+          teamAbbr: !!teamAbbr
+        });
       
       if (teamFullName) teamFullName.value = STATE.teamInfo.fullName || "";
       if (teamCity) teamCity.value = STATE.teamInfo.city || "";
@@ -13301,6 +13313,11 @@
       // Update logo previews
       updateLogoPreview("primary", STATE.teamInfo.logos?.primary);
       updateLogoPreview("secondary", STATE.teamInfo.logos?.secondary);
+      
+      console.log("renderTeamManagement completed successfully");
+      } catch (error) {
+        console.error("Error in renderTeamManagement:", error);
+      }
     }
     
     // Setup event listeners once on page load
