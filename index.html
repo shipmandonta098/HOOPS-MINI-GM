@@ -4841,6 +4841,10 @@
         setTimeout(() => {
           setupScreen.style.display = "none";
           mainApp.classList.add("active");
+          
+          // Automatically show dashboard
+          switchView('dashboard');
+          renderDashboard();
         }, 500);
       }
     });
