@@ -8560,10 +8560,11 @@
     // -------------------------------
     // Navigation
     // -------------------------------
-    $$("#nav .nav-btn").forEach(btn=>{
+    $$("#nav .nav-btn, .nav-section .nav-btn").forEach(btn=>{
       btn.addEventListener("click", ()=>{
         const view = btn.dataset.view;
-        $$("#nav .nav-btn").forEach(b=>b.classList.toggle("active", b===btn));
+        $$("#nav .nav-btn, .nav-section .nav-btn").forEach(b=>b.classList.toggle("active", b===btn));
+        // Toggle visibility for all sections matching data-view
         $$("main section[data-view]").forEach(sec=>{
           sec.hidden = (sec.dataset.view !== view);
         });
