@@ -8414,60 +8414,123 @@
     function cleanStateForStorage(state, aggressive = false) {
       const cleaned = JSON.parse(JSON.stringify(state)); // Deep clone
       
-      // Limit event history to last 100 events
-      if (cleaned.events && cleaned.events.length > 100) {
-        cleaned.events = cleaned.events.slice(0, 100);
+      // Always limit event history to last 50 events
+      if (cleaned.events && cleaned.events.length > 50) {
+        cleaned.events = cleaned.events.slice(0, 50);
       }
       
-      // Limit owner events to last 50
-      if (cleaned.ownerEvents && cleaned.ownerEvents.length > 50) {
-        cleaned.ownerEvents = cleaned.ownerEvents.slice(0, 50);
+      // Always limit owner events to last 30
+      if (cleaned.ownerEvents && cleaned.ownerEvents.length > 30) {
+        cleaned.ownerEvents = cleaned.ownerEvents.slice(0, 30);
       }
       
-      // Limit fan history
-      if (cleaned.fans?.history && cleaned.fans.history.length > 50) {
-        cleaned.fans.history = cleaned.fans.history.slice(0, 50);
+      // Always limit fan history
+      if (cleaned.fans?.history && cleaned.fans.history.length > 30) {
+        cleaned.fans.history = cleaned.fans.history.slice(0, 30);
       }
       
-      // Limit finance projections
-      if (cleaned.finance?.projections && cleaned.finance.projections.length > 20) {
-        cleaned.finance.projections = cleaned.finance.projections.slice(0, 20);
+      // Always limit finance projections
+      if (cleaned.finance?.projections && cleaned.finance.projections.length > 10) {
+        cleaned.finance.projections = cleaned.finance.projections.slice(0, 10);
+      }
+      
+      // Always reduce draft prospects to top 100
+      if (cleaned.draft?.prospects && cleaned.draft.prospects.length > 100) {
+        cleaned.draft.prospects = cleaned.draft.prospects
+          .sort((a, b) => (b.projectedOvr || 0) - (a.projectedOvr || 0))
+          .slice(0, 100);
+      }
+      
+      // Always limit free agents to 50
+      if (cleaned.freeAgents && cleaned.freeAgents.length > 50) {
+        cleaned.freeAgents = cleaned.freeAgents
+          .sort((a, b) => (b.ovr || 0) - (a.ovr || 0))
+          .slice(0, 50);
+      }
+      
+      // Always reduce coach candidates to 8
+      if (cleaned.coaches?.candidates && cleaned.coaches.candidates.length > 8) {
+        cleaned.coaches.candidates = cleaned.coaches.candidates.slice(0, 8);
       }
       
       if (aggressive) {
-        // More aggressive cleanup for emergency saves
+        // ULTRA aggressive cleanup for emergency saves
         
-        // Reduce draft prospects to only top 60
-        if (cleaned.draft?.prospects && cleaned.draft.prospects.length > 60) {
+        // Keep only top 30 draft prospects
+        if (cleaned.draft?.prospects && cleaned.draft.prospects.length > 30) {
           cleaned.draft.prospects = cleaned.draft.prospects
-            .sort((a, b) => b.projectedOvr - a.projectedOvr)
-            .slice(0, 60);
+            .sort((a, b) => (b.projectedOvr || 0) - (a.projectedOvr || 0))
+            .slice(0, 30);
         }
         
-        // Limit free agents to 75
-        if (cleaned.freeAgents && cleaned.freeAgents.length > 75) {
+        // Keep only top 25 free agents
+        if (cleaned.freeAgents && cleaned.freeAgents.length > 25) {
           cleaned.freeAgents = cleaned.freeAgents
-            .sort((a, b) => b.ovr - a.ovr)
-            .slice(0, 75);
+            .sort((a, b) => (b.ovr || 0) - (a.ovr || 0))
+            .slice(0, 25);
         }
         
-        // Reduce schedule games - keep only upcoming and last 20 completed
+        // Drastically reduce schedule - only keep next 10 upcoming games
         if (cleaned.schedule?.games) {
-          const upcoming = cleaned.schedule.games.filter(g => g.status === 'upcoming');
-          const completed = cleaned.schedule.games
-            .filter(g => g.status !== 'upcoming')
-            .slice(0, 20);
-          cleaned.schedule.games = [...upcoming, ...completed];
+          const upcoming = cleaned.schedule.games
+            .filter(g => g.status === 'upcoming')
+            .slice(0, 10);
+          cleaned.schedule.games = upcoming;
         }
         
-        // Limit events to last 50
-        if (cleaned.events && cleaned.events.length > 50) {
-          cleaned.events = cleaned.events.slice(0, 50);
+        // Keep only last 20 events
+        if (cleaned.events && cleaned.events.length > 20) {
+          cleaned.events = cleaned.events.slice(0, 20);
         }
         
-        // Remove coach candidates except top 6
-        if (cleaned.coaches?.candidates && cleaned.coaches.candidates.length > 6) {
-          cleaned.coaches.candidates = cleaned.coaches.candidates.slice(0, 6);
+        // Remove all owner events
+        if (cleaned.ownerEvents) {
+          cleaned.ownerEvents = [];
+        }
+        
+        // Remove all fan history
+        if (cleaned.fans?.history) {
+          cleaned.fans.history = [];
+        }
+        
+        // Remove all finance projections
+        if (cleaned.finance?.projections) {
+          cleaned.finance.projections = [];
+        }
+        
+        // Keep only 3 coach candidates
+        if (cleaned.coaches?.candidates && cleaned.coaches.candidates.length > 3) {
+          cleaned.coaches.candidates = cleaned.coaches.candidates.slice(0, 3);
+        }
+        
+        // Remove league rosters entirely (can be regenerated)
+        if (cleaned.leagueRosters) {
+          // Keep only a few random teams
+          const teams = Object.keys(cleaned.leagueRosters);
+          const keepTeams = teams.slice(0, 5);
+          const newRosters = {};
+          keepTeams.forEach(team => {
+            newRosters[team] = cleaned.leagueRosters[team];
+          });
+          cleaned.leagueRosters = newRosters;
+        }
+        
+        // Simplify history to bare minimum
+        if (cleaned.history) {
+          if (cleaned.history.seasons && cleaned.history.seasons.length > 5) {
+            cleaned.history.seasons = cleaned.history.seasons.slice(-5);
+          }
+          if (cleaned.history.moments && cleaned.history.moments.length > 5) {
+            cleaned.history.moments = cleaned.history.moments.slice(-5);
+          }
+          // Clear leaders
+          if (cleaned.history.leaders) {
+            Object.keys(cleaned.history.leaders).forEach(key => {
+              if (cleaned.history.leaders[key].length > 3) {
+                cleaned.history.leaders[key] = cleaned.history.leaders[key].slice(0, 3);
+              }
+            });
+          }
         }
       }
       
