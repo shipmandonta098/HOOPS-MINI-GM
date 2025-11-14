@@ -6606,7 +6606,7 @@
     // Draft System
     // -------------------------------
     
-    function generateDraftProspects(year = 2026, count = 60) {
+    function generateDraftProspects(year = 2026, count = 200) {
       const firstNames = ["Zion","Luka","Trae","Ja","RJ","Coby","Tyler","Cameron","Keldon","Brandon","Jaxson","PJ","Nickeil","Kevin","Matisse","Grant","Bol","Goga","Carsen","Admiral"];
       const lastNames = ["Williams","Robinson","Barrett","Morant","Hunter","White","Herro","Johnson","Reddish","Clarke","Hayes","Washington","Alexander-Walker","Porter","Thybulle","Williams","Bol","Bitadze","Edwards","Schofield"];
       
@@ -12399,7 +12399,7 @@
     };
     
     window.generateProspects = function() {
-      const prospects = generateDraftProspects(STATE.year, 60);
+      const prospects = generateDraftProspects(STATE.year, 200);
       STATE.draft.prospects = prospects;
       STATE.draft.selectedProspect = null;
       STATE.draft.draftedPlayers = [];
